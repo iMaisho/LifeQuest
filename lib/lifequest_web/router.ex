@@ -54,6 +54,12 @@ defmodule LifequestWeb.Router do
       on_mount: [{LifequestWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+
+      live "/financial_profiles", FinancialProfileLive.Index, :index
+      live "/financial_profiles/new", FinancialProfileLive.Form, :new
+      live "/financial_profiles/:id", FinancialProfileLive.Show, :show
+      live "/financial_profiles/:id/edit", FinancialProfileLive.Form, :edit
+
     end
 
     post "/users/update-password", UserSessionController, :update_password
