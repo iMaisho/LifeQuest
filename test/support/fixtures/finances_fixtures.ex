@@ -20,4 +20,23 @@ defmodule Lifequest.FinancesFixtures do
     {:ok, financial_profile} = Lifequest.Finances.create_financial_profile(scope, attrs)
     financial_profile
   end
+
+  @doc """
+  Generate a income_stream.
+  """
+  def income_stream_fixture(scope, attrs \\ %{}) do
+    attrs =
+      Enum.into(attrs, %{
+        amount: "120.50",
+        end_date: ~D[2026-03-04],
+        frequency: :weekly,
+        is_active: true,
+        label: "some label",
+        start_date: ~D[2026-03-04],
+        type: :salary
+      })
+
+    {:ok, income_stream} = Lifequest.Finances.create_income_stream(scope, attrs)
+    income_stream
+  end
 end
