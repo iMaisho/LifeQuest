@@ -39,4 +39,20 @@ defmodule Lifequest.FinancesFixtures do
     {:ok, income_stream} = Lifequest.Finances.create_income_stream(scope, attrs)
     income_stream
   end
+
+  @doc """
+  Generate a expense.
+  """
+  def expense_fixture(scope, attrs \\ %{}) do
+    attrs =
+      Enum.into(attrs, %{
+        amount: "120.50",
+        frequency: :weekly,
+        name: "some name",
+        type: :essential
+      })
+
+    {:ok, expense} = Lifequest.Finances.create_expense(scope, attrs)
+    expense
+  end
 end

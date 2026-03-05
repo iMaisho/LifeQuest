@@ -195,4 +195,96 @@ defmodule Lifequest.FinancesTest do
       assert %Ecto.Changeset{} = Finances.change_income_stream(scope, income_stream)
     end
   end
+
+  describe "expenses" do
+    alias Lifequest.Finances.Expense
+
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    @invalid_attrs %{name: nil, type: nil, amount: nil, frequency: nil}
+
+    test "list_expenses/1 returns all scoped expenses" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      other_expense = expense_fixture(other_scope)
+      assert Finances.list_expenses(scope) == [expense]
+      assert Finances.list_expenses(other_scope) == [other_expense]
+    end
+
+    test "get_expense!/2 returns the expense with given id" do
+      scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      other_scope = user_scope_fixture()
+      assert Finances.get_expense!(scope, expense.id) == expense
+      assert_raise Ecto.NoResultsError, fn -> Finances.get_expense!(other_scope, expense.id) end
+    end
+
+    test "create_expense/2 with valid data creates a expense" do
+      valid_attrs = %{name: "some name", type: :essential, amount: "120.50", frequency: :weekly}
+      scope = user_scope_fixture()
+
+      assert {:ok, %Expense{} = expense} = Finances.create_expense(scope, valid_attrs)
+      assert expense.name == "some name"
+      assert expense.type == :essential
+      assert expense.amount == Decimal.new("120.50")
+      assert expense.frequency == :weekly
+      assert expense.user_id == scope.user.id
+    end
+
+    test "create_expense/2 with invalid data returns error changeset" do
+      scope = user_scope_fixture()
+      assert {:error, %Ecto.Changeset{}} = Finances.create_expense(scope, @invalid_attrs)
+    end
+
+    test "update_expense/3 with valid data updates the expense" do
+      scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      update_attrs = %{name: "some updated name", type: :pleasure, amount: "456.70", frequency: :monthly}
+
+      assert {:ok, %Expense{} = expense} = Finances.update_expense(scope, expense, update_attrs)
+      assert expense.name == "some updated name"
+      assert expense.type == :pleasure
+      assert expense.amount == Decimal.new("456.70")
+      assert expense.frequency == :monthly
+    end
+
+    test "update_expense/3 with invalid scope raises" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+
+      assert_raise MatchError, fn ->
+        Finances.update_expense(other_scope, expense, %{})
+      end
+    end
+
+    test "update_expense/3 with invalid data returns error changeset" do
+      scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      assert {:error, %Ecto.Changeset{}} = Finances.update_expense(scope, expense, @invalid_attrs)
+      assert expense == Finances.get_expense!(scope, expense.id)
+    end
+
+    test "delete_expense/2 deletes the expense" do
+      scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      assert {:ok, %Expense{}} = Finances.delete_expense(scope, expense)
+      assert_raise Ecto.NoResultsError, fn -> Finances.get_expense!(scope, expense.id) end
+    end
+
+    test "delete_expense/2 with invalid scope raises" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      assert_raise MatchError, fn -> Finances.delete_expense(other_scope, expense) end
+    end
+
+    test "change_expense/2 returns a expense changeset" do
+      scope = user_scope_fixture()
+      expense = expense_fixture(scope)
+      assert %Ecto.Changeset{} = Finances.change_expense(scope, expense)
+    end
+  end
 end

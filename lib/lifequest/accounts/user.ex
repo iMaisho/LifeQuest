@@ -13,7 +13,7 @@ defmodule Lifequest.Accounts.User do
 
     has_one :financial_profile, Lifequest.Finances.FinancialProfile
     has_many :income_streams, Lifequest.Finances.IncomeStream
-
+    has_many :expenses, Lifequest.Finances.Expense
 
     timestamps(type: :utc_datetime)
   end
