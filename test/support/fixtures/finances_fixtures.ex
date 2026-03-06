@@ -22,37 +22,22 @@ defmodule Lifequest.FinancesFixtures do
   end
 
   @doc """
-  Generate a income_stream.
+  Generate a transaction.
   """
-  def income_stream_fixture(scope, attrs \\ %{}) do
+  def transaction_fixture(scope, attrs \\ %{}) do
     attrs =
       Enum.into(attrs, %{
         amount: "120.50",
-        end_date: ~D[2026-03-04],
-        frequency: :weekly,
+        date: ~D[2026-03-05],
+        direction: :income,
+        expense_type: :essential,
+        income_type: :salary,
         is_active: true,
-        label: "some label",
-        start_date: ~D[2026-03-04],
-        type: :salary
+        is_recurring: true,
+        label: "some label"
       })
 
-    {:ok, income_stream} = Lifequest.Finances.create_income_stream(scope, attrs)
-    income_stream
-  end
-
-  @doc """
-  Generate a expense.
-  """
-  def expense_fixture(scope, attrs \\ %{}) do
-    attrs =
-      Enum.into(attrs, %{
-        amount: "120.50",
-        frequency: :weekly,
-        name: "some name",
-        type: :essential
-      })
-
-    {:ok, expense} = Lifequest.Finances.create_expense(scope, attrs)
-    expense
+    {:ok, transaction} = Lifequest.Finances.create_transaction(scope, attrs)
+    transaction
   end
 end

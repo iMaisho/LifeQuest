@@ -60,15 +60,10 @@ defmodule LifequestWeb.Router do
       live "/financial_profiles/:id", FinancialProfileLive.Show, :show
       live "/financial_profiles/:id/edit", FinancialProfileLive.Form, :edit
 
-      live "/income_streams", IncomeStreamLive.Index, :index
-      live "/income_streams/new", IncomeStreamLive.Form, :new
-      live "/income_streams/:id", IncomeStreamLive.Show, :show
-      live "/income_streams/:id/edit", IncomeStreamLive.Form, :edit
-
-      live "/expenses", ExpenseLive.Index, :index
-      live "/expenses/new", ExpenseLive.Form, :new
-      live "/expenses/:id", ExpenseLive.Show, :show
-      live "/expenses/:id/edit", ExpenseLive.Form, :edit
+      live "/transactions", TransactionLive.Index, :index
+      live "/transactions/new", TransactionLive.Form, :new
+      live "/transactions/:id", TransactionLive.Show, :show
+      live "/transactions/:id/edit", TransactionLive.Form, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password

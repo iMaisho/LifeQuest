@@ -6,9 +6,8 @@ defmodule Lifequest.Finances do
   import Ecto.Query, warn: false
 
   alias Lifequest.Accounts.Scope
-  alias Lifequest.Finances.Expense
   alias Lifequest.Finances.FinancialProfile
-  alias Lifequest.Finances.IncomeStream
+  alias Lifequest.Finances.Transaction
   alias Lifequest.Repo
 
   @doc """
@@ -62,6 +61,31 @@ defmodule Lifequest.Finances do
   """
   def get_financial_profile!(%Scope{} = scope, id) do
     Repo.get_by!(FinancialProfile, id: id, user_id: scope.user.id)
+  end
+
+  def get_financial_profile_by_user(%Scope{} = scope) do
+    FinancialProfile
+    |> where([f], f.user_id == ^scope.user.id)
+    |> Repo.one()
+  end
+
+  def create_financial_profile(%Scope{} = scope) do
+    with {:ok, financial_profile = %FinancialProfile{}} <-
+           %FinancialProfile{}
+           |> FinancialProfile.changeset(
+             %{
+               current_savings: 0,
+               current_debts: 0,
+               monthly_debt_payment: 0,
+               net_worth: 0,
+               employment_status: :cdi
+             },
+             scope
+           )
+           |> Repo.insert() do
+      broadcast_financial_profile(scope, {:created, financial_profile})
+      {:ok, financial_profile}
+    end
   end
 
   @doc """
@@ -152,274 +176,138 @@ defmodule Lifequest.Finances do
   end
 
   @doc """
-  Subscribes to scoped notifications about any income_stream changes.
+  Subscribes to scoped notifications about any transaction changes.
 
   The broadcasted messages match the pattern:
 
-    * {:created, %IncomeStream{}}
-    * {:updated, %IncomeStream{}}
-    * {:deleted, %IncomeStream{}}
+    * {:created, %Transaction{}}
+    * {:updated, %Transaction{}}
+    * {:deleted, %Transaction{}}
 
   """
-  def subscribe_income_streams(%Scope{} = scope) do
+  def subscribe_transactions(%Scope{} = scope) do
     key = scope.user.id
 
-    Phoenix.PubSub.subscribe(Lifequest.PubSub, "user:#{key}:income_streams")
+    Phoenix.PubSub.subscribe(Lifequest.PubSub, "user:#{key}:transactions")
   end
 
-  defp broadcast_income_stream(%Scope{} = scope, message) do
+  defp broadcast_transaction(%Scope{} = scope, message) do
     key = scope.user.id
 
-    Phoenix.PubSub.broadcast(Lifequest.PubSub, "user:#{key}:income_streams", message)
+    Phoenix.PubSub.broadcast(Lifequest.PubSub, "user:#{key}:transactions", message)
   end
 
   @doc """
-  Returns the list of income_streams.
+  Returns the list of transactions.
 
   ## Examples
 
-      iex> list_income_streams(scope)
-      [%IncomeStream{}, ...]
+      iex> list_transactions(scope)
+      [%Transaction{}, ...]
 
   """
-  def list_income_streams(%Scope{} = scope) do
-    Repo.all_by(IncomeStream, user_id: scope.user.id)
+  def list_transactions(%Scope{} = scope) do
+    Repo.all_by(Transaction, user_id: scope.user.id)
   end
 
   @doc """
-  Gets a single income_stream.
+  Gets a single transaction.
 
-  Raises `Ecto.NoResultsError` if the Income stream does not exist.
+  Raises `Ecto.NoResultsError` if the Transaction does not exist.
 
   ## Examples
 
-      iex> get_income_stream!(scope, 123)
-      %IncomeStream{}
+      iex> get_transaction!(scope, 123)
+      %Transaction{}
 
-      iex> get_income_stream!(scope, 456)
+      iex> get_transaction!(scope, 456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_income_stream!(%Scope{} = scope, id) do
-    Repo.get_by!(IncomeStream, id: id, user_id: scope.user.id)
+  def get_transaction!(%Scope{} = scope, id) do
+    Repo.get_by!(Transaction, id: id, user_id: scope.user.id)
   end
 
   @doc """
-  Creates a income_stream.
+  Creates a transaction.
 
   ## Examples
 
-      iex> create_income_stream(scope, %{field: value})
-      {:ok, %IncomeStream{}}
+      iex> create_transaction(scope, %{field: value})
+      {:ok, %Transaction{}}
 
-      iex> create_income_stream(scope, %{field: bad_value})
+      iex> create_transaction(scope, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_income_stream(%Scope{} = scope, attrs) do
-    with {:ok, income_stream = %IncomeStream{}} <-
-           %IncomeStream{}
-           |> IncomeStream.changeset(attrs, scope)
+  def create_transaction(%Scope{} = scope, attrs) do
+    with {:ok, transaction = %Transaction{}} <-
+           %Transaction{}
+           |> Transaction.changeset(attrs, scope)
            |> Repo.insert() do
-      broadcast_income_stream(scope, {:created, income_stream})
-      {:ok, income_stream}
+      broadcast_transaction(scope, {:created, transaction})
+      {:ok, transaction}
     end
   end
 
   @doc """
-  Updates a income_stream.
+  Updates a transaction.
 
   ## Examples
 
-      iex> update_income_stream(scope, income_stream, %{field: new_value})
-      {:ok, %IncomeStream{}}
+      iex> update_transaction(scope, transaction, %{field: new_value})
+      {:ok, %Transaction{}}
 
-      iex> update_income_stream(scope, income_stream, %{field: bad_value})
+      iex> update_transaction(scope, transaction, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_income_stream(%Scope{} = scope, %IncomeStream{} = income_stream, attrs) do
-    true = income_stream.user_id == scope.user.id
+  def update_transaction(%Scope{} = scope, %Transaction{} = transaction, attrs) do
+    true = transaction.user_id == scope.user.id
 
-    with {:ok, income_stream = %IncomeStream{}} <-
-           income_stream
-           |> IncomeStream.changeset(attrs, scope)
+    with {:ok, transaction = %Transaction{}} <-
+           transaction
+           |> Transaction.changeset(attrs, scope)
            |> Repo.update() do
-      broadcast_income_stream(scope, {:updated, income_stream})
-      {:ok, income_stream}
+      broadcast_transaction(scope, {:updated, transaction})
+      {:ok, transaction}
     end
   end
 
   @doc """
-  Deletes a income_stream.
+  Deletes a transaction.
 
   ## Examples
 
-      iex> delete_income_stream(scope, income_stream)
-      {:ok, %IncomeStream{}}
+      iex> delete_transaction(scope, transaction)
+      {:ok, %Transaction{}}
 
-      iex> delete_income_stream(scope, income_stream)
+      iex> delete_transaction(scope, transaction)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_income_stream(%Scope{} = scope, %IncomeStream{} = income_stream) do
-    true = income_stream.user_id == scope.user.id
+  def delete_transaction(%Scope{} = scope, %Transaction{} = transaction) do
+    true = transaction.user_id == scope.user.id
 
-    with {:ok, income_stream = %IncomeStream{}} <-
-           Repo.delete(income_stream) do
-      broadcast_income_stream(scope, {:deleted, income_stream})
-      {:ok, income_stream}
+    with {:ok, transaction = %Transaction{}} <-
+           Repo.delete(transaction) do
+      broadcast_transaction(scope, {:deleted, transaction})
+      {:ok, transaction}
     end
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking income_stream changes.
+  Returns an `%Ecto.Changeset{}` for tracking transaction changes.
 
   ## Examples
 
-      iex> change_income_stream(scope, income_stream)
-      %Ecto.Changeset{data: %IncomeStream{}}
+      iex> change_transaction(scope, transaction)
+      %Ecto.Changeset{data: %Transaction{}}
 
   """
-  def change_income_stream(%Scope{} = scope, %IncomeStream{} = income_stream, attrs \\ %{}) do
-    true = income_stream.user_id == scope.user.id
+  def change_transaction(%Scope{} = scope, %Transaction{} = transaction, attrs \\ %{}) do
+    true = transaction.user_id == scope.user.id
 
-    IncomeStream.changeset(income_stream, attrs, scope)
-  end
-
-  @doc """
-  Subscribes to scoped notifications about any expense changes.
-
-  The broadcasted messages match the pattern:
-
-    * {:created, %Expense{}}
-    * {:updated, %Expense{}}
-    * {:deleted, %Expense{}}
-
-  """
-  def subscribe_expenses(%Scope{} = scope) do
-    key = scope.user.id
-
-    Phoenix.PubSub.subscribe(Lifequest.PubSub, "user:#{key}:expenses")
-  end
-
-  defp broadcast_expense(%Scope{} = scope, message) do
-    key = scope.user.id
-
-    Phoenix.PubSub.broadcast(Lifequest.PubSub, "user:#{key}:expenses", message)
-  end
-
-  @doc """
-  Returns the list of expenses.
-
-  ## Examples
-
-      iex> list_expenses(scope)
-      [%Expense{}, ...]
-
-  """
-  def list_expenses(%Scope{} = scope) do
-    Repo.all_by(Expense, user_id: scope.user.id)
-  end
-
-  @doc """
-  Gets a single expense.
-
-  Raises `Ecto.NoResultsError` if the Expense does not exist.
-
-  ## Examples
-
-      iex> get_expense!(scope, 123)
-      %Expense{}
-
-      iex> get_expense!(scope, 456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_expense!(%Scope{} = scope, id) do
-    Repo.get_by!(Expense, id: id, user_id: scope.user.id)
-  end
-
-  @doc """
-  Creates a expense.
-
-  ## Examples
-
-      iex> create_expense(scope, %{field: value})
-      {:ok, %Expense{}}
-
-      iex> create_expense(scope, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_expense(%Scope{} = scope, attrs) do
-    with {:ok, expense = %Expense{}} <-
-           %Expense{}
-           |> Expense.changeset(attrs, scope)
-           |> Repo.insert() do
-      broadcast_expense(scope, {:created, expense})
-      {:ok, expense}
-    end
-  end
-
-  @doc """
-  Updates a expense.
-
-  ## Examples
-
-      iex> update_expense(scope, expense, %{field: new_value})
-      {:ok, %Expense{}}
-
-      iex> update_expense(scope, expense, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_expense(%Scope{} = scope, %Expense{} = expense, attrs) do
-    true = expense.user_id == scope.user.id
-
-    with {:ok, expense = %Expense{}} <-
-           expense
-           |> Expense.changeset(attrs, scope)
-           |> Repo.update() do
-      broadcast_expense(scope, {:updated, expense})
-      {:ok, expense}
-    end
-  end
-
-  @doc """
-  Deletes a expense.
-
-  ## Examples
-
-      iex> delete_expense(scope, expense)
-      {:ok, %Expense{}}
-
-      iex> delete_expense(scope, expense)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_expense(%Scope{} = scope, %Expense{} = expense) do
-    true = expense.user_id == scope.user.id
-
-    with {:ok, expense = %Expense{}} <-
-           Repo.delete(expense) do
-      broadcast_expense(scope, {:deleted, expense})
-      {:ok, expense}
-    end
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking expense changes.
-
-  ## Examples
-
-      iex> change_expense(scope, expense)
-      %Ecto.Changeset{data: %Expense{}}
-
-  """
-  def change_expense(%Scope{} = scope, %Expense{} = expense, attrs \\ %{}) do
-    true = expense.user_id == scope.user.id
-
-    Expense.changeset(expense, attrs, scope)
+    Transaction.changeset(transaction, attrs, scope)
   end
 end
