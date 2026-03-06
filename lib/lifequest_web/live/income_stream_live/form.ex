@@ -59,7 +59,10 @@ defmodule LifequestWeb.IncomeStreamLive.Form do
     socket
     |> assign(:page_title, "Edit Income stream")
     |> assign(:income_stream, income_stream)
-    |> assign(:form, to_form(Finances.change_income_stream(socket.assigns.current_scope, income_stream)))
+    |> assign(
+      :form,
+      to_form(Finances.change_income_stream(socket.assigns.current_scope, income_stream))
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -68,12 +71,21 @@ defmodule LifequestWeb.IncomeStreamLive.Form do
     socket
     |> assign(:page_title, "New Income stream")
     |> assign(:income_stream, income_stream)
-    |> assign(:form, to_form(Finances.change_income_stream(socket.assigns.current_scope, income_stream)))
+    |> assign(
+      :form,
+      to_form(Finances.change_income_stream(socket.assigns.current_scope, income_stream))
+    )
   end
 
   @impl true
   def handle_event("validate", %{"income_stream" => income_stream_params}, socket) do
-    changeset = Finances.change_income_stream(socket.assigns.current_scope, socket.assigns.income_stream, income_stream_params)
+    changeset =
+      Finances.change_income_stream(
+        socket.assigns.current_scope,
+        socket.assigns.income_stream,
+        income_stream_params
+      )
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -82,7 +94,11 @@ defmodule LifequestWeb.IncomeStreamLive.Form do
   end
 
   defp save_income_stream(socket, :edit, income_stream_params) do
-    case Finances.update_income_stream(socket.assigns.current_scope, socket.assigns.income_stream, income_stream_params) do
+    case Finances.update_income_stream(
+           socket.assigns.current_scope,
+           socket.assigns.income_stream,
+           income_stream_params
+         ) do
       {:ok, income_stream} ->
         {:noreply,
          socket

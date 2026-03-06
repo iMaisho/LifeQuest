@@ -16,7 +16,12 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
       <.form for={@form} id="financial_profile-form" phx-change="validate" phx-submit="save">
         <.input field={@form[:current_savings]} type="number" label="Current savings" step="any" />
         <.input field={@form[:current_debts]} type="number" label="Current debts" step="any" />
-        <.input field={@form[:monthly_debt_payment]} type="number" label="Monthly debt payment" step="any" />
+        <.input
+          field={@form[:monthly_debt_payment]}
+          type="number"
+          label="Monthly debt payment"
+          step="any"
+        />
         <.input field={@form[:net_worth]} type="number" label="Net worth" step="any" />
         <.input
           field={@form[:employment_status]}
@@ -27,7 +32,9 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
         />
         <footer>
           <.button phx-disable-with="Saving..." variant="primary">Save Financial profile</.button>
-          <.button navigate={return_path(@current_scope, @return_to, @financial_profile)}>Cancel</.button>
+          <.button navigate={return_path(@current_scope, @return_to, @financial_profile)}>
+            Cancel
+          </.button>
         </footer>
       </.form>
     </Layouts.app>
@@ -51,7 +58,10 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     socket
     |> assign(:page_title, "Edit Financial profile")
     |> assign(:financial_profile, financial_profile)
-    |> assign(:form, to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile)))
+    |> assign(
+      :form,
+      to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile))
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -60,12 +70,21 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     socket
     |> assign(:page_title, "New Financial profile")
     |> assign(:financial_profile, financial_profile)
-    |> assign(:form, to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile)))
+    |> assign(
+      :form,
+      to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile))
+    )
   end
 
   @impl true
   def handle_event("validate", %{"financial_profile" => financial_profile_params}, socket) do
-    changeset = Finances.change_financial_profile(socket.assigns.current_scope, socket.assigns.financial_profile, financial_profile_params)
+    changeset =
+      Finances.change_financial_profile(
+        socket.assigns.current_scope,
+        socket.assigns.financial_profile,
+        financial_profile_params
+      )
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -74,13 +93,22 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
   end
 
   defp save_financial_profile(socket, :edit, financial_profile_params) do
-    case Finances.update_financial_profile(socket.assigns.current_scope, socket.assigns.financial_profile, financial_profile_params) do
+    case Finances.update_financial_profile(
+           socket.assigns.current_scope,
+           socket.assigns.financial_profile,
+           financial_profile_params
+         ) do
       {:ok, financial_profile} ->
         {:noreply,
          socket
          |> put_flash(:info, "Financial profile updated successfully")
          |> push_navigate(
-           to: return_path(socket.assigns.current_scope, socket.assigns.return_to, financial_profile)
+           to:
+             return_path(
+               socket.assigns.current_scope,
+               socket.assigns.return_to,
+               financial_profile
+             )
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -95,7 +123,12 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
          socket
          |> put_flash(:info, "Financial profile created successfully")
          |> push_navigate(
-           to: return_path(socket.assigns.current_scope, socket.assigns.return_to, financial_profile)
+           to:
+             return_path(
+               socket.assigns.current_scope,
+               socket.assigns.return_to,
+               financial_profile
+             )
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -104,5 +137,7 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
   end
 
   defp return_path(_scope, "index", _financial_profile), do: ~p"/financial_profiles"
-  defp return_path(_scope, "show", financial_profile), do: ~p"/financial_profiles/#{financial_profile}"
+
+  defp return_path(_scope, "show", financial_profile),
+    do: ~p"/financial_profiles/#{financial_profile}"
 end

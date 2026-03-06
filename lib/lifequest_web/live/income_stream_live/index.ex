@@ -70,7 +70,10 @@ defmodule LifequestWeb.IncomeStreamLive.Index do
   @impl true
   def handle_info({type, %Lifequest.Finances.IncomeStream{}}, socket)
       when type in [:created, :updated, :deleted] do
-    {:noreply, stream(socket, :income_streams, list_income_streams(socket.assigns.current_scope), reset: true)}
+    {:noreply,
+     stream(socket, :income_streams, list_income_streams(socket.assigns.current_scope),
+       reset: true
+     )}
   end
 
   defp list_income_streams(current_scope) do

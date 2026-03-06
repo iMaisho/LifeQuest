@@ -50,8 +50,10 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websock" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websock_adapter" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/bandit" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/bunt" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/cc_precompiler" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/comeonin" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/credo" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/db_connection" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/decimal" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/dns_cluster" />
@@ -60,6 +62,7 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/elixir_make" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/esbuild" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/expo" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/file_system" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/finch" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/fine" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/gettext" />

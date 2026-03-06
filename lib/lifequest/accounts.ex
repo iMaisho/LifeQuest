@@ -4,9 +4,9 @@ defmodule Lifequest.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Lifequest.Repo
 
-  alias Lifequest.Accounts.{User, UserToken, UserNotifier}
+  alias Lifequest.Accounts.{User, UserNotifier, UserToken}
+  alias Lifequest.Repo
 
   ## Database getters
 

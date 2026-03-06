@@ -1,4 +1,6 @@
 defmodule LifequestWeb.UserAuth do
+  @moduledoc "Handles user authentication plugs and LiveView on_mount hooks."
+
   use LifequestWeb, :verified_routes
 
   import Plug.Conn

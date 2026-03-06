@@ -6,7 +6,19 @@ defmodule Lifequest.Finances.IncomeStream do
   @foreign_key_type :binary_id
   schema "income_streams" do
     field :label, :string
-    field :type, Ecto.Enum, values: [:salary, :freelance, :rental, :bonus, :pension, :government_aid, :investment, :other]
+
+    field :type, Ecto.Enum,
+      values: [
+        :salary,
+        :freelance,
+        :rental,
+        :bonus,
+        :pension,
+        :government_aid,
+        :investment,
+        :other
+      ]
+
     field :amount, :decimal
     field :frequency, Ecto.Enum, values: [:weekly, :monthly, :quarterly, :yearly, :one_time]
     field :start_date, :date

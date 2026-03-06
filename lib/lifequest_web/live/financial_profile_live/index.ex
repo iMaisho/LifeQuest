@@ -19,13 +19,23 @@ defmodule LifequestWeb.FinancialProfileLive.Index do
       <.table
         id="financial_profiles"
         rows={@streams.financial_profiles}
-        row_click={fn {_id, financial_profile} -> JS.navigate(~p"/financial_profiles/#{financial_profile}") end}
+        row_click={
+          fn {_id, financial_profile} -> JS.navigate(~p"/financial_profiles/#{financial_profile}") end
+        }
       >
-        <:col :let={{_id, financial_profile}} label="Current savings">{financial_profile.current_savings}</:col>
-        <:col :let={{_id, financial_profile}} label="Current debts">{financial_profile.current_debts}</:col>
-        <:col :let={{_id, financial_profile}} label="Monthly debt payment">{financial_profile.monthly_debt_payment}</:col>
+        <:col :let={{_id, financial_profile}} label="Current savings">
+          {financial_profile.current_savings}
+        </:col>
+        <:col :let={{_id, financial_profile}} label="Current debts">
+          {financial_profile.current_debts}
+        </:col>
+        <:col :let={{_id, financial_profile}} label="Monthly debt payment">
+          {financial_profile.monthly_debt_payment}
+        </:col>
         <:col :let={{_id, financial_profile}} label="Net worth">{financial_profile.net_worth}</:col>
-        <:col :let={{_id, financial_profile}} label="Employment status">{financial_profile.employment_status}</:col>
+        <:col :let={{_id, financial_profile}} label="Employment status">
+          {financial_profile.employment_status}
+        </:col>
         <:action :let={{_id, financial_profile}}>
           <div class="sr-only">
             <.link navigate={~p"/financial_profiles/#{financial_profile}"}>Show</.link>
@@ -68,7 +78,10 @@ defmodule LifequestWeb.FinancialProfileLive.Index do
   @impl true
   def handle_info({type, %Lifequest.Finances.FinancialProfile{}}, socket)
       when type in [:created, :updated, :deleted] do
-    {:noreply, stream(socket, :financial_profiles, list_financial_profiles(socket.assigns.current_scope), reset: true)}
+    {:noreply,
+     stream(socket, :financial_profiles, list_financial_profiles(socket.assigns.current_scope),
+       reset: true
+     )}
   end
 
   defp list_financial_profiles(current_scope) do

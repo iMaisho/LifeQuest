@@ -4,9 +4,33 @@ defmodule LifequestWeb.IncomeStreamLiveTest do
   import Phoenix.LiveViewTest
   import Lifequest.FinancesFixtures
 
-  @create_attrs %{label: "some label", type: :salary, amount: "120.5", frequency: :weekly, start_date: "2026-03-04", end_date: "2026-03-04", is_active: true}
-  @update_attrs %{label: "some updated label", type: :freelance, amount: "456.7", frequency: :monthly, start_date: "2026-03-05", end_date: "2026-03-05", is_active: false}
-  @invalid_attrs %{label: nil, type: nil, amount: nil, frequency: nil, start_date: nil, end_date: nil, is_active: false}
+  @create_attrs %{
+    label: "some label",
+    type: :salary,
+    amount: "120.5",
+    frequency: :weekly,
+    start_date: "2026-03-04",
+    end_date: "2026-03-04",
+    is_active: true
+  }
+  @update_attrs %{
+    label: "some updated label",
+    type: :freelance,
+    amount: "456.7",
+    frequency: :monthly,
+    start_date: "2026-03-05",
+    end_date: "2026-03-05",
+    is_active: false
+  }
+  @invalid_attrs %{
+    label: nil,
+    type: nil,
+    amount: nil,
+    frequency: nil,
+    start_date: nil,
+    end_date: nil,
+    is_active: false
+  }
 
   setup :register_and_log_in_user
 
@@ -81,7 +105,10 @@ defmodule LifequestWeb.IncomeStreamLiveTest do
     test "deletes income_stream in listing", %{conn: conn, income_stream: income_stream} do
       {:ok, index_live, _html} = live(conn, ~p"/income_streams")
 
-      assert index_live |> element("#income_streams-#{income_stream.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#income_streams-#{income_stream.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#income_streams-#{income_stream.id}")
     end
   end

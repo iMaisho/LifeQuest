@@ -70,7 +70,13 @@ defmodule LifequestWeb.ExpenseLive.Form do
 
   @impl true
   def handle_event("validate", %{"expense" => expense_params}, socket) do
-    changeset = Finances.change_expense(socket.assigns.current_scope, socket.assigns.expense, expense_params)
+    changeset =
+      Finances.change_expense(
+        socket.assigns.current_scope,
+        socket.assigns.expense,
+        expense_params
+      )
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -79,7 +85,11 @@ defmodule LifequestWeb.ExpenseLive.Form do
   end
 
   defp save_expense(socket, :edit, expense_params) do
-    case Finances.update_expense(socket.assigns.current_scope, socket.assigns.expense, expense_params) do
+    case Finances.update_expense(
+           socket.assigns.current_scope,
+           socket.assigns.expense,
+           expense_params
+         ) do
       {:ok, expense} ->
         {:noreply,
          socket

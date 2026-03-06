@@ -5,7 +5,12 @@ defmodule LifequestWeb.ExpenseLiveTest do
   import Lifequest.FinancesFixtures
 
   @create_attrs %{name: "some name", type: :essential, amount: "120.5", frequency: :weekly}
-  @update_attrs %{name: "some updated name", type: :pleasure, amount: "456.7", frequency: :monthly}
+  @update_attrs %{
+    name: "some updated name",
+    type: :pleasure,
+    amount: "456.7",
+    frequency: :monthly
+  }
   @invalid_attrs %{name: nil, type: nil, amount: nil, frequency: nil}
 
   setup :register_and_log_in_user

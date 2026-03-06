@@ -4,9 +4,27 @@ defmodule LifequestWeb.FinancialProfileLiveTest do
   import Phoenix.LiveViewTest
   import Lifequest.FinancesFixtures
 
-  @create_attrs %{current_savings: "120.5", current_debts: "120.5", monthly_debt_payment: "120.5", net_worth: "120.5", employment_status: :cdi}
-  @update_attrs %{current_savings: "456.7", current_debts: "456.7", monthly_debt_payment: "456.7", net_worth: "456.7", employment_status: :cdd}
-  @invalid_attrs %{current_savings: nil, current_debts: nil, monthly_debt_payment: nil, net_worth: nil, employment_status: nil}
+  @create_attrs %{
+    current_savings: "120.5",
+    current_debts: "120.5",
+    monthly_debt_payment: "120.5",
+    net_worth: "120.5",
+    employment_status: :cdi
+  }
+  @update_attrs %{
+    current_savings: "456.7",
+    current_debts: "456.7",
+    monthly_debt_payment: "456.7",
+    net_worth: "456.7",
+    employment_status: :cdd
+  }
+  @invalid_attrs %{
+    current_savings: nil,
+    current_debts: nil,
+    monthly_debt_payment: nil,
+    net_worth: nil,
+    employment_status: nil
+  }
 
   setup :register_and_log_in_user
 
@@ -50,7 +68,10 @@ defmodule LifequestWeb.FinancialProfileLiveTest do
       assert html =~ "Financial profile created successfully"
     end
 
-    test "updates financial_profile in listing", %{conn: conn, financial_profile: financial_profile} do
+    test "updates financial_profile in listing", %{
+      conn: conn,
+      financial_profile: financial_profile
+    } do
       {:ok, index_live, _html} = live(conn, ~p"/financial_profiles")
 
       assert {:ok, form_live, _html} =
@@ -75,10 +96,16 @@ defmodule LifequestWeb.FinancialProfileLiveTest do
       assert html =~ "Financial profile updated successfully"
     end
 
-    test "deletes financial_profile in listing", %{conn: conn, financial_profile: financial_profile} do
+    test "deletes financial_profile in listing", %{
+      conn: conn,
+      financial_profile: financial_profile
+    } do
       {:ok, index_live, _html} = live(conn, ~p"/financial_profiles")
 
-      assert index_live |> element("#financial_profiles-#{financial_profile.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#financial_profiles-#{financial_profile.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#financial_profiles-#{financial_profile.id}")
     end
   end
@@ -92,14 +119,20 @@ defmodule LifequestWeb.FinancialProfileLiveTest do
       assert html =~ "Show Financial profile"
     end
 
-    test "updates financial_profile and returns to show", %{conn: conn, financial_profile: financial_profile} do
+    test "updates financial_profile and returns to show", %{
+      conn: conn,
+      financial_profile: financial_profile
+    } do
       {:ok, show_live, _html} = live(conn, ~p"/financial_profiles/#{financial_profile}")
 
       assert {:ok, form_live, _} =
                show_live
                |> element("a", "Edit")
                |> render_click()
-               |> follow_redirect(conn, ~p"/financial_profiles/#{financial_profile}/edit?return_to=show")
+               |> follow_redirect(
+                 conn,
+                 ~p"/financial_profiles/#{financial_profile}/edit?return_to=show"
+               )
 
       assert render(form_live) =~ "Edit Financial profile"
 

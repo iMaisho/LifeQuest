@@ -14,7 +14,10 @@ defmodule LifequestWeb.FinancialProfileLive.Show do
           <.button navigate={~p"/financial_profiles"}>
             <.icon name="hero-arrow-left" />
           </.button>
-          <.button variant="primary" navigate={~p"/financial_profiles/#{@financial_profile}/edit?return_to=show"}>
+          <.button
+            variant="primary"
+            navigate={~p"/financial_profiles/#{@financial_profile}/edit?return_to=show"}
+          >
             <.icon name="hero-pencil-square" /> Edit financial_profile
           </.button>
         </:actions>
@@ -40,7 +43,10 @@ defmodule LifequestWeb.FinancialProfileLive.Show do
     {:ok,
      socket
      |> assign(:page_title, "Show Financial profile")
-     |> assign(:financial_profile, Finances.get_financial_profile!(socket.assigns.current_scope, id))}
+     |> assign(
+       :financial_profile,
+       Finances.get_financial_profile!(socket.assigns.current_scope, id)
+     )}
   end
 
   @impl true

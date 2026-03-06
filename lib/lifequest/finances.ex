@@ -4,10 +4,12 @@ defmodule Lifequest.Finances do
   """
 
   import Ecto.Query, warn: false
-  alias Lifequest.Repo
 
-  alias Lifequest.Finances.FinancialProfile
   alias Lifequest.Accounts.Scope
+  alias Lifequest.Finances.Expense
+  alias Lifequest.Finances.FinancialProfile
+  alias Lifequest.Finances.IncomeStream
+  alias Lifequest.Repo
 
   @doc """
   Subscribes to scoped notifications about any financial_profile changes.
@@ -139,14 +141,15 @@ defmodule Lifequest.Finances do
       %Ecto.Changeset{data: %FinancialProfile{}}
 
   """
-  def change_financial_profile(%Scope{} = scope, %FinancialProfile{} = financial_profile, attrs \\ %{}) do
+  def change_financial_profile(
+        %Scope{} = scope,
+        %FinancialProfile{} = financial_profile,
+        attrs \\ %{}
+      ) do
     true = financial_profile.user_id == scope.user.id
 
     FinancialProfile.changeset(financial_profile, attrs, scope)
   end
-
-  alias Lifequest.Finances.IncomeStream
-  alias Lifequest.Accounts.Scope
 
   @doc """
   Subscribes to scoped notifications about any income_stream changes.
@@ -283,9 +286,6 @@ defmodule Lifequest.Finances do
 
     IncomeStream.changeset(income_stream, attrs, scope)
   end
-
-  alias Lifequest.Finances.Expense
-  alias Lifequest.Accounts.Scope
 
   @doc """
   Subscribes to scoped notifications about any expense changes.

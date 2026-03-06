@@ -1,8 +1,10 @@
 defmodule Lifequest.Accounts.UserNotifier do
+  @moduledoc "Delivers user notification emails."
+
   import Swoosh.Email
 
-  alias Lifequest.Mailer
   alias Lifequest.Accounts.User
+  alias Lifequest.Mailer
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do

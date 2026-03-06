@@ -14,7 +14,10 @@ defmodule LifequestWeb.IncomeStreamLive.Show do
           <.button navigate={~p"/income_streams"}>
             <.icon name="hero-arrow-left" />
           </.button>
-          <.button variant="primary" navigate={~p"/income_streams/#{@income_stream}/edit?return_to=show"}>
+          <.button
+            variant="primary"
+            navigate={~p"/income_streams/#{@income_stream}/edit?return_to=show"}
+          >
             <.icon name="hero-pencil-square" /> Edit income_stream
           </.button>
         </:actions>

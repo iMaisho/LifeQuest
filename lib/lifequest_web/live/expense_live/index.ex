@@ -67,7 +67,8 @@ defmodule LifequestWeb.ExpenseLive.Index do
   @impl true
   def handle_info({type, %Lifequest.Finances.Expense{}}, socket)
       when type in [:created, :updated, :deleted] do
-    {:noreply, stream(socket, :expenses, list_expenses(socket.assigns.current_scope), reset: true)}
+    {:noreply,
+     stream(socket, :expenses, list_expenses(socket.assigns.current_scope), reset: true)}
   end
 
   defp list_expenses(current_scope) do
