@@ -12,8 +12,7 @@ defmodule Lifequest.Accounts.User do
     field :authenticated_at, :utc_datetime, virtual: true
 
     has_one :financial_profile, Lifequest.Finances.FinancialProfile
-    has_many :income_streams, Lifequest.Finances.IncomeStream
-    has_many :expenses, Lifequest.Finances.Expense
+    has_many :transactions, Lifequest.Finances.Transaction
 
     timestamps(type: :utc_datetime)
   end

@@ -2,7 +2,9 @@ defmodule LifequestWeb.UserLive.Registration do
   use LifequestWeb, :live_view
 
   alias Lifequest.Accounts
+  alias Lifequest.Accounts.Scope
   alias Lifequest.Accounts.User
+  alias Lifequest.Finances
 
   @impl true
   def render(assigns) do
@@ -63,6 +65,9 @@ defmodule LifequestWeb.UserLive.Registration do
             user,
             &url(~p"/users/log-in/#{&1}")
           )
+
+        {:ok, _} =
+          Finances.create_financial_profile(Scope.for_user(user))
 
         {:noreply,
          socket

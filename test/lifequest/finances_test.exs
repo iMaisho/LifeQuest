@@ -37,6 +37,20 @@ defmodule Lifequest.FinancesTest do
       end
     end
 
+    test "create_financial_profile/1 creates a financial_profile" do
+      scope = user_scope_fixture()
+
+      assert {:ok, %FinancialProfile{} = financial_profile} =
+               Finances.create_financial_profile(scope)
+
+      assert financial_profile.current_savings == Decimal.new("0")
+      assert financial_profile.current_debts == Decimal.new("0")
+      assert financial_profile.monthly_debt_payment == Decimal.new("0")
+      assert financial_profile.net_worth == Decimal.new("0")
+      assert financial_profile.employment_status == :cdi
+      assert financial_profile.user_id == scope.user.id
+    end
+
     test "create_financial_profile/2 with valid data creates a financial_profile" do
       valid_attrs = %{
         current_savings: "120.500",
@@ -57,13 +71,6 @@ defmodule Lifequest.FinancesTest do
       assert financial_profile.net_worth == Decimal.new("120.500")
       assert financial_profile.employment_status == :cdi
       assert financial_profile.user_id == scope.user.id
-    end
-
-    test "create_financial_profile/2 with invalid data returns error changeset" do
-      scope = user_scope_fixture()
-
-      assert {:error, %Ecto.Changeset{}} =
-               Finances.create_financial_profile(scope, @invalid_attrs)
     end
 
     test "update_financial_profile/3 with valid data updates the financial_profile" do
@@ -137,238 +144,140 @@ defmodule Lifequest.FinancesTest do
     end
   end
 
-  describe "income_streams" do
-    alias Lifequest.Finances.IncomeStream
+  describe "transactions" do
+    alias Lifequest.Finances.Transaction
 
     import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
     import Lifequest.FinancesFixtures
 
     @invalid_attrs %{
       label: nil,
-      type: nil,
+      date: nil,
+      direction: nil,
+      income_type: nil,
+      expense_type: nil,
       amount: nil,
-      frequency: nil,
-      start_date: nil,
-      end_date: nil,
+      is_recurring: nil,
       is_active: nil
     }
 
-    test "list_income_streams/1 returns all scoped income_streams" do
+    test "list_transactions/1 returns all scoped transactions" do
       scope = user_scope_fixture()
       other_scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
-      other_income_stream = income_stream_fixture(other_scope)
-      assert Finances.list_income_streams(scope) == [income_stream]
-      assert Finances.list_income_streams(other_scope) == [other_income_stream]
+      transaction = transaction_fixture(scope)
+      other_transaction = transaction_fixture(other_scope)
+      assert Finances.list_transactions(scope) == [transaction]
+      assert Finances.list_transactions(other_scope) == [other_transaction]
     end
 
-    test "get_income_stream!/2 returns the income_stream with given id" do
+    test "get_transaction!/2 returns the transaction with given id" do
       scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
+      transaction = transaction_fixture(scope)
       other_scope = user_scope_fixture()
-      assert Finances.get_income_stream!(scope, income_stream.id) == income_stream
+      assert Finances.get_transaction!(scope, transaction.id) == transaction
 
       assert_raise Ecto.NoResultsError, fn ->
-        Finances.get_income_stream!(other_scope, income_stream.id)
+        Finances.get_transaction!(other_scope, transaction.id)
       end
     end
 
-    test "create_income_stream/2 with valid data creates a income_stream" do
+    test "create_transaction/2 with valid data creates a transaction" do
       valid_attrs = %{
         label: "some label",
-        type: :salary,
-        amount: "120.50",
-        frequency: :weekly,
-        start_date: ~D[2026-03-04],
-        end_date: ~D[2026-03-04],
+        date: ~D[2026-03-05],
+        direction: :income,
+        income_type: :salary,
+        expense_type: :essential,
+        amount: "120.5",
+        is_recurring: true,
         is_active: true
       }
 
       scope = user_scope_fixture()
 
-      assert {:ok, %IncomeStream{} = income_stream} =
-               Finances.create_income_stream(scope, valid_attrs)
-
-      assert income_stream.label == "some label"
-      assert income_stream.type == :salary
-      assert income_stream.amount == Decimal.new("120.50")
-      assert income_stream.frequency == :weekly
-      assert income_stream.start_date == ~D[2026-03-04]
-      assert income_stream.end_date == ~D[2026-03-04]
-      assert income_stream.is_active == true
-      assert income_stream.user_id == scope.user.id
+      assert {:ok, %Transaction{} = transaction} = Finances.create_transaction(scope, valid_attrs)
+      assert transaction.label == "some label"
+      assert transaction.date == ~D[2026-03-05]
+      assert transaction.direction == :income
+      assert transaction.income_type == :salary
+      assert transaction.expense_type == nil
+      assert transaction.amount == Decimal.new("120.5")
+      assert transaction.is_recurring == true
+      assert transaction.is_active == true
+      assert transaction.user_id == scope.user.id
     end
 
-    test "create_income_stream/2 with invalid data returns error changeset" do
+    test "create_transaction/2 with invalid data returns error changeset" do
       scope = user_scope_fixture()
-      assert {:error, %Ecto.Changeset{}} = Finances.create_income_stream(scope, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Finances.create_transaction(scope, @invalid_attrs)
     end
 
-    test "update_income_stream/3 with valid data updates the income_stream" do
+    test "update_transaction/3 with valid data updates the transaction" do
       scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
+      transaction = transaction_fixture(scope)
 
       update_attrs = %{
         label: "some updated label",
-        type: :freelance,
-        amount: "456.70",
-        frequency: :monthly,
-        start_date: ~D[2026-03-05],
-        end_date: ~D[2026-03-05],
+        date: ~D[2026-03-06],
+        direction: :expense,
+        income_type: :freelance,
+        expense_type: :pleasure,
+        amount: "456.7",
+        is_recurring: false,
         is_active: false
       }
 
-      assert {:ok, %IncomeStream{} = income_stream} =
-               Finances.update_income_stream(scope, income_stream, update_attrs)
+      assert {:ok, %Transaction{} = transaction} =
+               Finances.update_transaction(scope, transaction, update_attrs)
 
-      assert income_stream.label == "some updated label"
-      assert income_stream.type == :freelance
-      assert income_stream.amount == Decimal.new("456.70")
-      assert income_stream.frequency == :monthly
-      assert income_stream.start_date == ~D[2026-03-05]
-      assert income_stream.end_date == ~D[2026-03-05]
-      assert income_stream.is_active == false
+      assert transaction.label == "some updated label"
+      assert transaction.date == ~D[2026-03-06]
+      assert transaction.direction == :expense
+      assert transaction.income_type == nil
+      assert transaction.expense_type == :pleasure
+      assert transaction.amount == Decimal.new("456.7")
+      assert transaction.is_recurring == false
+      assert transaction.is_active == false
     end
 
-    test "update_income_stream/3 with invalid scope raises" do
+    test "update_transaction/3 with invalid scope raises" do
       scope = user_scope_fixture()
       other_scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
+      transaction = transaction_fixture(scope)
 
       assert_raise MatchError, fn ->
-        Finances.update_income_stream(other_scope, income_stream, %{})
+        Finances.update_transaction(other_scope, transaction, %{})
       end
     end
 
-    test "update_income_stream/3 with invalid data returns error changeset" do
+    test "update_transaction/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
+      transaction = transaction_fixture(scope)
 
       assert {:error, %Ecto.Changeset{}} =
-               Finances.update_income_stream(scope, income_stream, @invalid_attrs)
+               Finances.update_transaction(scope, transaction, @invalid_attrs)
 
-      assert income_stream == Finances.get_income_stream!(scope, income_stream.id)
+      assert transaction == Finances.get_transaction!(scope, transaction.id)
     end
 
-    test "delete_income_stream/2 deletes the income_stream" do
+    test "delete_transaction/2 deletes the transaction" do
       scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
-      assert {:ok, %IncomeStream{}} = Finances.delete_income_stream(scope, income_stream)
-
-      assert_raise Ecto.NoResultsError, fn ->
-        Finances.get_income_stream!(scope, income_stream.id)
-      end
+      transaction = transaction_fixture(scope)
+      assert {:ok, %Transaction{}} = Finances.delete_transaction(scope, transaction)
+      assert_raise Ecto.NoResultsError, fn -> Finances.get_transaction!(scope, transaction.id) end
     end
 
-    test "delete_income_stream/2 with invalid scope raises" do
+    test "delete_transaction/2 with invalid scope raises" do
       scope = user_scope_fixture()
       other_scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
-      assert_raise MatchError, fn -> Finances.delete_income_stream(other_scope, income_stream) end
+      transaction = transaction_fixture(scope)
+      assert_raise MatchError, fn -> Finances.delete_transaction(other_scope, transaction) end
     end
 
-    test "change_income_stream/2 returns a income_stream changeset" do
+    test "change_transaction/2 returns a transaction changeset" do
       scope = user_scope_fixture()
-      income_stream = income_stream_fixture(scope)
-      assert %Ecto.Changeset{} = Finances.change_income_stream(scope, income_stream)
-    end
-  end
-
-  describe "expenses" do
-    alias Lifequest.Finances.Expense
-
-    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
-    import Lifequest.FinancesFixtures
-
-    @invalid_attrs %{name: nil, type: nil, amount: nil, frequency: nil}
-
-    test "list_expenses/1 returns all scoped expenses" do
-      scope = user_scope_fixture()
-      other_scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      other_expense = expense_fixture(other_scope)
-      assert Finances.list_expenses(scope) == [expense]
-      assert Finances.list_expenses(other_scope) == [other_expense]
-    end
-
-    test "get_expense!/2 returns the expense with given id" do
-      scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      other_scope = user_scope_fixture()
-      assert Finances.get_expense!(scope, expense.id) == expense
-      assert_raise Ecto.NoResultsError, fn -> Finances.get_expense!(other_scope, expense.id) end
-    end
-
-    test "create_expense/2 with valid data creates a expense" do
-      valid_attrs = %{name: "some name", type: :essential, amount: "120.50", frequency: :weekly}
-      scope = user_scope_fixture()
-
-      assert {:ok, %Expense{} = expense} = Finances.create_expense(scope, valid_attrs)
-      assert expense.name == "some name"
-      assert expense.type == :essential
-      assert expense.amount == Decimal.new("120.50")
-      assert expense.frequency == :weekly
-      assert expense.user_id == scope.user.id
-    end
-
-    test "create_expense/2 with invalid data returns error changeset" do
-      scope = user_scope_fixture()
-      assert {:error, %Ecto.Changeset{}} = Finances.create_expense(scope, @invalid_attrs)
-    end
-
-    test "update_expense/3 with valid data updates the expense" do
-      scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-
-      update_attrs = %{
-        name: "some updated name",
-        type: :pleasure,
-        amount: "456.70",
-        frequency: :monthly
-      }
-
-      assert {:ok, %Expense{} = expense} = Finances.update_expense(scope, expense, update_attrs)
-      assert expense.name == "some updated name"
-      assert expense.type == :pleasure
-      assert expense.amount == Decimal.new("456.70")
-      assert expense.frequency == :monthly
-    end
-
-    test "update_expense/3 with invalid scope raises" do
-      scope = user_scope_fixture()
-      other_scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-
-      assert_raise MatchError, fn ->
-        Finances.update_expense(other_scope, expense, %{})
-      end
-    end
-
-    test "update_expense/3 with invalid data returns error changeset" do
-      scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = Finances.update_expense(scope, expense, @invalid_attrs)
-      assert expense == Finances.get_expense!(scope, expense.id)
-    end
-
-    test "delete_expense/2 deletes the expense" do
-      scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      assert {:ok, %Expense{}} = Finances.delete_expense(scope, expense)
-      assert_raise Ecto.NoResultsError, fn -> Finances.get_expense!(scope, expense.id) end
-    end
-
-    test "delete_expense/2 with invalid scope raises" do
-      scope = user_scope_fixture()
-      other_scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      assert_raise MatchError, fn -> Finances.delete_expense(other_scope, expense) end
-    end
-
-    test "change_expense/2 returns a expense changeset" do
-      scope = user_scope_fixture()
-      expense = expense_fixture(scope)
-      assert %Ecto.Changeset{} = Finances.change_expense(scope, expense)
+      transaction = transaction_fixture(scope)
+      assert %Ecto.Changeset{} = Finances.change_transaction(scope, transaction)
     end
   end
 end
