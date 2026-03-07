@@ -260,7 +260,7 @@ defmodule LifequestWeb.UserAuth do
 
   @doc "Returns the path to redirect to after log in."
 
-  def signed_in_path(_scope), do: ~p"/"
+  def signed_in_path(_scope), do: ~p"/dashboard"
 
   @doc """
   Plug for routes that require the user to be authenticated.

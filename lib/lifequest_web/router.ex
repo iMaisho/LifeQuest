@@ -55,6 +55,8 @@ defmodule LifequestWeb.Router do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
 
+      live "/dashboard", DashboardLive.Index, :index
+
       live "/financial_profiles", FinancialProfileLive.Index, :index
       live "/financial_profiles/new", FinancialProfileLive.Form, :new
       live "/financial_profiles/:id", FinancialProfileLive.Show, :show
