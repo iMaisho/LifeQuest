@@ -310,4 +310,72 @@ defmodule Lifequest.Finances do
 
     Transaction.changeset(transaction, attrs, scope)
   end
+
+  @doc """
+  Returns transactions for the given direction and month.
+  """
+  def list_transactions_for_month(%Scope{} = scope, direction, %Date{} = date) do
+    start_of_month = Date.beginning_of_month(date)
+    end_of_month = Date.end_of_month(date)
+
+    Transaction
+    |> where([t], t.user_id == ^scope.user.id)
+    |> where([t], t.direction == ^direction)
+    |> where([t], t.is_active == true)
+    |> where([t], t.date >= ^start_of_month and t.date <= ^end_of_month)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns recurring transactions from last month that have not
+  been duplicated into the current month yet.
+  Matching is based on label + direction + type.
+  """
+  def list_pending_recurring(%Scope{} = scope, direction, %Date{} = date) do
+    previous_month = Date.shift(date, month: -1)
+    start_of_previous = Date.beginning_of_month(previous_month)
+    end_of_previous = Date.end_of_month(previous_month)
+
+    start_of_month = Date.beginning_of_month(date)
+    end_of_month = Date.end_of_month(date)
+
+    recurring_last_month =
+      Transaction
+      |> where([t], t.user_id == ^scope.user.id)
+      |> where([t], t.direction == ^direction)
+      |> where([t], t.is_recurring == true)
+      |> where([t], t.is_active == true)
+      |> where([t], t.date >= ^start_of_previous and t.date <= ^end_of_previous)
+      |> Repo.all()
+
+    validated_this_month =
+      Transaction
+      |> where([t], t.user_id == ^scope.user.id)
+      |> where([t], t.direction == ^direction)
+      |> where([t], t.date >= ^start_of_month and t.date <= ^end_of_month)
+      |> select([t], {t.label, t.direction})
+      |> Repo.all()
+      |> MapSet.new()
+
+    Enum.reject(recurring_last_month, fn t ->
+      MapSet.member?(validated_this_month, {t.label, t.direction})
+    end)
+  end
+
+  @doc """
+  Validates a recurring transaction for the given month by duplicating it
+  with the date set to the 5th of that month.
+  """
+  def validate_recurring(%Scope{} = scope, %Transaction{} = transaction, %Date{} = date) do
+    create_transaction(scope, %{
+      label: transaction.label,
+      direction: transaction.direction,
+      income_type: transaction.income_type,
+      expense_type: transaction.expense_type,
+      amount: transaction.amount,
+      date: Date.new!(date.year, date.month, 5),
+      is_recurring: true,
+      is_active: true
+    })
+  end
 end
