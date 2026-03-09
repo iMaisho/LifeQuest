@@ -73,7 +73,7 @@ defmodule LifequestWeb.TransactionLive.Form do
   end
 
   defp apply_action(socket, :new, _params) do
-    transaction = %Transaction{user_id: socket.assigns.current_scope.user.id}
+    transaction = %Transaction{}
 
     socket
     |> assign(:page_title, "New Transaction")

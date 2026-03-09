@@ -25,12 +25,12 @@ defmodule Lifequest.Finances.Transaction do
     field :date, :date
     field :is_recurring, :boolean, default: false
     field :is_active, :boolean, default: true
-    belongs_to :user, Lifequest.Accounts.User
 
+    belongs_to :account, Lifequest.Finances.Account
     timestamps(type: :utc_datetime)
   end
 
-  def changeset(transaction, attrs, scope) do
+  def changeset(transaction, attrs, _scope) do
     transaction
     |> cast(attrs, [
       :label,
@@ -40,11 +40,11 @@ defmodule Lifequest.Finances.Transaction do
       :amount,
       :date,
       :is_recurring,
-      :is_active
+      :is_active,
+      :account_id
     ])
-    |> validate_required([:label, :direction, :amount, :date])
+    |> validate_required([:account_id, :label, :direction, :amount, :date])
     |> validate_type_by_direction()
-    |> put_change(:user_id, scope.user.id)
   end
 
   defp validate_type_by_direction(changeset) do
