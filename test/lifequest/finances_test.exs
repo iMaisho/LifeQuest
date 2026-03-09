@@ -182,20 +182,22 @@ defmodule Lifequest.FinancesTest do
     end
 
     test "create_transaction/2 with valid data creates a transaction" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+
       valid_attrs = %{
         label: "some label",
         date: ~D[2026-03-05],
         direction: :income,
         income_type: :salary,
-        expense_type: :essential,
         amount: "120.5",
         is_recurring: true,
-        is_active: true
+        is_active: true,
+        account_id: account.id
       }
 
-      scope = user_scope_fixture()
-
       assert {:ok, %Transaction{} = transaction} = Finances.create_transaction(scope, valid_attrs)
+
       assert transaction.label == "some label"
       assert transaction.date == ~D[2026-03-05]
       assert transaction.direction == :income
@@ -204,7 +206,7 @@ defmodule Lifequest.FinancesTest do
       assert transaction.amount == Decimal.new("120.5")
       assert transaction.is_recurring == true
       assert transaction.is_active == true
-      assert transaction.user_id == scope.user.id
+      assert transaction.account_id == account.id
     end
 
     test "create_transaction/2 with invalid data returns error changeset" do
@@ -245,7 +247,7 @@ defmodule Lifequest.FinancesTest do
       other_scope = user_scope_fixture()
       transaction = transaction_fixture(scope)
 
-      assert_raise MatchError, fn ->
+      assert_raise Ecto.NoResultsError, fn ->
         Finances.update_transaction(other_scope, transaction, %{})
       end
     end
@@ -271,13 +273,124 @@ defmodule Lifequest.FinancesTest do
       scope = user_scope_fixture()
       other_scope = user_scope_fixture()
       transaction = transaction_fixture(scope)
-      assert_raise MatchError, fn -> Finances.delete_transaction(other_scope, transaction) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Finances.delete_transaction(other_scope, transaction)
+      end
     end
 
     test "change_transaction/2 returns a transaction changeset" do
       scope = user_scope_fixture()
       transaction = transaction_fixture(scope)
       assert %Ecto.Changeset{} = Finances.change_transaction(scope, transaction)
+    end
+  end
+
+  describe "accounts" do
+    alias Lifequest.Finances.Account
+
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    @invalid_attrs %{label: nil, type: nil, balance: nil, interest_rate: nil, is_active: nil}
+
+    test "list_accounts/1 returns all scoped accounts" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      account = account_fixture(scope)
+      other_account = account_fixture(other_scope)
+      assert Finances.list_accounts(scope) == [account]
+      assert Finances.list_accounts(other_scope) == [other_account]
+    end
+
+    test "get_account!/2 returns the account with given id" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+      other_scope = user_scope_fixture()
+      assert Finances.get_account!(scope, account.id) == account
+      assert_raise Ecto.NoResultsError, fn -> Finances.get_account!(other_scope, account.id) end
+    end
+
+    test "create_account/2 with valid data creates a account" do
+      valid_attrs = %{
+        label: "some label",
+        type: :checking,
+        balance: "120.5",
+        interest_rate: "120.5",
+        is_active: true
+      }
+
+      scope = user_scope_fixture()
+
+      assert {:ok, %Account{} = account} = Finances.create_account(scope, valid_attrs)
+      assert account.label == "some label"
+      assert account.type == :checking
+      assert account.balance == Decimal.new("120.5")
+      assert account.interest_rate == Decimal.new("120.5")
+      assert account.is_active == true
+      assert account.user_id == scope.user.id
+    end
+
+    test "create_account/2 with invalid data returns error changeset" do
+      scope = user_scope_fixture()
+      assert {:error, %Ecto.Changeset{}} = Finances.create_account(scope, @invalid_attrs)
+    end
+
+    test "update_account/3 with valid data updates the account" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+
+      update_attrs = %{
+        label: "some updated label",
+        type: :savings,
+        balance: "456.7",
+        interest_rate: "456.7",
+        is_active: false
+      }
+
+      assert {:ok, %Account{} = account} = Finances.update_account(scope, account, update_attrs)
+      assert account.label == "some updated label"
+      assert account.type == :savings
+      assert account.balance == Decimal.new("456.7")
+      assert account.interest_rate == Decimal.new("456.7")
+      assert account.is_active == false
+    end
+
+    test "update_account/3 with invalid scope raises" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      account = account_fixture(scope)
+
+      assert_raise MatchError, fn ->
+        Finances.update_account(other_scope, account, %{})
+      end
+    end
+
+    test "update_account/3 with invalid data returns error changeset" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+      assert {:error, %Ecto.Changeset{}} = Finances.update_account(scope, account, @invalid_attrs)
+      assert account == Finances.get_account!(scope, account.id)
+    end
+
+    test "delete_account/2 deletes the account" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+      assert {:ok, %Account{}} = Finances.delete_account(scope, account)
+      assert_raise Ecto.NoResultsError, fn -> Finances.get_account!(scope, account.id) end
+    end
+
+    test "delete_account/2 with invalid scope raises" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      account = account_fixture(scope)
+      assert_raise MatchError, fn -> Finances.delete_account(other_scope, account) end
+    end
+
+    test "change_account/2 returns a account changeset" do
+      scope = user_scope_fixture()
+      account = account_fixture(scope)
+      assert %Ecto.Changeset{} = Finances.change_account(scope, account)
     end
   end
 end
