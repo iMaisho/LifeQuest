@@ -93,7 +93,6 @@ defmodule LifequestWeb.FinancesLive.Index do
           <h3 class="card-title text-base">{@label}</h3>
           <p class="text-sm opacity-70">{@description}</p>
         </div>
-        
         <div class="text-right">
           <span :if={@value} class="font-semibold">{format_profile_value(@field, @value)}</span>
           <span :if={is_nil(@value)} class="badge badge-warning badge-sm">{gettext("Not set")}</span>
