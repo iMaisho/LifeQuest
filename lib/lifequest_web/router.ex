@@ -71,6 +71,8 @@ defmodule LifequestWeb.Router do
       live "/accounts/new", AccountLive.Form, :new
       live "/accounts/:id", AccountLive.Show, :show
       live "/accounts/:id/edit", AccountLive.Form, :edit
+
+      live "/finances", FinancesLive.Index, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password
