@@ -48,7 +48,6 @@ defmodule LifequestWeb.FinancesLive.Index do
     ~H"""
     <div class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">{@title}</h2>
-      
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {render_slot(@inner_block)}
       </div>
@@ -71,7 +70,6 @@ defmodule LifequestWeb.FinancesLive.Index do
         <span class={"#{@icon} size-8 shrink-0"} />
         <div>
           <h3 class="card-title text-base">{@label}</h3>
-          
           <p class="text-sm opacity-70">{@description}</p>
         </div>
       </div>
@@ -96,7 +94,6 @@ defmodule LifequestWeb.FinancesLive.Index do
         <span class={"#{@icon} size-8 shrink-0"} />
         <div class="flex-1">
           <h3 class="card-title text-base">{@label}</h3>
-          
           <p class="text-sm opacity-70">{@description}</p>
         </div>
         
