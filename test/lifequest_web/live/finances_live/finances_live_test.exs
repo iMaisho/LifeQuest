@@ -107,13 +107,19 @@ defmodule LifequestWeb.FinancesLive.IndexTest do
     test "essential card links to transaction form with correct params", %{conn: conn} do
       {:ok, live_view, _html} = live(conn, ~p"/finances")
 
-      assert has_element?(live_view, "a[href*='direction=expense'][href*='expense_type=essential']")
+      assert has_element?(
+               live_view,
+               "a[href*='direction=expense'][href*='expense_type=essential']"
+             )
     end
 
     test "pleasure card links to transaction form with correct params", %{conn: conn} do
       {:ok, live_view, _html} = live(conn, ~p"/finances")
 
-      assert has_element?(live_view, "a[href*='direction=expense'][href*='expense_type=pleasure']")
+      assert has_element?(
+               live_view,
+               "a[href*='direction=expense'][href*='expense_type=pleasure']"
+             )
     end
   end
 end

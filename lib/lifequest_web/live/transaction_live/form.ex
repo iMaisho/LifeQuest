@@ -15,8 +15,18 @@ defmodule LifequestWeb.TransactionLive.Form do
 
       <.form for={@form} id="transaction-form" phx-change="validate" phx-submit="save">
         <input type="hidden" name="transaction[direction]" value={@direction} />
-        <input type="hidden" name="transaction[income_type]" value={@income_type} :if={@direction == :income} />
-        <input type="hidden" name="transaction[expense_type]" value={@expense_type} :if={@direction == :expense} />
+        <input
+          :if={@direction == :income}
+          type="hidden"
+          name="transaction[income_type]"
+          value={@income_type}
+        />
+        <input
+          :if={@direction == :expense}
+          type="hidden"
+          name="transaction[expense_type]"
+          value={@expense_type}
+        />
 
         <.input field={@form[:label]} type="text" label={gettext("Label")} />
         <.input field={@form[:amount]} type="number" label={gettext("Amount")} step="any" />
@@ -59,12 +69,12 @@ defmodule LifequestWeb.TransactionLive.Form do
     expense_type = parse_expense_type(params["expense_type"])
 
     {:ok,
-      socket
-      |> assign(:direction, direction)
-      |> assign(:income_type, income_type)
-      |> assign(:expense_type, expense_type)
-      |> assign(:account_options, account_options)
-      |> apply_action(socket.assigns.live_action, params)}
+     socket
+     |> assign(:direction, direction)
+     |> assign(:income_type, income_type)
+     |> assign(:expense_type, expense_type)
+     |> assign(:account_options, account_options)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -77,7 +87,10 @@ defmodule LifequestWeb.TransactionLive.Form do
     |> assign(:income_type, transaction.income_type)
     |> assign(:expense_type, transaction.expense_type)
     |> assign(:transaction, transaction)
-    |> assign(:form, to_form(Finances.change_transaction(socket.assigns.current_scope, transaction)))
+    |> assign(
+      :form,
+      to_form(Finances.change_transaction(socket.assigns.current_scope, transaction))
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -96,7 +109,10 @@ defmodule LifequestWeb.TransactionLive.Form do
     |> assign(:page_title, page_title(direction, :new))
     |> assign(:subtitle, page_subtitle(direction))
     |> assign(:transaction, transaction)
-    |> assign(:form, to_form(Finances.change_transaction(socket.assigns.current_scope, transaction)))
+    |> assign(
+      :form,
+      to_form(Finances.change_transaction(socket.assigns.current_scope, transaction))
+    )
   end
 
   # --- Events ---
@@ -125,9 +141,9 @@ defmodule LifequestWeb.TransactionLive.Form do
          ) do
       {:ok, _transaction} ->
         {:noreply,
-          socket
-          |> put_flash(:info, gettext("Transaction updated successfully"))
-          |> push_navigate(to: ~p"/finances")}
+         socket
+         |> put_flash(:info, gettext("Transaction updated successfully"))
+         |> push_navigate(to: ~p"/finances")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -138,9 +154,9 @@ defmodule LifequestWeb.TransactionLive.Form do
     case Finances.create_transaction(socket.assigns.current_scope, params) do
       {:ok, _transaction} ->
         {:noreply,
-          socket
-          |> put_flash(:info, gettext("Transaction created successfully"))
-          |> push_navigate(to: ~p"/finances")}
+         socket
+         |> put_flash(:info, gettext("Transaction created successfully"))
+         |> push_navigate(to: ~p"/finances")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -154,6 +170,7 @@ defmodule LifequestWeb.TransactionLive.Form do
   defp parse_direction(_), do: :income
 
   defp parse_income_type(nil), do: nil
+
   defp parse_income_type(type) do
     String.to_existing_atom(type)
   rescue
@@ -161,6 +178,7 @@ defmodule LifequestWeb.TransactionLive.Form do
   end
 
   defp parse_expense_type(nil), do: nil
+
   defp parse_expense_type(type) do
     String.to_existing_atom(type)
   rescue
@@ -171,7 +189,9 @@ defmodule LifequestWeb.TransactionLive.Form do
   defp page_title(:expense, :new), do: gettext("New expense")
   defp page_title(:income, :edit), do: gettext("Edit income")
   defp page_title(:expense, :edit), do: gettext("Edit expense")
-  defp page_title(_, action), do: if(action == :new, do: gettext("New transaction"), else: gettext("Edit transaction"))
+
+  defp page_title(_, action),
+    do: if(action == :new, do: gettext("New transaction"), else: gettext("Edit transaction"))
 
   defp page_subtitle(:income), do: gettext("Add an income source to your financial profile.")
   defp page_subtitle(:expense), do: gettext("Add an expense to your financial profile.")

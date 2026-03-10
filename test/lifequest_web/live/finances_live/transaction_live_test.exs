@@ -21,7 +21,8 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     end
 
     test "has direction and income_type as hidden fields", %{conn: conn} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
       assert has_element?(live_view, "input[name='transaction[direction]'][value='income']")
       assert has_element?(live_view, "input[name='transaction[income_type]'][value='salary']")
@@ -41,17 +42,20 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     end
 
     test "creates income transaction and redirects", %{conn: conn, account: account} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#transaction-form", transaction: %{
-                 label: "My salary",
-                 amount: "2500",
-                 date: "2026-03-05",
-                 is_recurring: true,
-                 account_id: account.id
-               })
+               |> form("#transaction-form",
+                 transaction: %{
+                   label: "My salary",
+                   amount: "2500",
+                   date: "2026-03-05",
+                   is_recurring: true,
+                   account_id: account.id
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -59,15 +63,18 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     end
 
     test "shows validation errors on invalid data", %{conn: conn} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
       html =
         live_view
-        |> form("#transaction-form", transaction: %{
-          label: "",
-          amount: "",
-          date: ""
-        })
+        |> form("#transaction-form",
+          transaction: %{
+            label: "",
+            amount: "",
+            date: ""
+          }
+        )
         |> render_change()
 
       assert html =~ "can&#39;t be blank"
@@ -78,30 +85,35 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     setup [:create_account]
 
     test "renders expense form with correct title", %{conn: conn} do
-      {:ok, _live, html} = live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
+      {:ok, _live, html} =
+        live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
 
       assert html =~ "New expense"
     end
 
     test "has direction and expense_type as hidden fields", %{conn: conn} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
 
       assert has_element?(live_view, "input[name='transaction[direction]'][value='expense']")
       assert has_element?(live_view, "input[name='transaction[expense_type]'][value='essential']")
     end
 
     test "creates expense transaction and redirects", %{conn: conn, account: account} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#transaction-form", transaction: %{
-                 label: "Monthly rent",
-                 amount: "800",
-                 date: "2026-03-05",
-                 is_recurring: true,
-                 account_id: account.id
-               })
+               |> form("#transaction-form",
+                 transaction: %{
+                   label: "Monthly rent",
+                   amount: "800",
+                   date: "2026-03-05",
+                   is_recurring: true,
+                   account_id: account.id
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -113,13 +125,14 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     setup [:create_account]
 
     test "renders edit form with correct title", %{conn: conn, scope: scope, account: account} do
-      transaction = transaction_fixture(scope, %{
-        direction: :income,
-        income_type: :salary,
-        label: "My salary",
-        amount: "2500",
-        account_id: account.id
-      })
+      transaction =
+        transaction_fixture(scope, %{
+          direction: :income,
+          income_type: :salary,
+          label: "My salary",
+          amount: "2500",
+          account_id: account.id
+        })
 
       {:ok, _live, html} = live(conn, ~p"/transactions/#{transaction}/edit")
 
@@ -128,22 +141,25 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     end
 
     test "updates transaction and redirects", %{conn: conn, scope: scope, account: account} do
-      transaction = transaction_fixture(scope, %{
-        direction: :income,
-        income_type: :salary,
-        label: "My salary",
-        amount: "2500",
-        account_id: account.id
-      })
+      transaction =
+        transaction_fixture(scope, %{
+          direction: :income,
+          income_type: :salary,
+          label: "My salary",
+          amount: "2500",
+          account_id: account.id
+        })
 
       {:ok, live_view, _html} = live(conn, ~p"/transactions/#{transaction}/edit")
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#transaction-form", transaction: %{
-                 label: "Updated salary",
-                 amount: "3000"
-               })
+               |> form("#transaction-form",
+                 transaction: %{
+                   label: "Updated salary",
+                   amount: "3000"
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -153,7 +169,8 @@ defmodule LifequestWeb.TransactionLive.FormTest do
 
   describe "Cancel button" do
     test "navigates back to finances", %{conn: conn} do
-      {:ok, live_view, _html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
       assert has_element?(live_view, "a[href='/finances']")
     end

@@ -6,7 +6,7 @@ defmodule LifequestWeb.FinancesLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <h1 class="text-4xl font-bold mb-8">{gettext("Financial information")}</h1>
-
+      
       <.section title={gettext("Financial profile")}>
         <.profile_card
           :for={{field, label, description, icon, value} <- profile_fields(@financial_profile)}
@@ -18,7 +18,7 @@ defmodule LifequestWeb.FinancesLive.Index do
           profile={@financial_profile}
         />
       </.section>
-
+      
       <.section title={gettext("Income sources")}>
         <.type_card
           :for={{type, label, description, icon} <- income_types()}
@@ -28,7 +28,7 @@ defmodule LifequestWeb.FinancesLive.Index do
           icon={icon}
         />
       </.section>
-
+      
       <.section title={gettext("Expenses")}>
         <.type_card
           :for={{type, label, description, icon} <- expense_types()}
@@ -48,6 +48,7 @@ defmodule LifequestWeb.FinancesLive.Index do
     ~H"""
     <div class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">{@title}</h2>
+      
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {render_slot(@inner_block)}
       </div>
@@ -62,11 +63,15 @@ defmodule LifequestWeb.FinancesLive.Index do
 
   defp type_card(assigns) do
     ~H"""
-    <.link navigate={@href} class="card bg-base-200 shadow hover:shadow-lg hover:bg-base-300 transition-all cursor-pointer">
+    <.link
+      navigate={@href}
+      class="card bg-base-200 shadow hover:shadow-lg hover:bg-base-300 transition-all cursor-pointer"
+    >
       <div class="card-body flex flex-row items-center gap-4">
         <span class={"#{@icon} size-8 shrink-0"} />
         <div>
           <h3 class="card-title text-base">{@label}</h3>
+          
           <p class="text-sm opacity-70">{@description}</p>
         </div>
       </div>
@@ -83,13 +88,18 @@ defmodule LifequestWeb.FinancesLive.Index do
 
   defp profile_card(assigns) do
     ~H"""
-    <.link navigate={profile_field_path(@profile, @field)} class="card bg-base-200 shadow hover:shadow-lg hover:bg-base-300 transition-all cursor-pointer">
+    <.link
+      navigate={profile_field_path(@profile, @field)}
+      class="card bg-base-200 shadow hover:shadow-lg hover:bg-base-300 transition-all cursor-pointer"
+    >
       <div class="card-body flex flex-row items-center gap-4">
         <span class={"#{@icon} size-8 shrink-0"} />
         <div class="flex-1">
           <h3 class="card-title text-base">{@label}</h3>
+          
           <p class="text-sm opacity-70">{@description}</p>
         </div>
+        
         <div class="text-right">
           <span :if={@value} class="font-semibold">{format_profile_value(@field, @value)}</span>
           <span :if={is_nil(@value)} class="badge badge-warning badge-sm">{gettext("Not set")}</span>
@@ -107,37 +117,49 @@ defmodule LifequestWeb.FinancesLive.Index do
     financial_profile = Lifequest.Finances.get_financial_profile_by_user(scope)
 
     {:ok,
-      socket
-      |> assign(:page_title, gettext("Financial information"))
-      |> assign(:financial_profile, financial_profile)}
+     socket
+     |> assign(:page_title, gettext("Financial information"))
+     |> assign(:financial_profile, financial_profile)}
   end
 
   # --- Profile Fields ---
 
   defp profile_fields(nil) do
     [
-      {:current_savings, gettext("Current savings"), gettext("Total available savings"), "hero-banknotes", nil},
-      {:current_debts, gettext("Current debts"), gettext("Outstanding debts"), "hero-exclamation-triangle", nil},
-      {:monthly_debt_payment, gettext("Monthly debt payment"), gettext("Monthly repayment amount"), "hero-arrow-uturn-left", nil},
+      {:current_savings, gettext("Current savings"), gettext("Total available savings"),
+       "hero-banknotes", nil},
+      {:current_debts, gettext("Current debts"), gettext("Outstanding debts"),
+       "hero-exclamation-triangle", nil},
+      {:monthly_debt_payment, gettext("Monthly debt payment"),
+       gettext("Monthly repayment amount"), "hero-arrow-uturn-left", nil},
       {:net_worth, gettext("Net worth"), gettext("Total estimated assets"), "hero-scale", nil},
-      {:employment_status, gettext("Employment status"), gettext("Current professional situation"), "hero-briefcase", nil}
+      {:employment_status, gettext("Employment status"),
+       gettext("Current professional situation"), "hero-briefcase", nil}
     ]
   end
 
   defp profile_fields(profile) do
     [
-      {:current_savings, gettext("Current savings"), gettext("Total available savings"), "hero-banknotes", profile.current_savings},
-      {:current_debts, gettext("Current debts"), gettext("Outstanding debts"), "hero-exclamation-triangle", profile.current_debts},
-      {:monthly_debt_payment, gettext("Monthly debt payment"), gettext("Monthly repayment amount"), "hero-arrow-uturn-left", profile.monthly_debt_payment},
-      {:net_worth, gettext("Net worth"), gettext("Total estimated assets"), "hero-scale", profile.net_worth},
-      {:employment_status, gettext("Employment status"), gettext("Current professional situation"), "hero-briefcase", profile.employment_status}
+      {:current_savings, gettext("Current savings"), gettext("Total available savings"),
+       "hero-banknotes", profile.current_savings},
+      {:current_debts, gettext("Current debts"), gettext("Outstanding debts"),
+       "hero-exclamation-triangle", profile.current_debts},
+      {:monthly_debt_payment, gettext("Monthly debt payment"),
+       gettext("Monthly repayment amount"), "hero-arrow-uturn-left",
+       profile.monthly_debt_payment},
+      {:net_worth, gettext("Net worth"), gettext("Total estimated assets"), "hero-scale",
+       profile.net_worth},
+      {:employment_status, gettext("Employment status"),
+       gettext("Current professional situation"), "hero-briefcase", profile.employment_status}
     ]
   end
 
   # --- Helpers ---
 
   defp profile_field_path(nil, _field), do: ~p"/financial_profiles/new"
-  defp profile_field_path(profile, field), do: ~p"/financial_profiles/#{profile}/edit?field=#{field}"
+
+  defp profile_field_path(profile, field),
+    do: ~p"/financial_profiles/#{profile}/edit?field=#{field}"
 
   defp format_profile_value(:employment_status, value), do: format_employment_status(value)
   defp format_profile_value(_field, value), do: "#{Decimal.round(value, 2)} €"
@@ -153,11 +175,13 @@ defmodule LifequestWeb.FinancesLive.Index do
   defp income_types do
     [
       {:salary, gettext("Salary"), gettext("Monthly wages, net income"), "hero-banknotes"},
-      {:freelance, gettext("Freelance"), gettext("Independent work, contracts"), "hero-briefcase"},
+      {:freelance, gettext("Freelance"), gettext("Independent work, contracts"),
+       "hero-briefcase"},
       {:rental, gettext("Rental"), gettext("Property rental income"), "hero-home-modern"},
       {:bonus, gettext("Bonus"), gettext("Annual bonuses, profit sharing"), "hero-gift"},
       {:pension, gettext("Pension"), gettext("Retirement, alimony received"), "hero-heart"},
-      {:government_aid, gettext("Government aid"), gettext("APL, RSA, benefits"), "hero-shield-check"},
+      {:government_aid, gettext("Government aid"), gettext("APL, RSA, benefits"),
+       "hero-shield-check"},
       {:investment, gettext("Investment"), gettext("Dividends, interest"), "hero-chart-bar"},
       {:other, gettext("Other income"), gettext("Miscellaneous income"), "hero-plus-circle"}
     ]
@@ -166,8 +190,10 @@ defmodule LifequestWeb.FinancesLive.Index do
   defp expense_types do
     [
       {:essential, gettext("Essential"), gettext("Rent, insurance, subscriptions"), "hero-home"},
-      {:pleasure, gettext("Pleasure"), gettext("Dining out, entertainment, shopping"), "hero-face-smile"},
-      {:savings, gettext("Savings"), gettext("Automatic transfers to savings"), "hero-arrow-trending-up"},
+      {:pleasure, gettext("Pleasure"), gettext("Dining out, entertainment, shopping"),
+       "hero-face-smile"},
+      {:savings, gettext("Savings"), gettext("Automatic transfers to savings"),
+       "hero-arrow-trending-up"},
       {:extra, gettext("Extra"), gettext("Unexpected expenses"), "hero-exclamation-triangle"},
       {:other, gettext("Other expenses"), gettext("Miscellaneous expenses"), "hero-plus-circle"}
     ]

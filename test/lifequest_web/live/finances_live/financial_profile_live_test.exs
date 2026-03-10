@@ -23,13 +23,15 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#financial_profile-form", financial_profile: %{
-                 current_savings: "5000",
-                 current_debts: "1000",
-                 monthly_debt_payment: "200",
-                 net_worth: "50000",
-                 employment_status: :cdi
-               })
+               |> form("#financial_profile-form",
+                 financial_profile: %{
+                   current_savings: "5000",
+                   current_debts: "1000",
+                   monthly_debt_payment: "200",
+                   net_worth: "50000",
+                   employment_status: :cdi
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -41,13 +43,15 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
 
       html =
         live_view
-        |> form("#financial_profile-form", financial_profile: %{
-          current_savings: nil,
-          current_debts: nil,
-          monthly_debt_payment: nil,
-          net_worth: nil,
-          employment_status: nil
-        })
+        |> form("#financial_profile-form",
+          financial_profile: %{
+            current_savings: nil,
+            current_debts: nil,
+            monthly_debt_payment: nil,
+            net_worth: nil,
+            employment_status: nil
+          }
+        )
         |> render_change()
 
       assert html =~ "can&#39;t be blank"
@@ -72,9 +76,11 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#financial_profile-form", financial_profile: %{
-                 current_savings: "9999"
-               })
+               |> form("#financial_profile-form",
+                 financial_profile: %{
+                   current_savings: "9999"
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -86,7 +92,8 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
     test "renders only the focused field for current_savings", %{conn: conn, scope: scope} do
       profile = financial_profile_fixture(scope)
 
-      {:ok, _live, html} = live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
+      {:ok, _live, html} =
+        live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
 
       assert html =~ "Current savings"
       refute html =~ "Current debts"
@@ -98,7 +105,8 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
     test "renders only the focused field for employment_status", %{conn: conn, scope: scope} do
       profile = financial_profile_fixture(scope)
 
-      {:ok, _live, html} = live(conn, ~p"/financial_profiles/#{profile}/edit?field=employment_status")
+      {:ok, _live, html} =
+        live(conn, ~p"/financial_profiles/#{profile}/edit?field=employment_status")
 
       assert html =~ "Employment status"
       refute html =~ "Current savings"
@@ -108,13 +116,16 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
     test "updates single field and redirects", %{conn: conn, scope: scope} do
       profile = financial_profile_fixture(scope)
 
-      {:ok, live_view, _html} = live(conn, ~p"/financial_profiles/#{profile}/edit?field=net_worth")
+      {:ok, live_view, _html} =
+        live(conn, ~p"/financial_profiles/#{profile}/edit?field=net_worth")
 
       assert {:ok, _live, html} =
                live_view
-               |> form("#financial_profile-form", financial_profile: %{
-                 net_worth: "100000"
-               })
+               |> form("#financial_profile-form",
+                 financial_profile: %{
+                   net_worth: "100000"
+                 }
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
@@ -124,7 +135,8 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
     test "shows edit title with field name", %{conn: conn, scope: scope} do
       profile = financial_profile_fixture(scope)
 
-      {:ok, _live, html} = live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
+      {:ok, _live, html} =
+        live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
 
       assert html =~ "Current savings"
     end

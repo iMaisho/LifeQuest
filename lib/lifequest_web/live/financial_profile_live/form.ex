@@ -66,10 +66,10 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     focused_field = parse_field(params["field"])
 
     {:ok,
-      socket
-      |> assign(:focused_field, focused_field)
-      |> assign(:fields, @fields)
-      |> apply_action(socket.assigns.live_action, params)}
+     socket
+     |> assign(:focused_field, focused_field)
+     |> assign(:fields, @fields)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -79,7 +79,10 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     |> assign(:page_title, page_title(socket.assigns.focused_field, :edit))
     |> assign(:subtitle, page_subtitle(socket.assigns.focused_field, :edit))
     |> assign(:financial_profile, financial_profile)
-    |> assign(:form, to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile)))
+    |> assign(
+      :form,
+      to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile))
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -89,7 +92,10 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     |> assign(:page_title, page_title(socket.assigns.focused_field, :new))
     |> assign(:subtitle, page_subtitle(socket.assigns.focused_field, :new))
     |> assign(:financial_profile, financial_profile)
-    |> assign(:form, to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile)))
+    |> assign(
+      :form,
+      to_form(Finances.change_financial_profile(socket.assigns.current_scope, financial_profile))
+    )
   end
 
   # --- Events ---
@@ -118,9 +124,9 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
          ) do
       {:ok, _financial_profile} ->
         {:noreply,
-          socket
-          |> put_flash(:info, gettext("Financial profile updated successfully"))
-          |> push_navigate(to: ~p"/finances")}
+         socket
+         |> put_flash(:info, gettext("Financial profile updated successfully"))
+         |> push_navigate(to: ~p"/finances")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -131,9 +137,9 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
     case Finances.create_financial_profile(socket.assigns.current_scope, params) do
       {:ok, _financial_profile} ->
         {:noreply,
-          socket
-          |> put_flash(:info, gettext("Financial profile created successfully"))
-          |> push_navigate(to: ~p"/finances")}
+         socket
+         |> put_flash(:info, gettext("Financial profile created successfully"))
+         |> push_navigate(to: ~p"/finances")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -143,6 +149,7 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
   # --- Helpers ---
 
   defp parse_field(nil), do: nil
+
   defp parse_field(field) when is_binary(field) do
     atom = String.to_existing_atom(field)
     if atom in @fields, do: atom, else: nil
@@ -156,7 +163,9 @@ defmodule LifequestWeb.FinancialProfileLive.Form do
   defp page_title(field, :new), do: gettext("Set %{field}", field: field_label(field))
 
   defp page_subtitle(nil, _action), do: gettext("Manage your financial profile information.")
-  defp page_subtitle(_field, _action), do: gettext("Update this information to keep your profile accurate.")
+
+  defp page_subtitle(_field, _action),
+    do: gettext("Update this information to keep your profile accurate.")
 
   defp field_label(:current_savings), do: gettext("Current savings")
   defp field_label(:current_debts), do: gettext("Current debts")
