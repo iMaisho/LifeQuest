@@ -6,7 +6,6 @@ defmodule LifequestWeb.FinancesLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <h1 class="text-4xl font-bold mb-8">{gettext("Financial information")}</h1>
-      
       <.section title={gettext("Financial profile")}>
         <.profile_card
           :for={{field, label, description, icon, value} <- profile_fields(@financial_profile)}
@@ -18,7 +17,6 @@ defmodule LifequestWeb.FinancesLive.Index do
           profile={@financial_profile}
         />
       </.section>
-      
       <.section title={gettext("Income sources")}>
         <.type_card
           :for={{type, label, description, icon} <- income_types()}
@@ -28,7 +26,6 @@ defmodule LifequestWeb.FinancesLive.Index do
           icon={icon}
         />
       </.section>
-      
       <.section title={gettext("Expenses")}>
         <.type_card
           :for={{type, label, description, icon} <- expense_types()}
