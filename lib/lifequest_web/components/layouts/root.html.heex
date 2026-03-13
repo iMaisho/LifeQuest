@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="Lifequest" suffix=" · Phoenix Framework">
+    <.live_title default="Lifequest" suffix=" · LifeQuest">
       {assigns[:page_title]}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
@@ -25,32 +25,160 @@
           setTheme(localStorage.getItem("phx:theme") || "system");
         }
         window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-        
         window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
       })();
     </script>
   </head>
-  <body>
-    <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_scope do %>
-        <li>
-          {@current_scope.user.email}
-        </li>
-        <li>
-          <.link href={~p"/users/settings"}>Settings</.link>
-        </li>
-        <li>
-          <.link href={~p"/users/log-out"} method="delete">Log out</.link>
-        </li>
-      <% else %>
-        <li>
-          <.link href={~p"/users/register"}>Register</.link>
-        </li>
-        <li>
-          <.link href={~p"/users/log-in"}>Log in</.link>
-        </li>
-      <% end %>
-    </ul>
-    {@inner_content}
+  <body class="h-full">
+    <%= if @current_scope && @current_scope.user do %>
+      <div class="flex h-full">
+        <%!-- Sidebar --%>
+        <aside
+          id="sidebar"
+          class="group relative flex flex-col justify-between bg-base-200 border-r border-base-300 p-4 shrink-0 transition-all duration-300 w-64 data-[collapsed]:w-16 data-[collapsed]:items-center data-[collapsed]:px-0"
+        >
+          <%!-- Top: Logo + Nav --%>
+          <div>
+            <%!-- Logo --%>
+            <div class="flex items-center gap-2 mb-8 px-2 overflow-hidden">
+              <img src={~p"/images/logo.svg"} width="32" class="shrink-0" />
+              <span class="text-lg font-bold whitespace-nowrap sidebar-label">LifeQuest</span>
+            </div>
+
+            <%!-- Navigation --%>
+            <ul class="menu menu-vertical gap-1">
+              <li>
+                <.link navigate={~p"/dashboard"} class="flex items-center gap-3">
+                  <span class="hero-home size-5 shrink-0" />
+                  <span class="sidebar-label">Dashboard</span>
+                </.link>
+              </li>
+              <li>
+                <.link navigate={~p"/finances"} class="flex items-center gap-3">
+                  <span class="hero-banknotes size-5 shrink-0" />
+                  <span class="sidebar-label">Finances</span>
+                </.link>
+              </li>
+            </ul>
+          </div>
+
+          <%!-- Encoche de toggle --%>
+          <button
+            id="sidebar-toggle"
+            onclick="toggleSidebar()"
+            class="absolute top-1/2 -right-[17px] -translate-y-1/2 w-[18px] h-11 bg-base-200 border border-l-0 border-base-300 rounded-r-xl flex items-center justify-center z-10 hover:bg-base-300 transition-colors cursor-pointer"
+          >
+            <span
+              id="sidebar-arrow"
+              class="hero-chevron-left size-3 transition-transform duration-300"
+            />
+          </button>
+
+          <%!-- User profile --%>
+          <div class="relative border-t border-base-300 pt-4">
+            <button
+              id="profile-button"
+              onclick="toggleProfileMenu()"
+              class="flex items-center gap-3 px-2 w-full rounded-lg hover:bg-base-300 transition-colors py-2 cursor-pointer"
+            >
+              <div class="w-10 h-10 rounded-lg bg-base-300 flex items-center justify-center shrink-0">
+                <span class="hero-user size-6 opacity-70" />
+              </div>
+              <div class="flex-1 min-w-0 text-left sidebar-label">
+                <p class="text-sm font-medium truncate">{@current_scope.user.email}</p>
+              </div>
+            </button>
+
+            <%!-- Profile popup menu --%>
+            <div
+              id="profile-menu"
+              class="hidden absolute bottom-full left-0 mb-2 w-48 bg-base-100 border border-base-300 rounded-lg shadow-lg z-50"
+            >
+              <ul class="menu menu-compact p-2">
+                <li>
+                  <.link href={~p"/users/settings"} class="flex items-center gap-2">
+                    <span class="hero-cog-6-tooth size-4" /> Settings
+                  </.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log-out"} method="delete" class="flex items-center gap-2">
+                    <span class="hero-arrow-right-start-on-rectangle size-4" /> Log out
+                  </.link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        <%!-- Main content --%>
+        <main class="flex-1 overflow-y-auto">
+          {@inner_content}
+        </main>
+      </div>
+
+      <script>
+        function toggleSidebar() {
+          const sidebar = document.getElementById("sidebar");
+          const arrow = document.getElementById("sidebar-arrow");
+          const isCollapsed = sidebar.hasAttribute("data-collapsed");
+
+          if (isCollapsed) {
+            sidebar.removeAttribute("data-collapsed");
+            arrow.classList.remove("rotate-180");
+          } else {
+            sidebar.setAttribute("data-collapsed", "");
+            arrow.classList.add("rotate-180");
+            // Close profile menu when collapsing
+            document.getElementById("profile-menu").classList.add("hidden");
+          }
+        }
+
+        function toggleProfileMenu() {
+          const menu = document.getElementById("profile-menu");
+          menu.classList.toggle("hidden");
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener("click", (e) => {
+          const profileButton = document.getElementById("profile-button");
+          const profileMenu = document.getElementById("profile-menu");
+          if (profileButton && profileMenu && !profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
+            profileMenu.classList.add("hidden");
+          }
+        });
+      </script>
+
+      <style>
+        #sidebar[data-collapsed] .sidebar-label { display: none; }
+        #sidebar[data-collapsed] .menu li a {
+          justify-content: center;
+          padding-left: 0;
+          padding-right: 0;
+        }
+        #sidebar[data-collapsed] #profile-button { justify-content: center; }
+              
+      </style>
+    <% else %>
+      <%!-- Unauthenticated layout --%>
+      <div class="min-h-full flex flex-col">
+        <nav class="flex items-center justify-between px-6 py-4 border-b border-base-200">
+          <div class="flex items-center gap-2">
+            <img src={~p"/images/logo.svg"} width="32" />
+            <span class="text-lg font-bold">LifeQuest</span>
+          </div>
+          <ul class="flex gap-4">
+            <li>
+              <.link href={~p"/users/register"} class="btn btn-ghost btn-sm">Register</.link>
+            </li>
+            <li>
+              <.link href={~p"/users/log-in"} class="btn btn-primary btn-sm">Log in</.link>
+            </li>
+          </ul>
+        </nav>
+        <main class="flex-1">
+          {@inner_content}
+        </main>
+      </div>
+    <% end %>
   </body>
 </html>
