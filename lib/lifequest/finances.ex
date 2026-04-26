@@ -211,6 +211,7 @@ defmodule Lifequest.Finances do
     Transaction
     |> join(:inner, [t], a in Account, on: t.account_id == a.id)
     |> where([t, a], a.user_id == ^scope.user.id)
+    |> preload([t, a], account: a)
     |> Repo.all()
   end
 

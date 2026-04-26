@@ -166,8 +166,11 @@ defmodule Lifequest.FinancesTest do
       other_scope = user_scope_fixture()
       transaction = transaction_fixture(scope)
       other_transaction = transaction_fixture(other_scope)
-      assert Finances.list_transactions(scope) == [transaction]
-      assert Finances.list_transactions(other_scope) == [other_transaction]
+      assert [result] = Finances.list_transactions(scope)
+      assert result.id == transaction.id
+      assert result.account.id == transaction.account_id
+      assert [other_result] = Finances.list_transactions(other_scope)
+      assert other_result.id == other_transaction.id
     end
 
     test "get_transaction!/2 returns the transaction with given id" do
