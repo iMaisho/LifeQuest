@@ -391,6 +391,126 @@ defmodule Lifequest.Finances do
   end
 
   @doc """
+  Returns all active recurring transactions for the given scope.
+
+  Only transactions with `is_recurring: true` and `is_active: true` are included.
+  Results are scoped via the account's user_id (transactions have no direct user_id).
+
+  ## Examples
+
+      iex> list_recurring_transactions(scope)
+      [%Transaction{is_recurring: true, is_active: true}, ...]
+
+  """
+  def list_recurring_transactions(%Scope{} = scope) do
+    Transaction
+    |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+    |> where([t, a], a.user_id == ^scope.user.id)
+    |> where([t], t.is_recurring == true and t.is_active == true)
+    |> Repo.all()
+  end
+
+  @doc """
+  Projects savings and debts month by month from today to the given target date.
+
+  Each month applies:
+    1. All active recurring income/expense transactions
+    2. Monthly debt repayment: `min(monthly_debt_payment, remaining_debts)`
+       The payment is capped to the remaining debt — once debts reach zero,
+       no further payment is deducted.
+
+  Returns `{:ok, projection}` or `{:error, :no_profile}` if no financial profile exists.
+
+  The returned projection map contains:
+    - `:projected_savings` — savings at target date
+    - `:projected_debts` — remaining debts at target date
+    - `:monthly_income` — sum of recurring income transactions
+    - `:monthly_expenses` — sum of recurring expense transactions
+    - `:monthly_debt_payment` — configured monthly repayment amount
+    - `:monthly_net` — income minus expenses (before debt repayment)
+    - `:monthly_net_after_debt` — net after deducting full monthly repayment
+    - `:months` — number of months in the projection
+    - `:current_savings` — savings at projection start
+    - `:current_debts` — debts at projection start
+
+  ## Examples
+
+      iex> project_savings(scope, ~D[2027-01-01])
+      {:ok, %{projected_savings: #Decimal<...>, projected_debts: #Decimal<...>, ...}}
+
+      iex> project_savings(scope_without_profile, ~D[2027-01-01])
+      {:error, :no_profile}
+
+  """
+  def project_savings(%Scope{} = scope, %Date{} = target_date) do
+    profile = get_financial_profile_by_user(scope)
+
+    if is_nil(profile) do
+      {:error, :no_profile}
+    else
+      build_projection(scope, profile, target_date)
+    end
+  end
+
+  # Calcule les montants mensuels et délègue la simulation mois par mois.
+  defp build_projection(scope, profile, target_date) do
+    transactions = list_recurring_transactions(scope)
+    zero = Decimal.new(0)
+
+    monthly_income =
+      transactions
+      |> Enum.filter(&(&1.direction == :income))
+      |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
+
+    monthly_expenses =
+      transactions
+      |> Enum.filter(&(&1.direction == :expense))
+      |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
+
+    monthly_net = Decimal.sub(monthly_income, monthly_expenses)
+    months = months_until(target_date)
+
+    {final_savings, final_debts} =
+      simulate_months(
+        months,
+        profile.current_savings,
+        profile.current_debts,
+        monthly_net,
+        profile.monthly_debt_payment
+      )
+
+    {:ok,
+     %{
+       projected_savings: final_savings,
+       projected_debts: final_debts,
+       monthly_income: monthly_income,
+       monthly_expenses: monthly_expenses,
+       monthly_debt_payment: profile.monthly_debt_payment,
+       monthly_net: monthly_net,
+       monthly_net_after_debt: Decimal.sub(monthly_net, profile.monthly_debt_payment),
+       months: months,
+       current_savings: profile.current_savings,
+       current_debts: profile.current_debts
+     }}
+  end
+
+  # Applique récursivement chaque mois : revenu net + remboursement plafonné aux dettes restantes.
+  defp simulate_months(0, savings, debts, _net, _payment), do: {savings, debts}
+
+  defp simulate_months(months, savings, debts, monthly_net, monthly_payment) do
+    savings = Decimal.add(savings, monthly_net)
+    effective_payment = Decimal.min(monthly_payment, debts)
+    savings = Decimal.sub(savings, effective_payment)
+    debts = Decimal.sub(debts, effective_payment)
+    simulate_months(months - 1, savings, debts, monthly_net, monthly_payment)
+  end
+
+  defp months_until(%Date{} = target_date) do
+    today = Date.utc_today()
+    (target_date.year - today.year) * 12 + (target_date.month - today.month)
+  end
+
+  @doc """
   Subscribes to scoped notifications about any account changes.
 
   The broadcasted messages match the pattern:
