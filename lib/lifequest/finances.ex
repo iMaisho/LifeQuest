@@ -448,51 +448,53 @@ defmodule Lifequest.Finances do
     if is_nil(profile) do
       {:error, :no_profile}
     else
-      transactions = list_recurring_transactions(scope)
-      zero = Decimal.new(0)
-
-      monthly_income =
-        transactions
-        |> Enum.filter(&(&1.direction == :income))
-        |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
-
-      monthly_expenses =
-        transactions
-        |> Enum.filter(&(&1.direction == :expense))
-        |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
-
-      monthly_net = Decimal.sub(monthly_income, monthly_expenses)
-      months = months_until(target_date)
-
-      {final_savings, final_debts} =
-        if months > 0 do
-          Enum.reduce(1..months, {profile.current_savings, profile.current_debts}, fn _,
-                                                                                      {savings,
-                                                                                       debts} ->
-            savings = Decimal.add(savings, monthly_net)
-            effective_payment = Decimal.min(profile.monthly_debt_payment, debts)
-            savings = Decimal.sub(savings, effective_payment)
-            debts = Decimal.sub(debts, effective_payment)
-            {savings, debts}
-          end)
-        else
-          {profile.current_savings, profile.current_debts}
-        end
-
-      {:ok,
-       %{
-         projected_savings: final_savings,
-         projected_debts: final_debts,
-         monthly_income: monthly_income,
-         monthly_expenses: monthly_expenses,
-         monthly_debt_payment: profile.monthly_debt_payment,
-         monthly_net: monthly_net,
-         monthly_net_after_debt: Decimal.sub(monthly_net, profile.monthly_debt_payment),
-         months: months,
-         current_savings: profile.current_savings,
-         current_debts: profile.current_debts
-       }}
+      build_projection(scope, profile, target_date)
     end
+  end
+
+  defp build_projection(scope, profile, target_date) do
+    transactions = list_recurring_transactions(scope)
+    zero = Decimal.new(0)
+
+    monthly_income =
+      transactions
+      |> Enum.filter(&(&1.direction == :income))
+      |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
+
+    monthly_expenses =
+      transactions
+      |> Enum.filter(&(&1.direction == :expense))
+      |> Enum.reduce(zero, &Decimal.add(&2, &1.amount))
+
+    monthly_net = Decimal.sub(monthly_income, monthly_expenses)
+    months = months_until(target_date)
+
+    {final_savings, final_debts} =
+      simulate_months(months, profile.current_savings, profile.current_debts, monthly_net, profile.monthly_debt_payment)
+
+    {:ok,
+     %{
+       projected_savings: final_savings,
+       projected_debts: final_debts,
+       monthly_income: monthly_income,
+       monthly_expenses: monthly_expenses,
+       monthly_debt_payment: profile.monthly_debt_payment,
+       monthly_net: monthly_net,
+       monthly_net_after_debt: Decimal.sub(monthly_net, profile.monthly_debt_payment),
+       months: months,
+       current_savings: profile.current_savings,
+       current_debts: profile.current_debts
+     }}
+  end
+
+  defp simulate_months(0, savings, debts, _net, _payment), do: {savings, debts}
+
+  defp simulate_months(months, savings, debts, monthly_net, monthly_payment) do
+    savings = Decimal.add(savings, monthly_net)
+    effective_payment = Decimal.min(monthly_payment, debts)
+    savings = Decimal.sub(savings, effective_payment)
+    debts = Decimal.sub(debts, effective_payment)
+    simulate_months(months - 1, savings, debts, monthly_net, monthly_payment)
   end
 
   defp months_until(%Date{} = target_date) do
