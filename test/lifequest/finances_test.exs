@@ -289,6 +289,165 @@ defmodule Lifequest.FinancesTest do
     end
   end
 
+  describe "list_recurring_transactions/1" do
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    test "returns only active and recurring transactions" do
+      scope = user_scope_fixture()
+      recurring = transaction_fixture(scope, %{is_recurring: true, is_active: true})
+      _non_recurring = transaction_fixture(scope, %{is_recurring: false, is_active: true})
+      _inactive = transaction_fixture(scope, %{is_recurring: true, is_active: false})
+
+      result = Finances.list_recurring_transactions(scope)
+      assert length(result) == 1
+      assert hd(result).id == recurring.id
+    end
+
+    test "is scoped to the current user" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      transaction_fixture(scope, %{is_recurring: true, is_active: true})
+      transaction_fixture(other_scope, %{is_recurring: true, is_active: true})
+
+      assert length(Finances.list_recurring_transactions(scope)) == 1
+      assert length(Finances.list_recurring_transactions(other_scope)) == 1
+    end
+  end
+
+  describe "project_savings/2" do
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    test "returns error when no financial profile exists" do
+      scope = user_scope_fixture()
+      assert {:error, :no_profile} = Finances.project_savings(scope, months_ahead(3))
+    end
+
+    test "projects savings with no transactions and no debts" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "0.00",
+        monthly_debt_payment: "0.00"
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(3))
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("1000.00"))
+      assert projection.months == 3
+    end
+
+    test "applies recurring income and expense transactions each month" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "0.00",
+        monthly_debt_payment: "0.00"
+      })
+
+      transaction_fixture(scope, %{
+        direction: :income,
+        income_type: :salary,
+        amount: "500.00",
+        is_recurring: true,
+        is_active: true
+      })
+
+      transaction_fixture(scope, %{
+        direction: :expense,
+        expense_type: :essential,
+        amount: "200.00",
+        is_recurring: true,
+        is_active: true
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(3))
+      # 1000 + (500 - 200) * 3 = 1900
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("1900.00"))
+      assert Decimal.equal?(projection.monthly_income, Decimal.new("500.00"))
+      assert Decimal.equal?(projection.monthly_expenses, Decimal.new("200.00"))
+    end
+
+    test "deducts monthly_debt_payment from savings and debts each month" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "600.00",
+        monthly_debt_payment: "100.00"
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(3))
+      # savings: 1000 - 100 - 100 - 100 = 700
+      # debts:   600  - 100 - 100 - 100 = 300
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("700.00"))
+      assert Decimal.equal?(projection.projected_debts, Decimal.new("300.00"))
+    end
+
+    test "caps debt payment at remaining debt when debt is nearly paid off" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "150.00",
+        monthly_debt_payment: "100.00"
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(3))
+      # Month 1: savings=900, debts=50   (payment=min(100,150)=100)
+      # Month 2: savings=850, debts=0    (payment=min(100,50)=50)
+      # Month 3: savings=850, debts=0    (payment=min(100,0)=0)
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("850.00"))
+      assert Decimal.equal?(projection.projected_debts, Decimal.new("0"))
+    end
+
+    test "ignores non-recurring and inactive transactions" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "0.00",
+        monthly_debt_payment: "0.00"
+      })
+
+      transaction_fixture(scope, %{
+        direction: :income,
+        income_type: :salary,
+        amount: "200.00",
+        is_recurring: true,
+        is_active: true
+      })
+
+      transaction_fixture(scope, %{
+        direction: :income,
+        income_type: :salary,
+        amount: "500.00",
+        is_recurring: false,
+        is_active: true
+      })
+
+      transaction_fixture(scope, %{
+        direction: :income,
+        income_type: :salary,
+        amount: "300.00",
+        is_recurring: true,
+        is_active: false
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(1))
+      # Only the 200 recurring active transaction counts: 1000 + 200 = 1200
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("1200.00"))
+    end
+
+    defp months_ahead(n) do
+      today = Date.utc_today()
+      total = today.month + n
+      Date.new!(today.year + div(total - 1, 12), rem(total - 1, 12) + 1, 1)
+    end
+  end
+
   describe "accounts" do
     alias Lifequest.Finances.Account
 
