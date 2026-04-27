@@ -452,6 +452,7 @@ defmodule Lifequest.Finances do
     end
   end
 
+  # Calcule les montants mensuels et délègue la simulation mois par mois.
   defp build_projection(scope, profile, target_date) do
     transactions = list_recurring_transactions(scope)
     zero = Decimal.new(0)
@@ -470,7 +471,13 @@ defmodule Lifequest.Finances do
     months = months_until(target_date)
 
     {final_savings, final_debts} =
-      simulate_months(months, profile.current_savings, profile.current_debts, monthly_net, profile.monthly_debt_payment)
+      simulate_months(
+        months,
+        profile.current_savings,
+        profile.current_debts,
+        monthly_net,
+        profile.monthly_debt_payment
+      )
 
     {:ok,
      %{
@@ -487,6 +494,7 @@ defmodule Lifequest.Finances do
      }}
   end
 
+  # Applique récursivement chaque mois : revenu net + remboursement plafonné aux dettes restantes.
   defp simulate_months(0, savings, debts, _net, _payment), do: {savings, debts}
 
   defp simulate_months(months, savings, debts, monthly_net, monthly_payment) do
