@@ -99,7 +99,7 @@ defmodule Lifequest.MixProject do
         "esbuild lifequest --minify",
         "phx.digest"
       ],
-      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
+      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "credo --strict", "test"]
     ]
   end
 end
