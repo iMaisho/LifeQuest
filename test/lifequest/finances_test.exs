@@ -289,6 +289,129 @@ defmodule Lifequest.FinancesTest do
     end
   end
 
+  describe "list_transactions_by_category/3" do
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    test "retourne les transactions de la bonne catégorie" do
+      scope = user_scope_fixture()
+
+      salary =
+        transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "1500"})
+
+      _freelance =
+        transaction_fixture(scope, %{direction: :income, income_type: :freelance, amount: "500"})
+
+      result = Finances.list_transactions_by_category(scope, :income, :salary)
+      assert length(result) == 1
+      assert hd(result).id == salary.id
+    end
+
+    test "retourne [] si aucune transaction pour cette catégorie" do
+      scope = user_scope_fixture()
+      _salary = transaction_fixture(scope, %{direction: :income, income_type: :salary})
+
+      assert Finances.list_transactions_by_category(scope, :income, :freelance) == []
+    end
+
+    test "isole par scope utilisateur" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      _transaction = transaction_fixture(scope, %{direction: :income, income_type: :salary})
+
+      assert Finances.list_transactions_by_category(other_scope, :income, :salary) == []
+    end
+
+    test "ne mélange pas les directions : une transaction expense n'apparaît pas dans income" do
+      scope = user_scope_fixture()
+      _salary = transaction_fixture(scope, %{direction: :income, income_type: :salary})
+      essential = transaction_fixture(scope, %{direction: :expense, expense_type: :essential})
+
+      income_results = Finances.list_transactions_by_category(scope, :income, :pension)
+      expense_results = Finances.list_transactions_by_category(scope, :expense, :essential)
+
+      assert income_results == []
+      assert length(expense_results) == 1
+      assert hd(expense_results).id == essential.id
+    end
+  end
+
+  describe "sum_all_by_category/2" do
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    test "retourne une map avec les bons totaux par catégorie" do
+      scope = user_scope_fixture()
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "1000"})
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "500"})
+      transaction_fixture(scope, %{direction: :income, income_type: :freelance, amount: "300"})
+
+      result = Finances.sum_all_by_category(scope, :income)
+
+      assert Decimal.equal?(result[:salary], Decimal.new("1500"))
+      assert Decimal.equal?(result[:freelance], Decimal.new("300"))
+    end
+
+    test "une catégorie sans transaction n'apparaît pas dans la map" do
+      scope = user_scope_fixture()
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "1000"})
+
+      result = Finances.sum_all_by_category(scope, :income)
+
+      refute Map.has_key?(result, :freelance)
+    end
+
+    test "isole par scope utilisateur" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "2000"})
+      transaction_fixture(other_scope, %{direction: :income, income_type: :salary, amount: "999"})
+
+      result = Finances.sum_all_by_category(scope, :income)
+      other_result = Finances.sum_all_by_category(other_scope, :income)
+
+      assert Decimal.equal?(result[:salary], Decimal.new("2000"))
+      assert Decimal.equal?(other_result[:salary], Decimal.new("999"))
+    end
+  end
+
+  describe "get_category_statistics/3" do
+    import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+    import Lifequest.FinancesFixtures
+
+    test "retourne count, sum et avg corrects" do
+      scope = user_scope_fixture()
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "1000"})
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "2000"})
+
+      result = Finances.get_category_statistics(scope, :income, :salary)
+
+      assert result.count == 2
+      assert Decimal.equal?(result.sum, Decimal.new("3000"))
+      assert Decimal.equal?(result.avg, Decimal.new("1500"))
+    end
+
+    test "retourne des zéros pour une catégorie sans transactions" do
+      scope = user_scope_fixture()
+
+      result = Finances.get_category_statistics(scope, :income, :salary)
+
+      assert result.count == 0
+      assert Decimal.equal?(result.sum, Decimal.new(0))
+      assert Decimal.equal?(result.avg, Decimal.new(0))
+    end
+
+    test "isole par scope utilisateur" do
+      scope = user_scope_fixture()
+      other_scope = user_scope_fixture()
+      transaction_fixture(scope, %{direction: :income, income_type: :salary, amount: "5000"})
+
+      result = Finances.get_category_statistics(other_scope, :income, :salary)
+
+      assert result.count == 0
+    end
+  end
+
   describe "list_recurring_transactions/1" do
     import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
     import Lifequest.FinancesFixtures

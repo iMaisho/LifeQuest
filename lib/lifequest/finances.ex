@@ -319,6 +319,105 @@ defmodule Lifequest.Finances do
   end
 
   @doc """
+  Returns all transactions for a given direction and category (income_type or expense_type).
+
+  Filters by scope (via account's user_id), direction, and the matching type field.
+  Results are ordered by inserted_at descending.
+
+  Returns `[%Transaction{}, ...]`.
+
+  ## Examples
+
+      iex> list_transactions_by_category(scope, :income, :salary)
+      [%Transaction{direction: :income, income_type: :salary}, ...]
+
+      iex> list_transactions_by_category(scope, :expense, :essential)
+      [%Transaction{direction: :expense, expense_type: :essential}, ...]
+
+  """
+  def list_transactions_by_category(%Scope{} = scope, direction, category) do
+    type_field = if direction == :income, do: :income_type, else: :expense_type
+
+    Transaction
+    |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+    |> where([t, a], a.user_id == ^scope.user.id)
+    |> where([t, a], t.direction == ^direction)
+    |> where([t, a], field(t, ^type_field) == ^category)
+    |> order_by([t, a], desc: t.inserted_at)
+    |> preload([t, a], account: a)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the total amount per category for a given direction.
+
+  Performs a grouped query (group_by + sum) scoped to the user.
+  The category field used is `income_type` for `:income` and `expense_type` for `:expense`.
+
+  Returns `%{category_atom => %Decimal{}}`.
+
+  ## Examples
+
+      iex> sum_all_by_category(scope, :income)
+      %{salary: #Decimal<3500.00>, freelance: #Decimal<500.00>}
+
+      iex> sum_all_by_category(scope, :expense)
+      %{essential: #Decimal<1200.00>, pleasure: #Decimal<350.00>}
+
+  """
+  def sum_all_by_category(%Scope{} = scope, direction) do
+    type_field = if direction == :income, do: :income_type, else: :expense_type
+
+    Transaction
+    |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+    |> where([t, a], a.user_id == ^scope.user.id)
+    |> where([t, a], t.direction == ^direction)
+    |> group_by([t, a], field(t, ^type_field))
+    |> select([t, a], {field(t, ^type_field), sum(t.amount)})
+    |> Repo.all()
+    |> Map.new()
+  end
+
+  @doc """
+  Returns count, sum and average for a specific category and direction.
+
+  Returns `%{count: integer, sum: Decimal, avg: Decimal}`.
+  If no transactions exist, sum and avg default to `Decimal.new(0)`.
+
+  ## Examples
+
+      iex> get_category_statistics(scope, :income, :salary)
+      %{count: 3, sum: #Decimal<10500.00>, avg: #Decimal<3500.00>}
+
+      iex> get_category_statistics(scope, :expense, :essential)
+      %{count: 0, sum: #Decimal<0>, avg: #Decimal<0>}
+
+  """
+  def get_category_statistics(%Scope{} = scope, direction, category) do
+    type_field = if direction == :income, do: :income_type, else: :expense_type
+    zero = Decimal.new(0)
+
+    result =
+      Transaction
+      |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+      |> where([t, a], a.user_id == ^scope.user.id)
+      |> where([t, a], t.direction == ^direction)
+      |> where([t, a], field(t, ^type_field) == ^category)
+      |> select([t, a], %{
+        count: count(t.id),
+        sum: sum(t.amount),
+        avg: avg(t.amount)
+      })
+      |> Repo.one()
+
+    %{
+      count: result.count || 0,
+      sum: result.sum || zero,
+      avg: result.avg || zero
+    }
+  end
+
+  @doc """
   Returns transactions for the given direction and month.
   """
   def list_transactions_for_month(%Scope{} = scope, direction, %Date{} = date) do
