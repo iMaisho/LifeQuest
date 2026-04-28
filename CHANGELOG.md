@@ -6,6 +6,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ## [Unreleased]
 
+### Added
+- Filtrage des transactions par catégorie avec persistance dans l'URL
+- Badge de catégorie coloré dans la liste des transactions
+- Synthèse des totaux par catégorie sur la page finances
+- Bloc "Top catégories de dépenses" sur le dashboard
+
 ## [0.5.0] - 2025-04-24
 
 ### Added

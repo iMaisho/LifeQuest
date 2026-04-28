@@ -41,6 +41,18 @@ defmodule LifequestWeb.FinancesLive.Index do
           direction={:expense}
         />
       </.section>
+      <.section title={gettext("Category summary")} grid={false}>
+        <.category_summary
+          direction={:income}
+          totals={@income_totals}
+          types={income_types()}
+        />
+        <.category_summary
+          direction={:expense}
+          totals={@expense_totals}
+          types={expense_types()}
+        />
+      </.section>
     </Layouts.app>
     """
   end
@@ -183,6 +195,47 @@ defmodule LifequestWeb.FinancesLive.Index do
     """
   end
 
+  attr :direction, :atom, required: true
+  attr :totals, :map, required: true
+  attr :types, :list, required: true
+
+  defp category_summary(assigns) do
+    ~H"""
+    <div class="card bg-base-200 shadow">
+      <div class="card-body">
+        <h3 class="font-semibold mb-3">
+          <%= if @direction == :income do %>
+            {gettext("Income by category")}
+          <% else %>
+            {gettext("Expenses by category")}
+          <% end %>
+        </h3>
+        <p :if={map_size(@totals) == 0} class="text-sm opacity-50 text-center py-3">
+          {gettext("No transactions yet")}
+        </p>
+        <div :if={map_size(@totals) > 0} class="space-y-2">
+          <%= for {type, label, _description, _icon} <- @types do %>
+            <%= if Map.has_key?(@totals, type) do %>
+              <div class="flex justify-between items-center">
+                <span class={[
+                  "badge badge-sm badge-outline",
+                  @direction == :income && "badge-success",
+                  @direction == :expense && "badge-error"
+                ]}>
+                  {label}
+                </span>
+                <span class="font-semibold text-sm">
+                  {Decimal.round(Map.get(@totals, type), 2)} €
+                </span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
   # --- Mount ---
 
   @impl true
@@ -201,6 +254,8 @@ defmodule LifequestWeb.FinancesLive.Index do
      socket
      |> assign(:page_title, gettext("Financial information"))
      |> assign(:financial_profile, financial_profile)
+     |> assign(:income_totals, Finances.sum_all_by_category(scope, :income))
+     |> assign(:expense_totals, Finances.sum_all_by_category(scope, :expense))
      |> assign_transaction_groups(transactions)}
   end
 
@@ -219,8 +274,14 @@ defmodule LifequestWeb.FinancesLive.Index do
   @impl true
   def handle_info({type, %Finances.Transaction{}}, socket)
       when type in [:created, :updated, :deleted] do
-    transactions = Finances.list_transactions(socket.assigns.current_scope)
-    {:noreply, assign_transaction_groups(socket, transactions)}
+    scope = socket.assigns.current_scope
+    transactions = Finances.list_transactions(scope)
+
+    {:noreply,
+     socket
+     |> assign(:income_totals, Finances.sum_all_by_category(scope, :income))
+     |> assign(:expense_totals, Finances.sum_all_by_category(scope, :expense))
+     |> assign_transaction_groups(transactions)}
   end
 
   def handle_info({type, %Finances.FinancialProfile{}}, socket)

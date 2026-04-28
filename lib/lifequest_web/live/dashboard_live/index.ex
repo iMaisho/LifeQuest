@@ -27,6 +27,8 @@ defmodule LifequestWeb.DashboardLive.Index do
         total={@total_expense}
         by_type={@expense_by_type}
       />
+
+      <.top_expense_categories top_categories={@top_expense_categories} />
     </Layouts.app>
     """
   end
@@ -96,6 +98,29 @@ defmodule LifequestWeb.DashboardLive.Index do
     """
   end
 
+  defp top_expense_categories(assigns) do
+    ~H"""
+    <div :if={@top_categories != []} class="mb-12">
+      <div class="card bg-base-200 shadow">
+        <div class="card-body">
+          <h2 class="card-title mb-4">{gettext("Top expense categories")}</h2>
+          <div class="space-y-3">
+            <div
+              :for={{category, total} <- @top_categories}
+              class="flex justify-between items-center"
+            >
+              <span class="badge badge-error badge-outline">
+                {format_expense_type(category)}
+              </span>
+              <span class="font-semibold">{format_currency(total)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
   defp empty_state(assigns) do
     ~H"""
     <div class="alert alert-info">
@@ -127,6 +152,11 @@ defmodule LifequestWeb.DashboardLive.Index do
     pending_incomes = Finances.list_pending_recurring(scope, :income, date)
     pending_expenses = Finances.list_pending_recurring(scope, :expense, date)
 
+    top_expense_categories =
+      Finances.sum_all_by_category(scope, :expense)
+      |> Enum.sort_by(fn {_cat, amount} -> Decimal.to_float(amount) end, :desc)
+      |> Enum.take(5)
+
     socket
     |> assign(:incomes, incomes)
     |> assign(:expenses, expenses)
@@ -136,6 +166,7 @@ defmodule LifequestWeb.DashboardLive.Index do
     |> assign(:total_expense, sum_amounts(expenses))
     |> assign(:income_by_type, group_by_type(incomes, :income_type))
     |> assign(:expense_by_type, group_by_type(expenses, :expense_type))
+    |> assign(:top_expense_categories, top_expense_categories)
   end
 
   # --- Events ---
