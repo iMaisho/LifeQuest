@@ -12,6 +12,50 @@ defmodule LifequestWeb.DashboardLive.Index do
         {format_month(@current_month)}
       </p>
 
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <.donut_chart
+          title={gettext("Income by type")}
+          slices={@income_slices}
+          empty_label={gettext("No income")}
+        />
+        <.donut_chart
+          title={gettext("Expenses by type")}
+          slices={@expense_slices}
+          empty_label={gettext("No expenses")}
+        />
+      </div>
+
+      <div class="card bg-base-200 shadow mb-12">
+        <div class="card-body">
+          <h2 class="card-title mb-4">{gettext("Monthly balance")}</h2>
+          <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+              <span class="text-success font-medium">{gettext("Total income")}</span>
+              <span class="text-success font-semibold">{format_currency(@total_income)}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-error font-medium">{gettext("Total expenses")}</span>
+              <span class="text-error font-semibold">{format_currency(@total_expense)}</span>
+            </div>
+            <div class="divider my-1"></div>
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-lg">{gettext("Balance")}</span>
+              <span class={[
+                "font-bold text-lg",
+                Decimal.compare(Decimal.sub(@total_income, @total_expense), Decimal.new(0)) in [
+                  :gt,
+                  :eq
+                ] && "text-success",
+                Decimal.compare(Decimal.sub(@total_income, @total_expense), Decimal.new(0)) == :lt &&
+                  "text-error"
+              ]}>
+                {format_currency(Decimal.sub(@total_income, @total_expense))}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <.transaction_section
         direction={:income}
         transactions={@incomes}
@@ -132,6 +176,79 @@ defmodule LifequestWeb.DashboardLive.Index do
     """
   end
 
+  @circumference 251.2
+
+  attr :title, :string, required: true
+  attr :slices, :list, required: true
+  attr :empty_label, :string, required: true
+
+  defp donut_chart(assigns) do
+    assigns = assign(assigns, :circumference, @circumference)
+
+    ~H"""
+    <div class="card bg-base-200 shadow">
+      <div class="card-body items-center">
+        <h2 class="card-title">{@title}</h2>
+        <%= if @slices == [] do %>
+          <p class="text-sm opacity-60 mt-4">{@empty_label}</p>
+        <% else %>
+          <svg viewBox="0 0 100 100" class="w-48 h-48 -rotate-90">
+            <%= for {slice, offset} <- compute_arc_offsets(@slices, @circumference) do %>
+              <circle
+                cx="50"
+                cy="50"
+                r="40"
+                fill="none"
+                stroke={slice.color}
+                stroke-width="20"
+                stroke-dasharray={"#{slice.arc_length} #{@circumference}"}
+                stroke-dashoffset={offset}
+              />
+            <% end %>
+          </svg>
+          <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2">
+            <div :for={slice <- @slices} class="flex items-center gap-1 text-xs">
+              <span
+                class="inline-block w-3 h-3 rounded-full shrink-0"
+                style={"background-color: #{slice.color};"}
+              >
+              </span>
+              <span>{slice.label}</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    """
+  end
+
+  # Computes {slice_with_arc_length, stroke_dashoffset} pairs for SVG rendering.
+  # Each slice starts where the previous ended; offset walks backward from circumference.
+  defp compute_arc_offsets(slices, circumference) do
+    total =
+      slices
+      |> Enum.map(&Decimal.to_float(&1.value))
+      |> Enum.sum()
+
+    slices_with_arc =
+      Enum.map(slices, fn slice ->
+        arc = Decimal.to_float(slice.value) / total * circumference
+        Map.put(slice, :arc_length, arc)
+      end)
+
+    {pairs, _} =
+      Enum.map_reduce(slices_with_arc, 0.0, fn slice, cumulative ->
+        offset = circumference - cumulative
+
+        {
+          {slice, offset},
+          cumulative + slice.arc_length
+        }
+      end)
+
+    pairs
+  end
+
   # --- Mount & Data Loading ---
 
   @impl true
@@ -157,6 +274,9 @@ defmodule LifequestWeb.DashboardLive.Index do
       |> Enum.sort_by(fn {_cat, amount} -> Decimal.to_float(amount) end, :desc)
       |> Enum.take(5)
 
+    income_slices = build_income_slices(Finances.sum_all_by_category(scope, :income))
+    expense_slices = build_expense_slices(Finances.sum_all_by_category(scope, :expense))
+
     socket
     |> assign(:incomes, incomes)
     |> assign(:expenses, expenses)
@@ -167,6 +287,8 @@ defmodule LifequestWeb.DashboardLive.Index do
     |> assign(:income_by_type, group_by_type(incomes, :income_type))
     |> assign(:expense_by_type, group_by_type(expenses, :expense_type))
     |> assign(:top_expense_categories, top_expense_categories)
+    |> assign(:income_slices, income_slices)
+    |> assign(:expense_slices, expense_slices)
   end
 
   # --- Events ---
@@ -235,6 +357,47 @@ defmodule LifequestWeb.DashboardLive.Index do
   defp format_expense_type(:extra), do: gettext("Extra")
   defp format_expense_type(:other), do: gettext("Other")
   defp format_expense_type(_), do: gettext("Unknown")
+
+  # --- Slice Builders ---
+
+  @income_colors %{
+    salary: "#22c55e",
+    freelance: "#16a34a",
+    rental: "#15803d",
+    bonus: "#4ade80",
+    pension: "#86efac",
+    government_aid: "#bbf7d0",
+    investment: "#34d399",
+    other: "#6ee7b7"
+  }
+
+  @expense_colors %{
+    essential: "#ef4444",
+    pleasure: "#f97316",
+    savings: "#3b82f6",
+    extra: "#eab308",
+    other: "#94a3b8"
+  }
+
+  defp build_income_slices(category_map) do
+    Enum.map(category_map, fn {type, value} ->
+      %{
+        label: format_income_type(type),
+        value: value,
+        color: Map.get(@income_colors, type, "#6ee7b7")
+      }
+    end)
+  end
+
+  defp build_expense_slices(category_map) do
+    Enum.map(category_map, fn {type, value} ->
+      %{
+        label: format_expense_type(type),
+        value: value,
+        color: Map.get(@expense_colors, type, "#94a3b8")
+      }
+    end)
+  end
 
   # --- Calculation Helpers ---
 

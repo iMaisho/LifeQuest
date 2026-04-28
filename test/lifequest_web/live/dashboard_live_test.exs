@@ -260,4 +260,94 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
       assert html =~ expected_month
     end
   end
+
+  describe "Donut charts" do
+    test "affiche les titres des sections donut", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Income by type"
+      assert html =~ "Expenses by type"
+    end
+
+    test "affiche un SVG quand des revenus existent", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "1500.00", income_type: :salary})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "<svg"
+    end
+
+    test "affiche un SVG quand des dépenses existent", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "400.00", expense_type: :essential})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "<svg"
+    end
+
+    test "affiche le message vide quand aucun revenu ce mois", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "No income this month."
+    end
+
+    test "affiche le message vide quand aucune dépense ce mois", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "No expenses this month."
+    end
+
+    test "affiche le total des revenus dans la balance", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "2000.00", income_type: :salary})
+      create_income(scope, %{amount: "500.00", income_type: :freelance})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "2500.00 €"
+    end
+
+    test "affiche le total des dépenses dans la balance", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "600.00", expense_type: :essential})
+      create_expense(scope, %{amount: "100.00", expense_type: :pleasure})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "700.00 €"
+    end
+
+    test "les donuts n'affichent que les données de l'utilisateur connecté", %{
+      conn: conn,
+      scope: scope
+    } do
+      other_scope = Lifequest.AccountsFixtures.user_scope_fixture()
+
+      create_income(scope, %{amount: "3000.00", income_type: :salary})
+      create_income(other_scope, %{amount: "9000.00", income_type: :salary})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "3000.00 €"
+      refute html =~ "9000.00 €"
+    end
+
+    test "le donut income affiche les types présents", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "2000.00", income_type: :salary})
+      create_income(scope, %{label: "Freelance", amount: "800.00", income_type: :freelance})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Salary"
+      assert html =~ "Freelance"
+    end
+
+    test "le donut expense affiche les types présents", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "500.00", expense_type: :essential})
+      create_expense(scope, %{label: "Cinema", amount: "50.00", expense_type: :pleasure})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Essential"
+      assert html =~ "Pleasure"
+    end
+  end
 end
