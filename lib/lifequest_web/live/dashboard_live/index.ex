@@ -14,103 +14,27 @@ defmodule LifequestWeb.DashboardLive.Index do
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <.donut_chart
-          title={gettext("Income by type")}
+          title={gettext("Monthly income")}
           slices={@income_slices}
-          empty_label={gettext("No income")}
+          empty_label={gettext("No income this month.")}
         />
         <.donut_chart
-          title={gettext("Expenses by type")}
+          title={gettext("Monthly expenses")}
           slices={@expense_slices}
-          empty_label={gettext("No expenses")}
+          empty_label={gettext("No expenses this month.")}
         />
       </div>
 
-      <div class="card bg-base-200 shadow mb-12">
-        <div class="card-body">
-          <h2 class="card-title mb-4">{gettext("Monthly balance")}</h2>
-          <div class="flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-              <span class="text-success font-medium">{gettext("Total income")}</span>
-              <span class="text-success font-semibold">{format_currency(@total_income)}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-error font-medium">{gettext("Total expenses")}</span>
-              <span class="text-error font-semibold">{format_currency(@total_expense)}</span>
-            </div>
-            <div class="divider my-1"></div>
-            <div class="flex justify-between items-center">
-              <span class="font-bold text-lg">{gettext("Balance")}</span>
-              <span class={[
-                "font-bold text-lg",
-                Decimal.compare(Decimal.sub(@total_income, @total_expense), Decimal.new(0)) in [
-                  :gt,
-                  :eq
-                ] && "text-success",
-                Decimal.compare(Decimal.sub(@total_income, @total_expense), Decimal.new(0)) == :lt &&
-                  "text-error"
-              ]}>
-                {format_currency(Decimal.sub(@total_income, @total_expense))}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <.pending_recurring_section direction={:income} pending={@pending_incomes} />
+      <.pending_recurring_section direction={:expense} pending={@pending_expenses} />
 
-      <.transaction_section
-        direction={:income}
-        transactions={@incomes}
-        pending={@pending_incomes}
-        total={@total_income}
-        by_type={@income_by_type}
-      />
-
-      <.transaction_section
-        direction={:expense}
-        transactions={@expenses}
-        pending={@pending_expenses}
-        total={@total_expense}
-        by_type={@expense_by_type}
-      />
-
-      <.top_expense_categories top_categories={@top_expense_categories} />
+      <.empty_state :if={@incomes == [] and @pending_incomes == []} direction={:income} />
+      <.empty_state :if={@expenses == [] and @pending_expenses == []} direction={:expense} />
     </Layouts.app>
     """
   end
 
   # --- Components ---
-
-  defp transaction_section(assigns) do
-    ~H"""
-    <div class="mb-12">
-      <.transaction_summary direction={@direction} total={@total} by_type={@by_type} />
-      <.pending_recurring_section direction={@direction} pending={@pending} />
-      <.empty_state :if={@transactions == [] and @pending == []} direction={@direction} />
-    </div>
-    """
-  end
-
-  defp transaction_summary(assigns) do
-    ~H"""
-    <div class="card bg-base-200 shadow mb-8">
-      <div class="card-body">
-        <h2 class="card-title">{direction_title(@direction)}</h2>
-        <p class="text-3xl font-bold">{format_currency(@total)}</p>
-      </div>
-    </div>
-
-    <div :if={@by_type != []} class="card bg-base-200 shadow mb-8">
-      <div class="card-body">
-        <h2 class="card-title mb-4">{gettext("Breakdown by type")}</h2>
-        <div class="space-y-3">
-          <div :for={{type, amount} <- @by_type} class="flex justify-between items-center">
-            <span class="badge badge-outline">{format_type(@direction, type)}</span>
-            <span class="font-semibold">{format_currency(amount)}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    """
-  end
 
   defp pending_recurring_section(assigns) do
     ~H"""
@@ -142,32 +66,9 @@ defmodule LifequestWeb.DashboardLive.Index do
     """
   end
 
-  defp top_expense_categories(assigns) do
-    ~H"""
-    <div :if={@top_categories != []} class="mb-12">
-      <div class="card bg-base-200 shadow">
-        <div class="card-body">
-          <h2 class="card-title mb-4">{gettext("Top expense categories")}</h2>
-          <div class="space-y-3">
-            <div
-              :for={{category, total} <- @top_categories}
-              class="flex justify-between items-center"
-            >
-              <span class="badge badge-error badge-outline">
-                {format_expense_type(category)}
-              </span>
-              <span class="font-semibold">{format_currency(total)}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    """
-  end
-
   defp empty_state(assigns) do
     ~H"""
-    <div class="alert alert-info">
+    <div class="alert alert-info mb-8">
       <span>{empty_message(@direction)}</span>
       <.link navigate={~p"/transactions/new"} class="btn btn-sm btn-primary">
         {add_label(@direction)}
@@ -183,7 +84,12 @@ defmodule LifequestWeb.DashboardLive.Index do
   attr :empty_label, :string, required: true
 
   defp donut_chart(assigns) do
-    assigns = assign(assigns, :circumference, @circumference)
+    total = Enum.reduce(assigns.slices, Decimal.new(0), &Decimal.add(&2, &1.value))
+
+    assigns =
+      assigns
+      |> assign(:circumference, @circumference)
+      |> assign(:donut_total, total)
 
     ~H"""
     <div class="card bg-base-200 shadow">
@@ -205,15 +111,28 @@ defmodule LifequestWeb.DashboardLive.Index do
                 stroke-dashoffset={offset}
               />
             <% end %>
+            <text
+              x="50"
+              y="50"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              transform="rotate(90, 50, 50)"
+              font-size="7"
+              font-weight="bold"
+              class="fill-current"
+            >
+              {format_currency(@donut_total)}
+            </text>
           </svg>
-          <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2">
-            <div :for={slice <- @slices} class="flex items-center gap-1 text-xs">
+          <div class="w-full flex flex-col gap-1 mt-3">
+            <div :for={slice <- @slices} class="flex items-center gap-2 text-sm">
               <span
-                class="inline-block w-3 h-3 rounded-full shrink-0"
+                class="inline-block w-3 h-3 rounded-sm shrink-0"
                 style={"background-color: #{slice.color};"}
               >
               </span>
-              <span>{slice.label}</span>
+              <span class="flex-1">{slice.label}</span>
+              <span class="font-semibold">{format_currency(slice.value)}</span>
             </div>
           </div>
         <% end %>
@@ -223,7 +142,7 @@ defmodule LifequestWeb.DashboardLive.Index do
   end
 
   # Computes {slice_with_arc_length, stroke_dashoffset} pairs for SVG rendering.
-  # Each slice starts where the previous ended; offset walks backward from circumference.
+  # offset = arc_length + C - cumulative positions each slice right after the previous.
   defp compute_arc_offsets(slices, circumference) do
     total =
       slices
@@ -238,7 +157,7 @@ defmodule LifequestWeb.DashboardLive.Index do
 
     {pairs, _} =
       Enum.map_reduce(slices_with_arc, 0.0, fn slice, cumulative ->
-        offset = circumference - cumulative
+        offset = slice.arc_length + circumference - cumulative
 
         {
           {slice, offset},
@@ -269,26 +188,16 @@ defmodule LifequestWeb.DashboardLive.Index do
     pending_incomes = Finances.list_pending_recurring(scope, :income, date)
     pending_expenses = Finances.list_pending_recurring(scope, :expense, date)
 
-    top_expense_categories =
-      Finances.sum_all_by_category(scope, :expense)
-      |> Enum.sort_by(fn {_cat, amount} -> Decimal.to_float(amount) end, :desc)
-      |> Enum.take(5)
-
-    income_slices = build_income_slices(Finances.sum_all_by_category(scope, :income))
-    expense_slices = build_expense_slices(Finances.sum_all_by_category(scope, :expense))
-
     socket
     |> assign(:incomes, incomes)
     |> assign(:expenses, expenses)
     |> assign(:pending_incomes, pending_incomes)
     |> assign(:pending_expenses, pending_expenses)
-    |> assign(:total_income, sum_amounts(incomes))
-    |> assign(:total_expense, sum_amounts(expenses))
-    |> assign(:income_by_type, group_by_type(incomes, :income_type))
-    |> assign(:expense_by_type, group_by_type(expenses, :expense_type))
-    |> assign(:top_expense_categories, top_expense_categories)
-    |> assign(:income_slices, income_slices)
-    |> assign(:expense_slices, expense_slices)
+    |> assign(:income_slices, build_income_slices(group_amounts_by_type(incomes, :income_type)))
+    |> assign(
+      :expense_slices,
+      build_expense_slices(group_amounts_by_type(expenses, :expense_type))
+    )
   end
 
   # --- Events ---
@@ -308,10 +217,7 @@ defmodule LifequestWeb.DashboardLive.Index do
     end
   end
 
-  # --- Direction-aware Labels ---
-
-  defp direction_title(:income), do: gettext("Monthly income")
-  defp direction_title(:expense), do: gettext("Monthly expenses")
+  # --- Labels ---
 
   defp pending_title(:income), do: gettext("Recurring income to validate")
   defp pending_title(:expense), do: gettext("Recurring expenses to validate")
@@ -322,7 +228,7 @@ defmodule LifequestWeb.DashboardLive.Index do
   defp add_label(:income), do: gettext("Add income")
   defp add_label(:expense), do: gettext("Add expense")
 
-  # --- Formatting Helpers ---
+  # --- Formatting ---
 
   defp format_currency(amount) do
     "#{Decimal.round(amount, 2)} €"
@@ -333,13 +239,10 @@ defmodule LifequestWeb.DashboardLive.Index do
   end
 
   defp format_transaction_type(%{direction: :income, income_type: type}),
-    do: format_type(:income, type)
+    do: format_income_type(type)
 
   defp format_transaction_type(%{direction: :expense, expense_type: type}),
-    do: format_type(:expense, type)
-
-  defp format_type(:income, type), do: format_income_type(type)
-  defp format_type(:expense, type), do: format_expense_type(type)
+    do: format_expense_type(type)
 
   defp format_income_type(:salary), do: gettext("Salary")
   defp format_income_type(:freelance), do: gettext("Freelance")
@@ -402,12 +305,10 @@ defmodule LifequestWeb.DashboardLive.Index do
   # --- Calculation Helpers ---
 
   defp sum_amounts(transactions) do
-    transactions
-    |> Enum.map(& &1.amount)
-    |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+    Enum.reduce(transactions, Decimal.new(0), &Decimal.add(&2, &1.amount))
   end
 
-  defp group_by_type(transactions, type_field) do
+  defp group_amounts_by_type(transactions, type_field) do
     transactions
     |> Enum.group_by(&Map.get(&1, type_field))
     |> Enum.map(fn {type, txns} -> {type, sum_amounts(txns)} end)
