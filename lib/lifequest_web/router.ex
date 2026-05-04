@@ -75,6 +75,8 @@ defmodule LifequestWeb.Router do
       live "/finances", FinancesLive.Index, :index
 
       live "/projections", ProjectionsLive.Index, :index
+
+      live "/investments", InvestmentsLive.Index, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password

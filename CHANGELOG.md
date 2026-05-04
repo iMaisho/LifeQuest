@@ -13,6 +13,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 - Badge de catégorie coloré dans la liste des transactions
 - Synthèse des totaux par catégorie sur la page finances
 - Bloc "Top catégories de dépenses" sur le dashboard
+- Page de simulation de placements : placement sûr (3%/an garanti) et placement risqué avec fourchette pessimiste/attendu/optimiste, virement mensuel et horizon personnalisable
 
 ## [0.5.0] - 2025-04-24
 
