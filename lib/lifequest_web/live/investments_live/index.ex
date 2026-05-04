@@ -28,7 +28,11 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               <button
                 phx-click="set_duration"
                 phx-value-years={d}
-                class={["btn btn-sm", @duration == d && "btn-primary", @duration != d && "btn-outline"]}
+                class={[
+                  "btn btn-sm",
+                  @duration == d && "btn-primary",
+                  @duration != d && "btn-outline"
+                ]}
               >
                 {gettext("%{years} years", years: d)}
               </button>
@@ -268,9 +272,11 @@ defmodule LifequestWeb.InvestmentsLive.Index do
     risky_capital = risky_initial + risky_monthly * years * 12
 
     result_risky = %{
-      pessimistic: future_value(risky_initial, risky_monthly, @risky_placement.rate_pessimistic, years),
+      pessimistic:
+        future_value(risky_initial, risky_monthly, @risky_placement.rate_pessimistic, years),
       expected: future_value(risky_initial, risky_monthly, @risky_placement.rate_expected, years),
-      optimistic: future_value(risky_initial, risky_monthly, @risky_placement.rate_optimistic, years),
+      optimistic:
+        future_value(risky_initial, risky_monthly, @risky_placement.rate_optimistic, years),
       capital: risky_capital
     }
 
