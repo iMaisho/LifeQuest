@@ -3,7 +3,6 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
   import Phoenix.LiveViewTest
   import Lifequest.FinancesFixtures
 
-
   setup :register_and_log_in_user
 
   test "redirects when not authenticated" do
@@ -33,7 +32,9 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
 
     html =
       live
-      |> form("form[phx-submit='evaluate']", goal: %{target_amount: "1000", target_date: future_date})
+      |> form("form[phx-submit='evaluate']",
+        goal: %{target_amount: "1000", target_date: future_date}
+      )
       |> render_submit()
 
     assert html =~ "Goal"
@@ -47,7 +48,9 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
 
     html =
       live
-      |> form("form[phx-submit='evaluate']", goal: %{target_amount: "1000", target_date: past_date})
+      |> form("form[phx-submit='evaluate']",
+        goal: %{target_amount: "1000", target_date: past_date}
+      )
       |> render_submit()
 
     assert html =~ "valid"
