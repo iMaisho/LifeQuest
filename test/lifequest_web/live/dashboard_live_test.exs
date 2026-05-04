@@ -80,13 +80,14 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
   end
 
   describe "Dashboard with income data" do
-    test "displays total monthly income", %{conn: conn, scope: scope} do
+    test "displays monthly income amounts in legend", %{conn: conn, scope: scope} do
       create_income(scope, %{amount: "2500.00"})
       create_income(scope, %{label: "Freelance gig", income_type: :freelance, amount: "500.00"})
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "3000.00 €"
+      assert html =~ "2500.00 €"
+      assert html =~ "500.00 €"
     end
 
     test "displays income breakdown by type", %{conn: conn, scope: scope} do
@@ -148,13 +149,14 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
   end
 
   describe "Dashboard with expense data" do
-    test "displays total monthly expenses", %{conn: conn, scope: scope} do
+    test "displays monthly expense amounts in legend", %{conn: conn, scope: scope} do
       create_expense(scope, %{amount: "800.00"})
       create_expense(scope, %{label: "Netflix", expense_type: :pleasure, amount: "15.00"})
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "815.00 €"
+      assert html =~ "800.00 €"
+      assert html =~ "15.00 €"
     end
 
     test "displays expense breakdown by type", %{conn: conn, scope: scope} do
@@ -258,6 +260,98 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       expected_month = Calendar.strftime(Date.utc_today(), "%B %Y") |> String.capitalize()
       assert html =~ expected_month
+    end
+  end
+
+  describe "Donut charts" do
+    test "affiche les titres des sections donut", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Monthly income"
+      assert html =~ "Monthly expenses"
+    end
+
+    test "affiche un SVG quand des revenus existent", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "1500.00", income_type: :salary})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "<svg"
+    end
+
+    test "affiche un SVG quand des dépenses existent", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "400.00", expense_type: :essential})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "<svg"
+    end
+
+    test "affiche le message vide quand aucun revenu ce mois", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "No income this month."
+    end
+
+    test "affiche le message vide quand aucune dépense ce mois", %{conn: conn} do
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "No expenses this month."
+    end
+
+    test "affiche les montants par catégorie dans la légende income", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "2000.00", income_type: :salary})
+      create_income(scope, %{amount: "500.00", income_type: :freelance})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "2000.00 €"
+      assert html =~ "500.00 €"
+    end
+
+    test "affiche les montants par catégorie dans la légende expense", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "600.00", expense_type: :essential})
+      create_expense(scope, %{amount: "100.00", expense_type: :pleasure})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "600.00 €"
+      assert html =~ "100.00 €"
+    end
+
+    test "les donuts n'affichent que les données de l'utilisateur connecté", %{
+      conn: conn,
+      scope: scope
+    } do
+      other_scope = Lifequest.AccountsFixtures.user_scope_fixture()
+
+      create_income(scope, %{amount: "3000.00", income_type: :salary})
+      create_income(other_scope, %{amount: "9000.00", income_type: :salary})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "3000.00 €"
+      refute html =~ "9000.00 €"
+    end
+
+    test "le donut income affiche les types présents", %{conn: conn, scope: scope} do
+      create_income(scope, %{amount: "2000.00", income_type: :salary})
+      create_income(scope, %{label: "Freelance", amount: "800.00", income_type: :freelance})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Salary"
+      assert html =~ "Freelance"
+    end
+
+    test "le donut expense affiche les types présents", %{conn: conn, scope: scope} do
+      create_expense(scope, %{amount: "500.00", expense_type: :essential})
+      create_expense(scope, %{label: "Cinema", amount: "50.00", expense_type: :pleasure})
+
+      {:ok, _live, html} = live(conn, ~p"/dashboard")
+
+      assert html =~ "Essential"
+      assert html =~ "Pleasure"
     end
   end
 end
