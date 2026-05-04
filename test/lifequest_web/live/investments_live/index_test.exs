@@ -6,10 +6,10 @@ defmodule LifequestWeb.InvestmentsLive.IndexTest do
 
   test "renders the investment page with both placements", %{conn: conn} do
     {:ok, _live, html} = live(conn, ~p"/investments")
-    assert html =~ "Investissements"
-    assert html =~ "Livret Croissance"
-    assert html =~ "Portefeuille Actions"
-    assert html =~ "Garanti"
+    assert html =~ "Investments"
+    assert html =~ "Safe Savings Account"
+    assert html =~ "Dynamic Portfolio"
+    assert html =~ "Guaranteed"
     assert html =~ "Variable"
   end
 
@@ -22,7 +22,7 @@ defmodule LifequestWeb.InvestmentsLive.IndexTest do
     {:ok, live, _html} = live(conn, ~p"/investments")
 
     html = live |> element("button[phx-value-years='5']") |> render_click()
-    assert html =~ "5 ans"
+    assert html =~ "5 years"
   end
 
   test "updates safe placement results when inputs change", %{conn: conn} do
@@ -44,13 +44,13 @@ defmodule LifequestWeb.InvestmentsLive.IndexTest do
       |> form("form[phx-change='update_risque']", risque: %{initial: "5000", monthly: "200"})
       |> render_change()
 
-    assert html =~ "Pessimiste"
-    assert html =~ "Attendu"
-    assert html =~ "Optimiste"
+    assert html =~ "Pessimistic"
+    assert html =~ "Expected"
+    assert html =~ "Optimistic"
   end
 
   test "shows initial zero results on mount", %{conn: conn} do
     {:ok, _live, html} = live(conn, ~p"/investments")
-    assert html =~ "0,00"
+    assert html =~ "0.00"
   end
 end

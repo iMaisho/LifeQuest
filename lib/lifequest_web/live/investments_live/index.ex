@@ -3,30 +3,26 @@ defmodule LifequestWeb.InvestmentsLive.Index do
 
   @durations [1, 5, 10, 20, 30]
 
-  @placement_sur %{
-    name: "Livret Croissance",
-    subtitle: "Épargne sécurisée, capital garanti",
-    rate: 0.03
-  }
+  @placement_sur %{rate: 0.03}
 
   @placement_risque %{
-    name: "Portefeuille Actions",
-    subtitle: "Investissement en marchés financiers, rendement variable",
-    rate_pessimiste: -0.15,
-    rate_attendu: 0.08,
-    rate_optimiste: 0.20
+    rate_pessimistic: -0.15,
+    rate_expected: 0.08,
+    rate_optimistic: 0.20
   }
 
   @impl true
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <h1 class="text-4xl font-bold mb-2">Investissements</h1>
-      <p class="text-sm opacity-70 mb-8">Simulez la croissance de vos placements dans le temps.</p>
+      <h1 class="text-4xl font-bold mb-2">{gettext("Investments")}</h1>
+      <p class="text-sm opacity-70 mb-8">
+        {gettext("Simulate the growth of your investments over time.")}
+      </p>
 
       <div class="card bg-base-200 shadow mb-8">
         <div class="card-body">
-          <h2 class="font-semibold mb-3">Horizon de simulation</h2>
+          <h2 class="font-semibold mb-3">{gettext("Simulation horizon")}</h2>
           <div class="flex flex-wrap gap-2 mb-3">
             <%= for d <- @durations do %>
               <button
@@ -34,7 +30,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
                 phx-value-years={d}
                 class={["btn btn-sm", @duration == d && "btn-primary", @duration != d && "btn-outline"]}
               >
-                {d} ans
+                {gettext("%{years} years", years: d)}
               </button>
             <% end %>
           </div>
@@ -43,35 +39,37 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               type="number"
               name="custom_years"
               value={@custom_duration}
-              placeholder="Personnalisé"
+              placeholder={gettext("Custom")}
               phx-debounce="500"
               class="input input-sm input-bordered w-36"
               min="1"
               max="50"
             />
-            <span class="text-sm opacity-60">ans</span>
+            <span class="text-sm opacity-60">{gettext("years")}</span>
           </form>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <%!-- Placement sûr --%>
+        <%!-- Safe placement --%>
         <div class="card bg-base-200 shadow">
           <div class="card-body">
             <div class="flex items-start justify-between mb-1">
-              <h2 class="card-title text-base">{@placement_sur.name}</h2>
-              <span class="badge badge-success badge-sm">Garanti</span>
+              <h2 class="card-title text-base">{gettext("Safe Savings Account")}</h2>
+              <span class="badge badge-success badge-sm">{gettext("Guaranteed")}</span>
             </div>
-            <p class="text-xs opacity-60 mb-1">{@placement_sur.subtitle}</p>
+            <p class="text-xs opacity-60 mb-1">
+              {gettext("Secured savings, guaranteed capital")}
+            </p>
             <p class="text-success font-semibold text-sm mb-4">
-              {fmt_rate(@placement_sur.rate)}% / an
+              {fmt_rate(@placement_sur.rate)}% / {gettext("year")}
             </p>
 
             <.form for={@sur_form} phx-change="update_sur" class="space-y-3">
               <.input
                 field={@sur_form[:initial]}
                 type="number"
-                label="Investissement initial (€)"
+                label={gettext("Initial investment (€)")}
                 min="0"
                 step="100"
                 phx-debounce="300"
@@ -79,7 +77,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               <.input
                 field={@sur_form[:monthly]}
                 type="number"
-                label="Virement mensuel (€)"
+                label={gettext("Monthly transfer (€)")}
                 min="0"
                 step="50"
                 phx-debounce="300"
@@ -90,43 +88,45 @@ defmodule LifequestWeb.InvestmentsLive.Index do
 
             <div class="space-y-2">
               <div class="flex justify-between text-sm">
-                <span class="opacity-60">Capital investi</span>
+                <span class="opacity-60">{gettext("Invested capital")}</span>
                 <span>{fmt(@result_sur.capital)} €</span>
               </div>
               <div class="flex justify-between text-sm">
-                <span class="opacity-60">Intérêts générés</span>
+                <span class="opacity-60">{gettext("Generated interest")}</span>
                 <span class="text-success">{fmt(@result_sur.gains)} €</span>
               </div>
               <div class="flex justify-between font-bold border-t border-base-300 pt-2 mt-1">
-                <span>Valeur dans {@duration} ans</span>
+                <span>{gettext("Value in %{years} years", years: @duration)}</span>
                 <span class="text-success">{fmt(@result_sur.final)} €</span>
               </div>
             </div>
           </div>
         </div>
 
-        <%!-- Placement risqué --%>
+        <%!-- Risky placement --%>
         <div class="card bg-base-200 shadow">
           <div class="card-body">
             <div class="flex items-start justify-between mb-1">
-              <h2 class="card-title text-base">{@placement_risque.name}</h2>
-              <span class="badge badge-warning badge-sm">Variable</span>
+              <h2 class="card-title text-base">{gettext("Dynamic Portfolio")}</h2>
+              <span class="badge badge-warning badge-sm">{gettext("Variable")}</span>
             </div>
-            <p class="text-xs opacity-60 mb-1">{@placement_risque.subtitle}</p>
+            <p class="text-xs opacity-60 mb-1">
+              {gettext("Variable-rate equity market investment")}
+            </p>
             <div class="flex gap-2 mb-4 text-xs font-medium">
-              <span class="text-error">{fmt_rate(@placement_risque.rate_pessimiste)}%</span>
+              <span class="text-error">{fmt_rate(@placement_risque.rate_pessimistic)}%</span>
               <span class="opacity-30">/</span>
-              <span class="text-primary">{fmt_rate(@placement_risque.rate_attendu)}%</span>
+              <span class="text-primary">{fmt_rate(@placement_risque.rate_expected)}%</span>
               <span class="opacity-30">/</span>
-              <span class="text-success">{fmt_rate(@placement_risque.rate_optimiste)}%</span>
-              <span class="opacity-40">par an</span>
+              <span class="text-success">{fmt_rate(@placement_risque.rate_optimistic)}%</span>
+              <span class="opacity-40">{gettext("per year")}</span>
             </div>
 
             <.form for={@risque_form} phx-change="update_risque" class="space-y-3">
               <.input
                 field={@risque_form[:initial]}
                 type="number"
-                label="Investissement initial (€)"
+                label={gettext("Initial investment (€)")}
                 min="0"
                 step="100"
                 phx-debounce="300"
@@ -134,7 +134,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               <.input
                 field={@risque_form[:monthly]}
                 type="number"
-                label="Virement mensuel (€)"
+                label={gettext("Monthly transfer (€)")}
                 min="0"
                 step="50"
                 phx-debounce="300"
@@ -144,29 +144,31 @@ defmodule LifequestWeb.InvestmentsLive.Index do
             <div class="divider my-4" />
 
             <p class="text-xs opacity-50 mb-3">
-              Capital investi : {fmt(@result_risque.capital)} €
+              {gettext("Invested capital: %{amount} €", amount: fmt(@result_risque.capital))}
             </p>
             <div class="grid grid-cols-3 gap-2">
               <div class="rounded-lg bg-error/10 p-3 text-center">
-                <p class="text-xs opacity-60 mb-1">Pessimiste</p>
+                <p class="text-xs opacity-60 mb-1">{gettext("Pessimistic")}</p>
                 <p class={[
                   "font-bold text-sm",
-                  @result_risque.pessimiste < 0 && "text-error",
-                  @result_risque.pessimiste >= 0 && "text-base-content"
+                  @result_risque.pessimistic < 0 && "text-error",
+                  @result_risque.pessimistic >= 0 && "text-base-content"
                 ]}>
-                  {fmt(@result_risque.pessimiste)} €
+                  {fmt(@result_risque.pessimistic)} €
                 </p>
               </div>
               <div class="rounded-lg bg-primary/10 p-3 text-center">
-                <p class="text-xs opacity-60 mb-1">Attendu</p>
-                <p class="font-bold text-sm text-primary">{fmt(@result_risque.attendu)} €</p>
+                <p class="text-xs opacity-60 mb-1">{gettext("Expected")}</p>
+                <p class="font-bold text-sm text-primary">{fmt(@result_risque.expected)} €</p>
               </div>
               <div class="rounded-lg bg-success/10 p-3 text-center">
-                <p class="text-xs opacity-60 mb-1">Optimiste</p>
-                <p class="font-bold text-sm text-success">{fmt(@result_risque.optimiste)} €</p>
+                <p class="text-xs opacity-60 mb-1">{gettext("Optimistic")}</p>
+                <p class="font-bold text-sm text-success">{fmt(@result_risque.optimistic)} €</p>
               </div>
             </div>
-            <p class="text-xs opacity-40 text-right mt-2">dans {@duration} ans</p>
+            <p class="text-xs opacity-40 text-right mt-2">
+              {gettext("in %{years} years", years: @duration)}
+            </p>
           </div>
         </div>
       </div>
@@ -178,7 +180,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "Investissements")
+     |> assign(:page_title, gettext("Investments"))
      |> assign(:durations, @durations)
      |> assign(:duration, 10)
      |> assign(:custom_duration, "")
@@ -266,9 +268,9 @@ defmodule LifequestWeb.InvestmentsLive.Index do
     capital_risque = ri + rm * years * 12
 
     result_risque = %{
-      pessimiste: future_value(ri, rm, @placement_risque.rate_pessimiste, years),
-      attendu: future_value(ri, rm, @placement_risque.rate_attendu, years),
-      optimiste: future_value(ri, rm, @placement_risque.rate_optimiste, years),
+      pessimistic: future_value(ri, rm, @placement_risque.rate_pessimistic, years),
+      expected: future_value(ri, rm, @placement_risque.rate_expected, years),
+      optimistic: future_value(ri, rm, @placement_risque.rate_optimistic, years),
       capital: capital_risque
     }
 
@@ -277,7 +279,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
     |> assign(:result_risque, result_risque)
   end
 
-  # Formule de capitalisation avec versements mensuels réguliers.
+  # Compound interest formula with regular monthly contributions.
   defp future_value(initial, monthly, annual_rate, years) do
     r = annual_rate / 12
     n = years * 12
@@ -318,7 +320,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
       |> Enum.reverse()
       |> Enum.join()
 
-    "#{sign}#{formatted_int},#{dec_str}"
+    "#{sign}#{formatted_int}.#{dec_str}"
   end
 
   defp fmt_rate(rate) do
