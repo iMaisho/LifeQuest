@@ -50,25 +50,25 @@
               <li>
                 <.link navigate={~p"/dashboard"} class="flex items-center gap-3">
                   <span class="hero-home size-5 shrink-0" />
-                  <span class="sidebar-label">Dashboard</span>
+                  <span class="sidebar-label">{gettext("Dashboard")}</span>
                 </.link>
               </li>
               <li>
                 <.link navigate={~p"/finances"} class="flex items-center gap-3">
                   <span class="hero-banknotes size-5 shrink-0" />
-                  <span class="sidebar-label">Finances</span>
+                  <span class="sidebar-label">{gettext("Finances")}</span>
                 </.link>
               </li>
               <li>
                 <.link navigate={~p"/projections"} class="flex items-center gap-3">
                   <span class="hero-chart-bar size-5 shrink-0" />
-                  <span class="sidebar-label">Projections</span>
+                  <span class="sidebar-label">{gettext("Projections")}</span>
                 </.link>
               </li>
               <li>
                 <.link navigate={~p"/investments"} class="flex items-center gap-3">
                   <span class="hero-arrow-trending-up size-5 shrink-0" />
-                  <span class="sidebar-label">Investments</span>
+                  <span class="sidebar-label">{gettext("Investments")}</span>
                 </.link>
               </li>
             </ul>
@@ -109,12 +109,12 @@
               <ul class="menu menu-compact p-2">
                 <li>
                   <.link href={~p"/users/settings"} class="flex items-center gap-2">
-                    <span class="hero-cog-6-tooth size-4" /> Settings
+                    <span class="hero-cog-6-tooth size-4" /> {gettext("Settings")}
                   </.link>
                 </li>
                 <li>
                   <.link href={~p"/users/log-out"} method="delete" class="flex items-center gap-2">
-                    <span class="hero-arrow-right-start-on-rectangle size-4" /> Log out
+                    <span class="hero-arrow-right-start-on-rectangle size-4" /> {gettext("Log out")}
                   </.link>
                 </li>
               </ul>
