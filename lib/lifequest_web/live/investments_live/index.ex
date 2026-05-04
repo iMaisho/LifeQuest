@@ -3,9 +3,9 @@ defmodule LifequestWeb.InvestmentsLive.Index do
 
   @durations [1, 5, 10, 20, 30]
 
-  @placement_sur %{rate: 0.03}
+  @safe_placement %{rate: 0.03}
 
-  @placement_risque %{
+  @risky_placement %{
     rate_pessimistic: -0.15,
     rate_expected: 0.08,
     rate_optimistic: 0.20
@@ -62,12 +62,12 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               {gettext("Secured savings, guaranteed capital")}
             </p>
             <p class="text-success font-semibold text-sm mb-4">
-              {fmt_rate(@placement_sur.rate)}% / {gettext("year")}
+              {fmt_rate(@safe_placement.rate)}% / {gettext("year")}
             </p>
 
-            <.form for={@sur_form} phx-change="update_sur" class="space-y-3">
+            <.form for={@safe_form} phx-change="update_safe" class="space-y-3">
               <.input
-                field={@sur_form[:initial]}
+                field={@safe_form[:initial]}
                 type="number"
                 label={gettext("Initial investment (€)")}
                 min="0"
@@ -75,7 +75,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
                 phx-debounce="300"
               />
               <.input
-                field={@sur_form[:monthly]}
+                field={@safe_form[:monthly]}
                 type="number"
                 label={gettext("Monthly transfer (€)")}
                 min="0"
@@ -89,15 +89,15 @@ defmodule LifequestWeb.InvestmentsLive.Index do
             <div class="space-y-2">
               <div class="flex justify-between text-sm">
                 <span class="opacity-60">{gettext("Invested capital")}</span>
-                <span>{fmt(@result_sur.capital)} €</span>
+                <span>{fmt(@result_safe.capital)} €</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="opacity-60">{gettext("Generated interest")}</span>
-                <span class="text-success">{fmt(@result_sur.gains)} €</span>
+                <span class="text-success">{fmt(@result_safe.gains)} €</span>
               </div>
               <div class="flex justify-between font-bold border-t border-base-300 pt-2 mt-1">
                 <span>{gettext("Value in %{years} years", years: @duration)}</span>
-                <span class="text-success">{fmt(@result_sur.final)} €</span>
+                <span class="text-success">{fmt(@result_safe.final)} €</span>
               </div>
             </div>
           </div>
@@ -114,17 +114,17 @@ defmodule LifequestWeb.InvestmentsLive.Index do
               {gettext("Variable-rate equity market investment")}
             </p>
             <div class="flex gap-2 mb-4 text-xs font-medium">
-              <span class="text-error">{fmt_rate(@placement_risque.rate_pessimistic)}%</span>
+              <span class="text-error">{fmt_rate(@risky_placement.rate_pessimistic)}%</span>
               <span class="opacity-30">/</span>
-              <span class="text-primary">{fmt_rate(@placement_risque.rate_expected)}%</span>
+              <span class="text-primary">{fmt_rate(@risky_placement.rate_expected)}%</span>
               <span class="opacity-30">/</span>
-              <span class="text-success">{fmt_rate(@placement_risque.rate_optimistic)}%</span>
+              <span class="text-success">{fmt_rate(@risky_placement.rate_optimistic)}%</span>
               <span class="opacity-40">{gettext("per year")}</span>
             </div>
 
-            <.form for={@risque_form} phx-change="update_risque" class="space-y-3">
+            <.form for={@risky_form} phx-change="update_risky" class="space-y-3">
               <.input
-                field={@risque_form[:initial]}
+                field={@risky_form[:initial]}
                 type="number"
                 label={gettext("Initial investment (€)")}
                 min="0"
@@ -132,7 +132,7 @@ defmodule LifequestWeb.InvestmentsLive.Index do
                 phx-debounce="300"
               />
               <.input
-                field={@risque_form[:monthly]}
+                field={@risky_form[:monthly]}
                 type="number"
                 label={gettext("Monthly transfer (€)")}
                 min="0"
@@ -144,26 +144,26 @@ defmodule LifequestWeb.InvestmentsLive.Index do
             <div class="divider my-4" />
 
             <p class="text-xs opacity-50 mb-3">
-              {gettext("Invested capital: %{amount} €", amount: fmt(@result_risque.capital))}
+              {gettext("Invested capital: %{amount} €", amount: fmt(@result_risky.capital))}
             </p>
             <div class="grid grid-cols-3 gap-2">
               <div class="rounded-lg bg-error/10 p-3 text-center">
                 <p class="text-xs opacity-60 mb-1">{gettext("Pessimistic")}</p>
                 <p class={[
                   "font-bold text-sm",
-                  @result_risque.pessimistic < 0 && "text-error",
-                  @result_risque.pessimistic >= 0 && "text-base-content"
+                  @result_risky.pessimistic < 0 && "text-error",
+                  @result_risky.pessimistic >= 0 && "text-base-content"
                 ]}>
-                  {fmt(@result_risque.pessimistic)} €
+                  {fmt(@result_risky.pessimistic)} €
                 </p>
               </div>
               <div class="rounded-lg bg-primary/10 p-3 text-center">
                 <p class="text-xs opacity-60 mb-1">{gettext("Expected")}</p>
-                <p class="font-bold text-sm text-primary">{fmt(@result_risque.expected)} €</p>
+                <p class="font-bold text-sm text-primary">{fmt(@result_risky.expected)} €</p>
               </div>
               <div class="rounded-lg bg-success/10 p-3 text-center">
                 <p class="text-xs opacity-60 mb-1">{gettext("Optimistic")}</p>
-                <p class="font-bold text-sm text-success">{fmt(@result_risque.optimistic)} €</p>
+                <p class="font-bold text-sm text-success">{fmt(@result_risky.optimistic)} €</p>
               </div>
             </div>
             <p class="text-xs opacity-40 text-right mt-2">
@@ -184,14 +184,14 @@ defmodule LifequestWeb.InvestmentsLive.Index do
      |> assign(:durations, @durations)
      |> assign(:duration, 10)
      |> assign(:custom_duration, "")
-     |> assign(:placement_sur, @placement_sur)
-     |> assign(:placement_risque, @placement_risque)
-     |> assign(:sur_initial, 0.0)
-     |> assign(:sur_monthly, 0.0)
-     |> assign(:risque_initial, 0.0)
-     |> assign(:risque_monthly, 0.0)
-     |> assign(:sur_form, to_form(%{"initial" => "0", "monthly" => "0"}, as: :sur))
-     |> assign(:risque_form, to_form(%{"initial" => "0", "monthly" => "0"}, as: :risque))
+     |> assign(:safe_placement, @safe_placement)
+     |> assign(:risky_placement, @risky_placement)
+     |> assign(:safe_initial, 0.0)
+     |> assign(:safe_monthly, 0.0)
+     |> assign(:risky_initial, 0.0)
+     |> assign(:risky_monthly, 0.0)
+     |> assign(:safe_form, to_form(%{"initial" => "0", "monthly" => "0"}, as: :safe))
+     |> assign(:risky_form, to_form(%{"initial" => "0", "monthly" => "0"}, as: :risky))
      |> compute_results()}
   end
 
@@ -222,61 +222,61 @@ defmodule LifequestWeb.InvestmentsLive.Index do
   end
 
   @impl true
-  def handle_event("update_sur", %{"sur" => params}, socket) do
+  def handle_event("update_safe", %{"safe" => params}, socket) do
     initial = parse_float(Map.get(params, "initial", "0"))
     monthly = parse_float(Map.get(params, "monthly", "0"))
 
     {:noreply,
      socket
-     |> assign(:sur_initial, initial)
-     |> assign(:sur_monthly, monthly)
-     |> assign(:sur_form, to_form(params, as: :sur))
+     |> assign(:safe_initial, initial)
+     |> assign(:safe_monthly, monthly)
+     |> assign(:safe_form, to_form(params, as: :safe))
      |> compute_results()}
   end
 
   @impl true
-  def handle_event("update_risque", %{"risque" => params}, socket) do
+  def handle_event("update_risky", %{"risky" => params}, socket) do
     initial = parse_float(Map.get(params, "initial", "0"))
     monthly = parse_float(Map.get(params, "monthly", "0"))
 
     {:noreply,
      socket
-     |> assign(:risque_initial, initial)
-     |> assign(:risque_monthly, monthly)
-     |> assign(:risque_form, to_form(params, as: :risque))
+     |> assign(:risky_initial, initial)
+     |> assign(:risky_monthly, monthly)
+     |> assign(:risky_form, to_form(params, as: :risky))
      |> compute_results()}
   end
 
   defp compute_results(socket) do
     %{
       duration: years,
-      sur_initial: si,
-      sur_monthly: sm,
-      risque_initial: ri,
-      risque_monthly: rm
+      safe_initial: safe_initial,
+      safe_monthly: safe_monthly,
+      risky_initial: risky_initial,
+      risky_monthly: risky_monthly
     } = socket.assigns
 
-    capital_sur = si + sm * years * 12
-    final_sur = future_value(si, sm, @placement_sur.rate, years)
+    safe_capital = safe_initial + safe_monthly * years * 12
+    safe_final = future_value(safe_initial, safe_monthly, @safe_placement.rate, years)
 
-    result_sur = %{
-      final: final_sur,
-      capital: capital_sur,
-      gains: final_sur - capital_sur
+    result_safe = %{
+      final: safe_final,
+      capital: safe_capital,
+      gains: safe_final - safe_capital
     }
 
-    capital_risque = ri + rm * years * 12
+    risky_capital = risky_initial + risky_monthly * years * 12
 
-    result_risque = %{
-      pessimistic: future_value(ri, rm, @placement_risque.rate_pessimistic, years),
-      expected: future_value(ri, rm, @placement_risque.rate_expected, years),
-      optimistic: future_value(ri, rm, @placement_risque.rate_optimistic, years),
-      capital: capital_risque
+    result_risky = %{
+      pessimistic: future_value(risky_initial, risky_monthly, @risky_placement.rate_pessimistic, years),
+      expected: future_value(risky_initial, risky_monthly, @risky_placement.rate_expected, years),
+      optimistic: future_value(risky_initial, risky_monthly, @risky_placement.rate_optimistic, years),
+      capital: risky_capital
     }
 
     socket
-    |> assign(:result_sur, result_sur)
-    |> assign(:result_risque, result_risque)
+    |> assign(:result_safe, result_safe)
+    |> assign(:result_risky, result_risky)
   end
 
   # Compound interest formula with regular monthly contributions.

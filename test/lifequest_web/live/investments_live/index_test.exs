@@ -30,7 +30,7 @@ defmodule LifequestWeb.InvestmentsLive.IndexTest do
 
     html =
       live
-      |> form("form[phx-change='update_sur']", sur: %{initial: "10000", monthly: "100"})
+      |> form("form[phx-change='update_safe']", safe: %{initial: "10000", monthly: "100"})
       |> render_change()
 
     assert html =~ "10"
@@ -41,7 +41,7 @@ defmodule LifequestWeb.InvestmentsLive.IndexTest do
 
     html =
       live
-      |> form("form[phx-change='update_risque']", risque: %{initial: "5000", monthly: "200"})
+      |> form("form[phx-change='update_risky']", risky: %{initial: "5000", monthly: "200"})
       |> render_change()
 
     assert html =~ "Pessimistic"
