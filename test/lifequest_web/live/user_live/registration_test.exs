@@ -62,7 +62,7 @@ defmodule LifequestWeb.UserLive.RegistrationTest do
         )
         |> render_submit()
 
-      assert result =~ "has already been taken"
+      assert result =~ "est déjà pris"
     end
   end
 

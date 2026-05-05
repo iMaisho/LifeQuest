@@ -66,16 +66,16 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
     test "renders empty states", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Dashboard"
-      assert html =~ "No income this month."
-      assert html =~ "No expenses this month."
+      assert html =~ "Tableau de bord"
+      assert html =~ "Aucun revenu ce mois-ci."
+      assert html =~ "Aucune dépense ce mois-ci."
     end
 
     test "shows add income link", %{conn: conn} do
       {:ok, live_view, _html} = live(conn, ~p"/dashboard")
 
-      assert has_element?(live_view, "a", "Add income")
-      assert has_element?(live_view, "a", "Add expense")
+      assert has_element?(live_view, "a", "Ajouter un revenu")
+      assert has_element?(live_view, "a", "Ajouter une dépense")
     end
   end
 
@@ -96,7 +96,7 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Salary"
+      assert html =~ "Salaire"
       assert html =~ "Freelance"
       assert html =~ "2500.00 €"
       assert html =~ "500.00 €"
@@ -117,13 +117,13 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Salary"
+      assert html =~ "Salaire"
       assert html =~ "Freelance"
-      assert html =~ "Rental"
-      assert html =~ "Bonus"
-      assert html =~ "Pension"
-      assert html =~ "Government aid"
-      assert html =~ "Investment"
+      assert html =~ "Location"
+      assert html =~ "Prime"
+      assert html =~ "Retraite"
+      assert html =~ "Aides de l&#39;État"
+      assert html =~ "Investissement"
     end
 
     test "does not show income from other months", %{conn: conn, scope: scope} do
@@ -165,8 +165,8 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Essential"
-      assert html =~ "Pleasure"
+      assert html =~ "Essentiel"
+      assert html =~ "Loisirs"
     end
 
     test "displays all expense types", %{conn: conn, scope: scope} do
@@ -176,9 +176,9 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Essential"
-      assert html =~ "Pleasure"
-      assert html =~ "Savings"
+      assert html =~ "Essentiel"
+      assert html =~ "Loisirs"
+      assert html =~ "Épargne"
       assert html =~ "Extra"
     end
   end
@@ -189,10 +189,10 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Recurring income to validate"
+      assert html =~ "Revenus récurrents à valider"
       assert html =~ "Recurring salary"
       assert html =~ "3000.00 €"
-      assert html =~ "Validate"
+      assert html =~ "Valider"
     end
 
     test "shows pending recurring expenses from last month", %{conn: conn, scope: scope} do
@@ -209,7 +209,7 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Recurring expenses to validate"
+      assert html =~ "Dépenses récurrentes à valider"
       assert html =~ "Recurring rent"
     end
 
@@ -219,7 +219,7 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      refute html =~ "Recurring income to validate"
+      refute html =~ "Revenus récurrents à valider"
     end
 
     test "validate_recurring duplicates transaction to current month", %{conn: conn, scope: scope} do
@@ -227,15 +227,15 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, live_view, _html} = live(conn, ~p"/dashboard")
 
-      assert has_element?(live_view, "button", "Validate")
+      assert has_element?(live_view, "button", "Valider")
 
       live_view
-      |> element("button", "Validate")
+      |> element("button", "Valider")
       |> render_click()
 
       html = render(live_view)
 
-      refute html =~ "Recurring income to validate"
+      refute html =~ "Revenus récurrents à valider"
       assert html =~ "3000.00 €"
     end
   end
@@ -267,8 +267,8 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
     test "affiche les titres des sections donut", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Monthly income"
-      assert html =~ "Monthly expenses"
+      assert html =~ "Revenus mensuels"
+      assert html =~ "Dépenses mensuelles"
     end
 
     test "affiche un SVG quand des revenus existent", %{conn: conn, scope: scope} do
@@ -290,13 +290,13 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
     test "affiche le message vide quand aucun revenu ce mois", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "No income this month."
+      assert html =~ "Aucun revenu ce mois-ci."
     end
 
     test "affiche le message vide quand aucune dépense ce mois", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "No expenses this month."
+      assert html =~ "Aucune dépense ce mois-ci."
     end
 
     test "affiche les montants par catégorie dans la légende income", %{conn: conn, scope: scope} do
@@ -340,7 +340,7 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Salary"
+      assert html =~ "Salaire"
       assert html =~ "Freelance"
     end
 
@@ -350,8 +350,8 @@ defmodule LifequestWeb.DashboardLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/dashboard")
 
-      assert html =~ "Essential"
-      assert html =~ "Pleasure"
+      assert html =~ "Essentiel"
+      assert html =~ "Loisirs"
     end
   end
 end

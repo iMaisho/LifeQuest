@@ -10,12 +10,12 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
     test "renders full form", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/financial_profiles/new")
 
-      assert html =~ "New financial profile"
-      assert html =~ "Current savings"
-      assert html =~ "Current debts"
-      assert html =~ "Monthly debt payment"
-      assert html =~ "Net worth"
-      assert html =~ "Employment status"
+      assert html =~ "Nouveau profil financier"
+      assert html =~ "Épargne actuelle"
+      assert html =~ "Dettes actuelles"
+      assert html =~ "Mensualité de dette"
+      assert html =~ "Patrimoine net"
+      assert html =~ "Statut professionnel"
     end
 
     test "creates profile and redirects to finances", %{conn: conn} do
@@ -35,7 +35,7 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Financial profile created successfully"
+      assert html =~ "Profil financier créé avec succès"
     end
 
     test "shows validation errors", %{conn: conn} do
@@ -54,7 +54,7 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
         )
         |> render_change()
 
-      assert html =~ "can&#39;t be blank"
+      assert html =~ "ne peut pas être vide"
     end
   end
 
@@ -64,9 +64,9 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
 
       {:ok, _live, html} = live(conn, ~p"/financial_profiles/#{profile}/edit")
 
-      assert html =~ "Edit financial profile"
-      assert html =~ "Current savings"
-      assert html =~ "Current debts"
+      assert html =~ "Modifier le profil financier"
+      assert html =~ "Épargne actuelle"
+      assert html =~ "Dettes actuelles"
     end
 
     test "updates profile and redirects to finances", %{conn: conn, scope: scope} do
@@ -84,7 +84,7 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Financial profile updated successfully"
+      assert html =~ "Profil financier mis à jour avec succès"
     end
   end
 
@@ -95,11 +95,11 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
       {:ok, _live, html} =
         live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
 
-      assert html =~ "Current savings"
-      refute html =~ "Current debts"
-      refute html =~ "Monthly debt payment"
-      refute html =~ "Net worth"
-      refute html =~ "Employment status"
+      assert html =~ "Épargne actuelle"
+      refute html =~ "Dettes actuelles"
+      refute html =~ "Mensualité de dette"
+      refute html =~ "Patrimoine net"
+      refute html =~ "Statut professionnel"
     end
 
     test "renders only the focused field for employment_status", %{conn: conn, scope: scope} do
@@ -108,9 +108,9 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
       {:ok, _live, html} =
         live(conn, ~p"/financial_profiles/#{profile}/edit?field=employment_status")
 
-      assert html =~ "Employment status"
-      refute html =~ "Current savings"
-      refute html =~ "Current debts"
+      assert html =~ "Statut professionnel"
+      refute html =~ "Épargne actuelle"
+      refute html =~ "Dettes actuelles"
     end
 
     test "updates single field and redirects", %{conn: conn, scope: scope} do
@@ -129,7 +129,7 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Financial profile updated successfully"
+      assert html =~ "Profil financier mis à jour avec succès"
     end
 
     test "shows edit title with field name", %{conn: conn, scope: scope} do
@@ -138,7 +138,7 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
       {:ok, _live, html} =
         live(conn, ~p"/financial_profiles/#{profile}/edit?field=current_savings")
 
-      assert html =~ "Current savings"
+      assert html =~ "Épargne actuelle"
     end
 
     test "ignores invalid field param and shows full form", %{conn: conn, scope: scope} do
@@ -146,9 +146,9 @@ defmodule LifequestWeb.FinancialProfileLive.FormTest do
 
       {:ok, _live, html} = live(conn, ~p"/financial_profiles/#{profile}/edit?field=bogus")
 
-      assert html =~ "Current savings"
-      assert html =~ "Current debts"
-      assert html =~ "Employment status"
+      assert html =~ "Épargne actuelle"
+      assert html =~ "Dettes actuelles"
+      assert html =~ "Statut professionnel"
     end
   end
 

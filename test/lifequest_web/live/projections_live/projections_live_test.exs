@@ -12,14 +12,14 @@ defmodule LifequestWeb.ProjectionsLive.IndexTest do
       {:ok, _live, html} = live(conn, ~p"/projections")
 
       assert html =~ "Projections"
-      assert html =~ "Project my finances to"
+      assert html =~ "Projeter mes finances"
     end
 
     test "does not show results before calculating", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/projections")
 
-      refute html =~ "Projected savings"
-      refute html =~ "Remaining debts"
+      refute html =~ "Épargne projetée"
+      refute html =~ "Dettes restantes"
     end
 
     test "redirects when not authenticated" do
@@ -38,7 +38,7 @@ defmodule LifequestWeb.ProjectionsLive.IndexTest do
         |> form("form", projection: %{target_date: Date.to_iso8601(months_ahead(6))})
         |> render_submit()
 
-      assert html =~ "financial profile"
+      assert html =~ "profil financier"
     end
   end
 
@@ -57,9 +57,9 @@ defmodule LifequestWeb.ProjectionsLive.IndexTest do
         |> form("form", projection: %{target_date: Date.to_iso8601(months_ahead(3))})
         |> render_submit()
 
-      assert html =~ "Projected savings"
-      assert html =~ "Remaining debts"
-      assert html =~ "Monthly net change"
+      assert html =~ "Épargne projetée"
+      assert html =~ "Dettes restantes"
+      assert html =~ "Évolution nette mensuelle"
     end
 
     test "shows correct projected savings with recurring income", %{conn: conn, scope: scope} do
@@ -149,7 +149,7 @@ defmodule LifequestWeb.ProjectionsLive.IndexTest do
         |> form("form", projection: %{target_date: Date.to_iso8601(past_date)})
         |> render_submit()
 
-      assert html =~ "valid future date"
+      assert html =~ "date future valide"
     end
   end
 

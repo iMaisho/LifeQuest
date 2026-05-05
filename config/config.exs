@@ -44,6 +44,8 @@ config :lifequest, LifequestWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :lifequest, Lifequest.Mailer, adapter: Swoosh.Adapters.Local
 
+config :lifequest, LifequestWeb.Gettext, default_locale: "fr"
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",
