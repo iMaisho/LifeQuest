@@ -10,40 +10,40 @@ defmodule LifequestWeb.FinancesLive.IndexTest do
     test "displays page title", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "Financial information"
+      assert html =~ "Informations financières"
     end
 
     test "displays financial profile section", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "Financial profile"
-      assert html =~ "Current savings"
-      assert html =~ "Current debts"
-      assert html =~ "Monthly debt payment"
-      assert html =~ "Net worth"
-      assert html =~ "Employment status"
+      assert html =~ "Profil financier"
+      assert html =~ "Épargne actuelle"
+      assert html =~ "Dettes actuelles"
+      assert html =~ "Mensualité de dette"
+      assert html =~ "Patrimoine net"
+      assert html =~ "Statut professionnel"
     end
 
     test "displays income sources section", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "Income sources"
-      assert html =~ "Salary"
+      assert html =~ "Sources de revenus"
+      assert html =~ "Salaire"
       assert html =~ "Freelance"
-      assert html =~ "Rental"
-      assert html =~ "Bonus"
-      assert html =~ "Pension"
-      assert html =~ "Government aid"
-      assert html =~ "Investment"
+      assert html =~ "Location"
+      assert html =~ "Prime"
+      assert html =~ "Retraite"
+      assert html =~ "Aides de l&#39;État"
+      assert html =~ "Investissement"
     end
 
     test "displays expenses section", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "Expenses"
-      assert html =~ "Essential"
-      assert html =~ "Pleasure"
-      assert html =~ "Savings"
+      assert html =~ "Dépenses"
+      assert html =~ "Essentiel"
+      assert html =~ "Loisirs"
+      assert html =~ "Épargne"
       assert html =~ "Extra"
     end
   end
@@ -52,7 +52,7 @@ defmodule LifequestWeb.FinancesLive.IndexTest do
     test "shows 'Not set' when no profile exists", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "Not set"
+      assert html =~ "Non renseigné"
     end
 
     test "shows current values when profile exists", %{conn: conn, scope: scope} do
@@ -70,7 +70,7 @@ defmodule LifequestWeb.FinancesLive.IndexTest do
       assert html =~ "1000.00 €"
       assert html =~ "200.00 €"
       assert html =~ "50000.00 €"
-      assert html =~ "Permanent contract"
+      assert html =~ "CDI"
     end
 
     test "links to new profile when none exists", %{conn: conn} do
@@ -124,7 +124,7 @@ defmodule LifequestWeb.FinancesLive.IndexTest do
 
       {:ok, _live, html} = live(conn, ~p"/finances")
 
-      assert html =~ "No transactions yet"
+      assert html =~ "Aucune transaction pour l&#39;instant"
     end
 
     test "affiche le montant de la transaction dans la catégorie", %{conn: conn, scope: scope} do

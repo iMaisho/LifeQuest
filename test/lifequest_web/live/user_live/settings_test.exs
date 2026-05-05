@@ -137,7 +137,7 @@ defmodule LifequestWeb.UserLive.SettingsTest do
         })
 
       assert result =~ "Save Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "devrait avoir au moins 12 caract"
       assert result =~ "does not match password"
     end
 
@@ -155,7 +155,7 @@ defmodule LifequestWeb.UserLive.SettingsTest do
         |> render_submit()
 
       assert result =~ "Save Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "devrait avoir au moins 12 caract"
       assert result =~ "does not match password"
     end
   end

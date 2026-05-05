@@ -51,7 +51,7 @@ defmodule LifequestWeb.AccountLiveTest do
 
       assert form_live
              |> form("#account-form", account: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "ne peut pas être vide"
 
       assert {:ok, index_live, _html} =
                form_live
@@ -77,7 +77,7 @@ defmodule LifequestWeb.AccountLiveTest do
 
       assert form_live
              |> form("#account-form", account: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "ne peut pas être vide"
 
       assert {:ok, index_live, _html} =
                form_live
@@ -121,7 +121,7 @@ defmodule LifequestWeb.AccountLiveTest do
 
       assert form_live
              |> form("#account-form", account: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "ne peut pas être vide"
 
       assert {:ok, show_live, _html} =
                form_live

@@ -17,7 +17,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     test "renders income form with correct title", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
-      assert html =~ "New income"
+      assert html =~ "Nouveau revenu"
     end
 
     test "has direction and income_type as hidden fields", %{conn: conn} do
@@ -31,13 +31,13 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     test "does not show direction or type select fields", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
-      refute html =~ "Choose a value"
+      refute html =~ "Choisir une valeur"
     end
 
     test "shows account select", %{conn: conn, account: account} do
       {:ok, _live, html} = live(conn, ~p"/transactions/new?direction=income&income_type=salary")
 
-      assert html =~ "Account"
+      assert html =~ "Compte"
       assert html =~ account.label
     end
 
@@ -59,7 +59,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Transaction created successfully"
+      assert html =~ "Transaction créée avec succès"
     end
 
     test "shows validation errors on invalid data", %{conn: conn} do
@@ -77,7 +77,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
         )
         |> render_change()
 
-      assert html =~ "can&#39;t be blank"
+      assert html =~ "ne peut pas être vide"
     end
   end
 
@@ -88,7 +88,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
       {:ok, _live, html} =
         live(conn, ~p"/transactions/new?direction=expense&expense_type=essential")
 
-      assert html =~ "New expense"
+      assert html =~ "Nouvelle dépense"
     end
 
     test "has direction and expense_type as hidden fields", %{conn: conn} do
@@ -117,7 +117,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Transaction created successfully"
+      assert html =~ "Transaction créée avec succès"
     end
   end
 
@@ -136,7 +136,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
 
       {:ok, _live, html} = live(conn, ~p"/transactions/#{transaction}/edit")
 
-      assert html =~ "Edit income"
+      assert html =~ "Modifier le revenu"
       assert html =~ "My salary"
     end
 
@@ -163,7 +163,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
                |> render_submit()
                |> follow_redirect(conn, ~p"/finances")
 
-      assert html =~ "Transaction updated successfully"
+      assert html =~ "Transaction mise à jour avec succès"
     end
   end
 
@@ -182,7 +182,7 @@ defmodule LifequestWeb.TransactionLive.FormTest do
     test "defaults to income when no direction param", %{conn: conn} do
       {:ok, _live, html} = live(conn, ~p"/transactions/new")
 
-      assert html =~ "New income"
+      assert html =~ "Nouveau revenu"
     end
   end
 end

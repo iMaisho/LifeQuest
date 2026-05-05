@@ -1,0 +1,1026 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: lib/lifequest_web/live/investments_live/index.ex:37
+#, elixir-autogen, elixir-format
+msgid "%{years} years"
+msgstr "%{years} ans"
+
+#: lib/lifequest_web/live/finances_live/index.ex:375
+#, elixir-autogen, elixir-format
+msgid "APL, RSA, benefits"
+msgstr "APL, RSA, aides sociales"
+
+#: lib/lifequest_web/live/finances_live/index.ex:158
+#: lib/lifequest_web/live/transaction_live/form.ex:39
+#, elixir-autogen, elixir-format
+msgid "Account"
+msgstr "Compte"
+
+#: lib/lifequest_web/components/core_components.ex:343
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Actions"
+
+#: lib/lifequest_web/live/finances_live/index.ex:145
+#, elixir-autogen, elixir-format
+msgid "Add"
+msgstr "Ajouter"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:197
+#, elixir-autogen, elixir-format
+msgid "Add an expense to your financial profile."
+msgstr "Ajoutez une dépense à votre profil financier."
+
+#: lib/lifequest_web/live/transaction_live/form.ex:196
+#, elixir-autogen, elixir-format
+msgid "Add an income source to your financial profile."
+msgstr "Ajoutez une source de revenus à votre profil financier."
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:229
+#, elixir-autogen, elixir-format
+msgid "Add expense"
+msgstr "Ajouter une dépense"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:228
+#, elixir-autogen, elixir-format
+msgid "Add income"
+msgstr "Ajouter un revenu"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:30
+#, elixir-autogen, elixir-format
+msgid "All"
+msgstr "Tous"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:62
+#, elixir-autogen, elixir-format
+msgid "All categories"
+msgstr "Toutes les catégories"
+
+#: lib/lifequest_web/live/finances_live/index.ex:156
+#: lib/lifequest_web/live/transaction_live/form.ex:32
+#: lib/lifequest_web/live/transaction_live/index.ex:78
+#, elixir-autogen, elixir-format
+msgid "Amount"
+msgstr "Montant"
+
+#: lib/lifequest_web/live/goals_live/index.ex:37
+#, elixir-autogen, elixir-format
+msgid "Amount needed (€)"
+msgstr "Montant nécessaire (€)"
+
+#: lib/lifequest_web/live/finances_live/index.ex:373
+#, elixir-autogen, elixir-format
+msgid "Annual bonuses, profit sharing"
+msgstr "Primes annuelles, intéressement"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:99
+#, elixir-autogen, elixir-format
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr ?"
+
+#: lib/lifequest_web/components/layouts.ex:83
+#: lib/lifequest_web/components/layouts.ex:95
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Tentative de reconnexion"
+
+#: lib/lifequest_web/live/finances_live/index.ex:387
+#, elixir-autogen, elixir-format
+msgid "Automatic transfers to savings"
+msgstr "Virements automatiques vers l'épargne"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:250
+#: lib/lifequest_web/live/finances_live/index.ex:373
+#: lib/lifequest_web/live/transaction_live/index.ex:215
+#: lib/lifequest_web/live/transaction_live/index.ex:238
+#, elixir-autogen, elixir-format
+msgid "Bonus"
+msgstr "Prime"
+
+#: lib/lifequest_web/live/finances_live/index.ex:330
+#: lib/lifequest_web/live/financial_profile_live/form.ex:181
+#, elixir-autogen, elixir-format
+msgid "Business owner"
+msgstr "Chef d'entreprise"
+
+#: lib/lifequest_web/live/projections_live/index.ex:24
+#, elixir-autogen, elixir-format
+msgid "Calculate"
+msgstr "Calculer"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:29
+#: lib/lifequest_web/live/transaction_live/form.ex:49
+#, elixir-autogen, elixir-format
+msgid "Cancel"
+msgstr "Annuler"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:75
+#, elixir-autogen, elixir-format
+msgid "Category"
+msgstr "Catégorie"
+
+#: lib/lifequest_web/live/finances_live/index.ex:44
+#, elixir-autogen, elixir-format
+msgid "Category summary"
+msgstr "Résumé par catégorie"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:45
+#, elixir-autogen, elixir-format
+msgid "Choose a value"
+msgstr "Choisir une valeur"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:40
+#, elixir-autogen, elixir-format
+msgid "Choose an account"
+msgstr "Choisir un compte"
+
+#: lib/lifequest_web/live/finances_live/index.ex:341
+#: lib/lifequest_web/live/finances_live/index.ex:355
+#: lib/lifequest_web/live/financial_profile_live/form.ex:171
+#, elixir-autogen, elixir-format
+msgid "Current debts"
+msgstr "Dettes actuelles"
+
+#: lib/lifequest_web/live/finances_live/index.ex:347
+#: lib/lifequest_web/live/finances_live/index.ex:363
+#, elixir-autogen, elixir-format
+msgid "Current professional situation"
+msgstr "Situation professionnelle actuelle"
+
+#: lib/lifequest_web/live/finances_live/index.ex:339
+#: lib/lifequest_web/live/finances_live/index.ex:353
+#: lib/lifequest_web/live/financial_profile_live/form.ex:170
+#: lib/lifequest_web/live/goals_live/index.ex:64
+#, elixir-autogen, elixir-format
+msgid "Current savings"
+msgstr "Épargne actuelle"
+
+#: lib/lifequest_web/live/investments_live/index.ex:46
+#, elixir-autogen, elixir-format
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:53
+#: lib/lifequest_web/live/dashboard_live/index.ex:10
+#: lib/lifequest_web/live/dashboard_live/index.ex:180
+#, elixir-autogen, elixir-format
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: lib/lifequest_web/live/finances_live/index.ex:157
+#: lib/lifequest_web/live/transaction_live/form.ex:33
+#: lib/lifequest_web/live/transaction_live/index.ex:87
+#, elixir-autogen, elixir-format
+msgid "Date"
+msgstr "Date"
+
+#: lib/lifequest_web/live/projections_live/index.ex:84
+#, elixir-autogen, elixir-format
+msgid "Debt repayment"
+msgstr "Remboursement de dettes"
+
+#: lib/lifequest_web/live/goals_live/index.ex:32
+#, elixir-autogen, elixir-format
+msgid "Define your goal"
+msgstr "Définir votre objectif"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:101
+#, elixir-autogen, elixir-format
+msgid "Delete"
+msgstr "Supprimer"
+
+#: lib/lifequest_web/live/finances_live/index.ex:182
+#, elixir-autogen, elixir-format
+msgid "Delete this transaction?"
+msgstr "Supprimer cette transaction ?"
+
+#: lib/lifequest_web/live/finances_live/index.ex:385
+#, elixir-autogen, elixir-format
+msgid "Dining out, entertainment, shopping"
+msgstr "Restaurants, loisirs, shopping"
+
+#: lib/lifequest_web/live/finances_live/index.ex:377
+#, elixir-autogen, elixir-format
+msgid "Dividends, interest"
+msgstr "Dividendes, intérêts"
+
+#: lib/lifequest_web/live/goals_live/index.ex:210
+#, elixir-autogen, elixir-format
+msgid "Duration"
+msgstr "Durée"
+
+#: lib/lifequest_web/live/investments_live/index.ex:114
+#, elixir-autogen, elixir-format
+msgid "Dynamic Portfolio"
+msgstr "Portefeuille Dynamique"
+
+#: lib/lifequest_web/live/finances_live/index.ex:104
+#: lib/lifequest_web/live/transaction_live/index.ex:94
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr "Modifier"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:162
+#, elixir-autogen, elixir-format
+msgid "Edit %{field}"
+msgstr "Modifier %{field}"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:191
+#, elixir-autogen, elixir-format
+msgid "Edit expense"
+msgstr "Modifier la dépense"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:160
+#, elixir-autogen, elixir-format
+msgid "Edit financial profile"
+msgstr "Modifier le profil financier"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:190
+#, elixir-autogen, elixir-format
+msgid "Edit income"
+msgstr "Modifier le revenu"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:194
+#, elixir-autogen, elixir-format
+msgid "Edit transaction"
+msgstr "Modifier la transaction"
+
+#: lib/lifequest_web/live/finances_live/index.ex:346
+#: lib/lifequest_web/live/finances_live/index.ex:362
+#: lib/lifequest_web/live/financial_profile_live/form.ex:44
+#: lib/lifequest_web/live/financial_profile_live/form.ex:174
+#, elixir-autogen, elixir-format
+msgid "Employment status"
+msgstr "Statut professionnel"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:216
+#, elixir-autogen, elixir-format
+msgid "Error validating transaction"
+msgstr "Erreur lors de la validation de la transaction"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:257
+#: lib/lifequest_web/live/finances_live/index.ex:384
+#: lib/lifequest_web/live/transaction_live/index.ex:225
+#: lib/lifequest_web/live/transaction_live/index.ex:245
+#, elixir-autogen, elixir-format
+msgid "Essential"
+msgstr "Essentiel"
+
+#: lib/lifequest_web/live/goals_live/index.ex:51
+#, elixir-autogen, elixir-format
+msgid "Evaluate"
+msgstr "Évaluer"
+
+#: lib/lifequest_web/live/goals_live/index.ex:176
+#, elixir-autogen, elixir-format
+msgid "Even the most optimistic investment scenario cannot reach your goal by this date."
+msgstr "Même le scénario d'investissement le plus optimiste ne permet pas d'atteindre votre objectif à cette date."
+
+#: lib/lifequest_web/live/goals_live/index.ex:227
+#: lib/lifequest_web/live/investments_live/index.ex:165
+#, elixir-autogen, elixir-format
+msgid "Expected"
+msgstr "Attendu"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:52
+#, elixir-autogen, elixir-format
+msgid "Expense"
+msgstr "Dépense"
+
+#: lib/lifequest_web/live/finances_live/index.ex:33
+#, elixir-autogen, elixir-format
+msgid "Expenses"
+msgstr "Dépenses"
+
+#: lib/lifequest_web/live/finances_live/index.ex:210
+#, elixir-autogen, elixir-format
+msgid "Expenses by category"
+msgstr "Dépenses par catégorie"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:260
+#: lib/lifequest_web/live/finances_live/index.ex:389
+#: lib/lifequest_web/live/transaction_live/index.ex:228
+#: lib/lifequest_web/live/transaction_live/index.ex:248
+#, elixir-autogen, elixir-format
+msgid "Extra"
+msgstr "Extra"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:59
+#, elixir-autogen, elixir-format
+msgid "Finances"
+msgstr "Finances"
+
+#: lib/lifequest_web/live/finances_live/index.ex:10
+#: lib/lifequest_web/live/finances_live/index.ex:255
+#, elixir-autogen, elixir-format
+msgid "Financial information"
+msgstr "Informations financières"
+
+#: lib/lifequest_web/live/finances_live/index.ex:11
+#, elixir-autogen, elixir-format
+msgid "Financial profile"
+msgstr "Profil financier"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:141
+#, elixir-autogen, elixir-format
+msgid "Financial profile created successfully"
+msgstr "Profil financier créé avec succès"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:128
+#, elixir-autogen, elixir-format
+msgid "Financial profile updated successfully"
+msgstr "Profil financier mis à jour avec succès"
+
+#: lib/lifequest_web/live/goals_live/index.ex:16
+#, elixir-autogen, elixir-format
+msgid "Find out whether your financial goal is realistic and how to reach it."
+msgstr "Découvrez si votre objectif financier est réaliste et comment l'atteindre."
+
+#: lib/lifequest_web/live/finances_live/index.ex:328
+#, elixir-autogen, elixir-format
+msgid "Fixed-term contract"
+msgstr "CDD"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:179
+#, elixir-autogen, elixir-format
+msgid "Fixed-term contract (CDD)"
+msgstr "Contrat à durée déterminée (CDD)"
+
+#: lib/lifequest_web/live/finances_live/index.ex:329
+#: lib/lifequest_web/live/finances_live/index.ex:370
+#: lib/lifequest_web/live/financial_profile_live/form.ex:180
+#: lib/lifequest_web/live/transaction_live/index.ex:213
+#: lib/lifequest_web/live/transaction_live/index.ex:236
+#, elixir-autogen, elixir-format
+msgid "Freelance"
+msgstr "Freelance"
+
+#: lib/lifequest_web/live/investments_live/index.ex:99
+#, elixir-autogen, elixir-format
+msgid "Generated interest"
+msgstr "Intérêts générés"
+
+#: lib/lifequest_web/live/goals_live/index.ex:173
+#, elixir-autogen, elixir-format
+msgid "Goal not realistic"
+msgstr "Objectif irréaliste"
+
+#: lib/lifequest_web/live/goals_live/index.ex:120
+#, elixir-autogen, elixir-format
+msgid "Goal reachable"
+msgstr "Objectif atteignable"
+
+#: lib/lifequest_web/live/goals_live/index.ex:156
+#, elixir-autogen, elixir-format
+msgid "Goal reachable only in the best case"
+msgstr "Objectif atteignable seulement dans le meilleur cas"
+
+#: lib/lifequest_web/live/goals_live/index.ex:139
+#, elixir-autogen, elixir-format
+msgid "Goal reachable, but with risk"
+msgstr "Objectif atteignable, mais avec risque"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:77
+#: lib/lifequest_web/live/goals_live/index.ex:14
+#: lib/lifequest_web/live/goals_live/index.ex:245
+#, elixir-autogen, elixir-format
+msgid "Goals"
+msgstr "Objectifs"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:252
+#: lib/lifequest_web/live/finances_live/index.ex:375
+#: lib/lifequest_web/live/transaction_live/index.ex:217
+#: lib/lifequest_web/live/transaction_live/index.ex:240
+#, elixir-autogen, elixir-format
+msgid "Government aid"
+msgstr "Aides de l'État"
+
+#: lib/lifequest_web/live/investments_live/index.ex:63
+#, elixir-autogen, elixir-format
+msgid "Guaranteed"
+msgstr "Garanti"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:41
+#, elixir-autogen, elixir-format
+msgid "Income"
+msgstr "Revenu"
+
+#: lib/lifequest_web/live/finances_live/index.ex:208
+#, elixir-autogen, elixir-format
+msgid "Income by category"
+msgstr "Revenus par catégorie"
+
+#: lib/lifequest_web/live/finances_live/index.ex:22
+#, elixir-autogen, elixir-format
+msgid "Income sources"
+msgstr "Sources de revenus"
+
+#: lib/lifequest_web/live/finances_live/index.ex:370
+#, elixir-autogen, elixir-format
+msgid "Independent work, contracts"
+msgstr "Travail indépendant, contrats"
+
+#: lib/lifequest_web/live/goals_live/index.ex:202
+#, elixir-autogen, elixir-format
+msgid "Initial capital"
+msgstr "Capital initial"
+
+#: lib/lifequest_web/live/investments_live/index.ex:76
+#: lib/lifequest_web/live/investments_live/index.ex:133
+#, elixir-autogen, elixir-format
+msgid "Initial investment (€)"
+msgstr "Investissement initial (€)"
+
+#: lib/lifequest_web/live/goals_live/index.ex:94
+#, elixir-autogen, elixir-format
+msgid "Investable capital"
+msgstr "Capital investissable"
+
+#: lib/lifequest_web/live/investments_live/index.ex:95
+#, elixir-autogen, elixir-format
+msgid "Invested capital"
+msgstr "Capital investi"
+
+#: lib/lifequest_web/live/investments_live/index.ex:151
+#, elixir-autogen, elixir-format
+msgid "Invested capital: %{amount} €"
+msgstr "Capital investi : %{amount} €"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:253
+#: lib/lifequest_web/live/finances_live/index.ex:377
+#: lib/lifequest_web/live/transaction_live/index.ex:218
+#: lib/lifequest_web/live/transaction_live/index.ex:241
+#, elixir-autogen, elixir-format
+msgid "Investment"
+msgstr "Investissement"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:71
+#: lib/lifequest_web/live/investments_live/index.ex:18
+#: lib/lifequest_web/live/investments_live/index.ex:187
+#, elixir-autogen, elixir-format
+msgid "Investments"
+msgstr "Investissements"
+
+#: lib/lifequest_web/live/finances_live/index.ex:155
+#: lib/lifequest_web/live/transaction_live/form.ex:31
+#: lib/lifequest_web/live/transaction_live/index.ex:74
+#, elixir-autogen, elixir-format
+msgid "Label"
+msgstr "Libellé"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:123
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr "Se déconnecter"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:165
+#, elixir-autogen, elixir-format
+msgid "Manage your financial profile information."
+msgstr "Gérez les informations de votre profil financier."
+
+#: lib/lifequest_web/live/transaction_live/form.ex:198
+#, elixir-autogen, elixir-format
+msgid "Manage your transaction."
+msgstr "Gérez votre transaction."
+
+#: lib/lifequest_web/live/finances_live/index.ex:390
+#, elixir-autogen, elixir-format
+msgid "Miscellaneous expenses"
+msgstr "Dépenses diverses"
+
+#: lib/lifequest_web/live/finances_live/index.ex:378
+#, elixir-autogen, elixir-format
+msgid "Miscellaneous income"
+msgstr "Revenus divers"
+
+#: lib/lifequest_web/live/projections_live/index.ex:68
+#, elixir-autogen, elixir-format
+msgid "Monthly breakdown"
+msgstr "Détail mensuel"
+
+#: lib/lifequest_web/live/goals_live/index.ex:206
+#, elixir-autogen, elixir-format
+msgid "Monthly contribution"
+msgstr "Versement mensuel"
+
+#: lib/lifequest_web/live/finances_live/index.ex:343
+#: lib/lifequest_web/live/finances_live/index.ex:357
+#: lib/lifequest_web/live/financial_profile_live/form.ex:172
+#, elixir-autogen, elixir-format
+msgid "Monthly debt payment"
+msgstr "Mensualité de dette"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:22
+#, elixir-autogen, elixir-format
+msgid "Monthly expenses"
+msgstr "Dépenses mensuelles"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:17
+#: lib/lifequest_web/live/goals_live/index.ex:68
+#, elixir-autogen, elixir-format
+msgid "Monthly income"
+msgstr "Revenus mensuels"
+
+#: lib/lifequest_web/live/projections_live/index.ex:53
+#, elixir-autogen, elixir-format
+msgid "Monthly net change"
+msgstr "Évolution nette mensuelle"
+
+#: lib/lifequest_web/live/finances_live/index.ex:344
+#: lib/lifequest_web/live/finances_live/index.ex:358
+#, elixir-autogen, elixir-format
+msgid "Monthly repayment amount"
+msgstr "Montant du remboursement mensuel"
+
+#: lib/lifequest_web/live/goals_live/index.ex:84
+#, elixir-autogen, elixir-format
+msgid "Monthly surplus"
+msgstr "Excédent mensuel"
+
+#: lib/lifequest_web/live/investments_live/index.ex:84
+#: lib/lifequest_web/live/investments_live/index.ex:141
+#, elixir-autogen, elixir-format
+msgid "Monthly transfer (€)"
+msgstr "Versement mensuel (€)"
+
+#: lib/lifequest_web/live/finances_live/index.ex:369
+#, elixir-autogen, elixir-format
+msgid "Monthly wages, net income"
+msgstr "Salaires mensuels, revenus nets"
+
+#: lib/lifequest_web/live/projections_live/index.ex:90
+#, elixir-autogen, elixir-format
+msgid "Net"
+msgstr "Net"
+
+#: lib/lifequest_web/live/finances_live/index.ex:345
+#: lib/lifequest_web/live/finances_live/index.ex:360
+#: lib/lifequest_web/live/financial_profile_live/form.ex:173
+#, elixir-autogen, elixir-format
+msgid "Net worth"
+msgstr "Patrimoine net"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:14
+#, elixir-autogen, elixir-format
+msgid "New Transaction"
+msgstr "Nouvelle transaction"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:189
+#, elixir-autogen, elixir-format
+msgid "New expense"
+msgstr "Nouvelle dépense"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:161
+#, elixir-autogen, elixir-format
+msgid "New financial profile"
+msgstr "Nouveau profil financier"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:188
+#, elixir-autogen, elixir-format
+msgid "New income"
+msgstr "Nouveau revenu"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:194
+#, elixir-autogen, elixir-format
+msgid "New transaction"
+msgstr "Nouvelle transaction"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:24
+#: lib/lifequest_web/live/dashboard_live/index.ex:226
+#, elixir-autogen, elixir-format
+msgid "No expenses this month."
+msgstr "Aucune dépense ce mois-ci."
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:19
+#: lib/lifequest_web/live/dashboard_live/index.ex:225
+#, elixir-autogen, elixir-format
+msgid "No income this month."
+msgstr "Aucun revenu ce mois-ci."
+
+#: lib/lifequest_web/live/finances_live/index.ex:149
+#: lib/lifequest_web/live/finances_live/index.ex:214
+#, elixir-autogen, elixir-format
+msgid "No transactions yet"
+msgstr "Aucune transaction pour l'instant"
+
+#: lib/lifequest_web/live/finances_live/index.ex:108
+#, elixir-autogen, elixir-format
+msgid "Not set yet"
+msgstr "Non renseigné"
+
+#: lib/lifequest_web/live/goals_live/index.ex:160
+#, elixir-autogen, elixir-format
+msgid "Only the optimistic scenario (+20%/year) reaches your goal. This represents significant risk."
+msgstr "Seul le scénario optimiste (+20%/an) permet d'atteindre votre objectif. Cela représente un risque important."
+
+#: lib/lifequest_web/live/goals_live/index.ex:231
+#: lib/lifequest_web/live/investments_live/index.ex:169
+#, elixir-autogen, elixir-format
+msgid "Optimistic"
+msgstr "Optimiste"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:254
+#: lib/lifequest_web/live/dashboard_live/index.ex:261
+#: lib/lifequest_web/live/transaction_live/index.ex:219
+#: lib/lifequest_web/live/transaction_live/index.ex:229
+#: lib/lifequest_web/live/transaction_live/index.ex:242
+#: lib/lifequest_web/live/transaction_live/index.ex:249
+#, elixir-autogen, elixir-format
+msgid "Other"
+msgstr "Autre"
+
+#: lib/lifequest_web/live/finances_live/index.ex:390
+#, elixir-autogen, elixir-format
+msgid "Other expenses"
+msgstr "Autres dépenses"
+
+#: lib/lifequest_web/live/finances_live/index.ex:378
+#, elixir-autogen, elixir-format
+msgid "Other income"
+msgstr "Autres revenus"
+
+#: lib/lifequest_web/live/finances_live/index.ex:341
+#: lib/lifequest_web/live/finances_live/index.ex:355
+#, elixir-autogen, elixir-format
+msgid "Outstanding debts"
+msgstr "Dettes en cours"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:251
+#: lib/lifequest_web/live/finances_live/index.ex:374
+#: lib/lifequest_web/live/transaction_live/index.ex:216
+#: lib/lifequest_web/live/transaction_live/index.ex:239
+#, elixir-autogen, elixir-format
+msgid "Pension"
+msgstr "Retraite"
+
+#: lib/lifequest_web/live/finances_live/index.ex:327
+#, elixir-autogen, elixir-format
+msgid "Permanent contract"
+msgstr "CDI"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:178
+#, elixir-autogen, elixir-format
+msgid "Permanent contract (CDI)"
+msgstr "Contrat à durée indéterminée (CDI)"
+
+#: lib/lifequest_web/live/goals_live/index.ex:223
+#: lib/lifequest_web/live/investments_live/index.ex:155
+#, elixir-autogen, elixir-format
+msgid "Pessimistic"
+msgstr "Pessimiste"
+
+#: lib/lifequest_web/live/goals_live/index.ex:266
+#, elixir-autogen, elixir-format
+msgid "Please enter a valid amount and a future date."
+msgstr "Veuillez saisir un montant valide et une date future."
+
+#: lib/lifequest_web/live/projections_live/index.ex:149
+#, elixir-autogen, elixir-format
+msgid "Please enter a valid future date."
+msgstr "Veuillez saisir une date future valide."
+
+#: lib/lifequest_web/live/goals_live/index.ex:22
+#: lib/lifequest_web/live/projections_live/index.ex:113
+#, elixir-autogen, elixir-format
+msgid "Please set up your"
+msgstr "Veuillez configurer votre"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:258
+#: lib/lifequest_web/live/finances_live/index.ex:385
+#: lib/lifequest_web/live/transaction_live/index.ex:226
+#: lib/lifequest_web/live/transaction_live/index.ex:246
+#, elixir-autogen, elixir-format
+msgid "Pleasure"
+msgstr "Loisirs"
+
+#: lib/lifequest_web/live/projections_live/index.ex:18
+#, elixir-autogen, elixir-format
+msgid "Project my finances to"
+msgstr "Projeter mes finances jusqu'au"
+
+#: lib/lifequest_web/live/projections_live/index.ex:35
+#, elixir-autogen, elixir-format
+msgid "Projected savings"
+msgstr "Épargne projetée"
+
+#: lib/lifequest_web/live/goals_live/index.ex:129
+#, elixir-autogen, elixir-format
+msgid "Projected value (safe)"
+msgstr "Valeur projetée (sans risque)"
+
+#: lib/lifequest_web/live/projections_live/index.ex:105
+#, elixir-autogen, elixir-format
+msgid "Projection over %{months} months"
+msgstr "Projection sur %{months} mois"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:65
+#: lib/lifequest_web/live/projections_live/index.ex:10
+#: lib/lifequest_web/live/projections_live/index.ex:129
+#, elixir-autogen, elixir-format
+msgid "Projections"
+msgstr "Projections"
+
+#: lib/lifequest_web/live/finances_live/index.ex:372
+#, elixir-autogen, elixir-format
+msgid "Property rental income"
+msgstr "Revenus locatifs"
+
+#: lib/lifequest_web/live/finances_live/index.ex:171
+#: lib/lifequest_web/live/transaction_live/form.ex:34
+#: lib/lifequest_web/live/transaction_live/index.ex:88
+#: lib/lifequest_web/live/transaction_live/index.ex:90
+#, elixir-autogen, elixir-format
+msgid "Recurring"
+msgstr "Récurrent"
+
+#: lib/lifequest_web/live/projections_live/index.ex:78
+#, elixir-autogen, elixir-format
+msgid "Recurring expenses"
+msgstr "Dépenses récurrentes"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:223
+#, elixir-autogen, elixir-format
+msgid "Recurring expenses to validate"
+msgstr "Dépenses récurrentes à valider"
+
+#: lib/lifequest_web/live/projections_live/index.ex:72
+#, elixir-autogen, elixir-format
+msgid "Recurring income"
+msgstr "Revenus récurrents"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:222
+#, elixir-autogen, elixir-format
+msgid "Recurring income to validate"
+msgstr "Revenus récurrents à valider"
+
+#: lib/lifequest_web/live/projections_live/index.ex:44
+#, elixir-autogen, elixir-format
+msgid "Remaining debts"
+msgstr "Dettes restantes"
+
+#: lib/lifequest_web/live/finances_live/index.ex:384
+#, elixir-autogen, elixir-format
+msgid "Rent, insurance, subscriptions"
+msgstr "Loyer, assurances, abonnements"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:249
+#: lib/lifequest_web/live/finances_live/index.ex:372
+#: lib/lifequest_web/live/transaction_live/index.ex:214
+#: lib/lifequest_web/live/transaction_live/index.ex:237
+#, elixir-autogen, elixir-format
+msgid "Rental"
+msgstr "Location"
+
+#: lib/lifequest_web/live/finances_live/index.ex:332
+#: lib/lifequest_web/live/financial_profile_live/form.ex:183
+#, elixir-autogen, elixir-format
+msgid "Retired"
+msgstr "Retraité"
+
+#: lib/lifequest_web/live/finances_live/index.ex:374
+#, elixir-autogen, elixir-format
+msgid "Retirement, alimony received"
+msgstr "Retraite, pension alimentaire"
+
+#: lib/lifequest_web/live/investments_live/index.ex:62
+#, elixir-autogen, elixir-format
+msgid "Safe Savings Account"
+msgstr "Livret d'Épargne Sécurisé"
+
+#: lib/lifequest_web/live/goals_live/index.ex:73
+#, elixir-autogen, elixir-format
+msgid "Safety net (%{n} months income)"
+msgstr "Épargne de précaution (%{n} mois de revenus)"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:247
+#: lib/lifequest_web/live/finances_live/index.ex:369
+#: lib/lifequest_web/live/transaction_live/index.ex:212
+#: lib/lifequest_web/live/transaction_live/index.ex:235
+#, elixir-autogen, elixir-format
+msgid "Salary"
+msgstr "Salaire"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:26
+#: lib/lifequest_web/live/transaction_live/form.ex:46
+#, elixir-autogen, elixir-format
+msgid "Save"
+msgstr "Enregistrer"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:259
+#: lib/lifequest_web/live/finances_live/index.ex:387
+#: lib/lifequest_web/live/transaction_live/index.ex:227
+#: lib/lifequest_web/live/transaction_live/index.ex:247
+#, elixir-autogen, elixir-format
+msgid "Savings"
+msgstr "Épargne"
+
+#: lib/lifequest_web/live/investments_live/index.ex:66
+#, elixir-autogen, elixir-format
+msgid "Secured savings, guaranteed capital"
+msgstr "Épargne sécurisée, capital garanti"
+
+#: lib/lifequest_web/live/finances_live/index.ex:104
+#, elixir-autogen, elixir-format
+msgid "Set"
+msgstr "Définir"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:163
+#, elixir-autogen, elixir-format
+msgid "Set %{field}"
+msgstr "Définir %{field}"
+
+#: lib/lifequest_web/components/layouts/root.html.heex:118
+#, elixir-autogen, elixir-format
+msgid "Settings"
+msgstr "Paramètres"
+
+#: lib/lifequest_web/live/investments_live/index.ex:20
+#, elixir-autogen, elixir-format
+msgid "Simulate the growth of your investments over time."
+msgstr "Simulez la croissance de vos investissements dans le temps."
+
+#: lib/lifequest_web/live/investments_live/index.ex:25
+#, elixir-autogen, elixir-format
+msgid "Simulation horizon"
+msgstr "Horizon de simulation"
+
+#: lib/lifequest_web/components/layouts.ex:90
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "Une erreur est survenue !"
+
+#: lib/lifequest_web/live/goals_live/index.ex:45
+#, elixir-autogen, elixir-format
+msgid "Target date"
+msgstr "Date cible"
+
+#: lib/lifequest_web/live/goals_live/index.ex:142
+#, elixir-autogen, elixir-format
+msgid "The safe placement falls short. The Dynamic Portfolio (expected +8%/year) can reach your goal, but returns are not guaranteed."
+msgstr "Le placement sécurisé ne suffit pas. Le Portefeuille Dynamique (+8%/an attendu) peut atteindre votre objectif, mais les rendements ne sont pas garantis."
+
+#: lib/lifequest_web/live/goals_live/index.ex:184
+#, elixir-autogen, elixir-format
+msgid "To reach your goal with the safe placement, you would need:"
+msgstr "Pour atteindre votre objectif avec le placement sécurisé, il vous faudrait :"
+
+#: lib/lifequest_web/live/finances_live/index.ex:339
+#: lib/lifequest_web/live/finances_live/index.ex:353
+#, elixir-autogen, elixir-format
+msgid "Total available savings"
+msgstr "Épargne totale disponible"
+
+#: lib/lifequest_web/live/finances_live/index.ex:345
+#: lib/lifequest_web/live/finances_live/index.ex:360
+#, elixir-autogen, elixir-format
+msgid "Total estimated assets"
+msgstr "Patrimoine total estimé"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:158
+#, elixir-autogen, elixir-format
+msgid "Transaction created successfully"
+msgstr "Transaction créée avec succès"
+
+#: lib/lifequest_web/live/transaction_live/form.ex:145
+#, elixir-autogen, elixir-format
+msgid "Transaction updated successfully"
+msgstr "Transaction mise à jour avec succès"
+
+#: lib/lifequest_web/live/transaction_live/index.ex:11
+#: lib/lifequest_web/live/transaction_live/index.ex:133
+#, elixir-autogen, elixir-format
+msgid "Transactions"
+msgstr "Transactions"
+
+#: lib/lifequest_web/live/finances_live/index.ex:331
+#: lib/lifequest_web/live/financial_profile_live/form.ex:182
+#, elixir-autogen, elixir-format
+msgid "Unemployed"
+msgstr "Sans emploi"
+
+#: lib/lifequest_web/live/finances_live/index.ex:389
+#, elixir-autogen, elixir-format
+msgid "Unexpected expenses"
+msgstr "Dépenses imprévues"
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:255
+#: lib/lifequest_web/live/dashboard_live/index.ex:262
+#: lib/lifequest_web/live/finances_live/index.ex:333
+#: lib/lifequest_web/live/transaction_live/index.ex:243
+#: lib/lifequest_web/live/transaction_live/index.ex:250
+#, elixir-autogen, elixir-format
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: lib/lifequest_web/live/financial_profile_live/form.ex:168
+#, elixir-autogen, elixir-format
+msgid "Update this information to keep your profile accurate."
+msgstr "Mettez à jour ces informations pour maintenir votre profil à jour."
+
+#: lib/lifequest_web/live/dashboard_live/index.ex:59
+#, elixir-autogen, elixir-format
+msgid "Validate"
+msgstr "Valider"
+
+#: lib/lifequest_web/live/investments_live/index.ex:103
+#, elixir-autogen, elixir-format
+msgid "Value in %{years} years"
+msgstr "Valeur dans %{years} ans"
+
+#: lib/lifequest_web/live/investments_live/index.ex:115
+#, elixir-autogen, elixir-format
+msgid "Variable"
+msgstr "Variable"
+
+#: lib/lifequest_web/live/investments_live/index.ex:118
+#, elixir-autogen, elixir-format
+msgid "Variable-rate equity market investment"
+msgstr "Investissement en actions à rendement variable"
+
+#: lib/lifequest_web/components/layouts.ex:78
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "Impossible de se connecter à Internet"
+
+#: lib/lifequest_web/live/goals_live/index.ex:123
+#, elixir-autogen, elixir-format
+msgid "With the Safe Savings Account (+3%/year), you can reach your goal without taking any risks."
+msgstr "Avec le Livret d'Épargne Sécurisé (+3%/an), vous pouvez atteindre votre objectif sans prendre de risques."
+
+#: lib/lifequest_web/live/goals_live/index.ex:61
+#, elixir-autogen, elixir-format
+msgid "Your financial situation"
+msgstr "Votre situation financière"
+
+#: lib/lifequest_web/live/projections_live/index.ex:61
+#, elixir-autogen, elixir-format
+msgid "after debt repayment"
+msgstr "après remboursement des dettes"
+
+#: lib/lifequest_web/live/goals_live/index.ex:24
+#, elixir-autogen, elixir-format
+msgid "before evaluating a goal."
+msgstr "avant d'évaluer un objectif."
+
+#: lib/lifequest_web/live/projections_live/index.ex:115
+#, elixir-autogen, elixir-format
+msgid "before running projections."
+msgstr "avant de lancer des projections."
+
+#: lib/lifequest_web/components/core_components.ex:75
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "fermer"
+
+#: lib/lifequest_web/live/goals_live/index.ex:23
+#: lib/lifequest_web/live/projections_live/index.ex:114
+#, elixir-autogen, elixir-format
+msgid "financial profile"
+msgstr "profil financier"
+
+#: lib/lifequest_web/live/investments_live/index.ex:174
+#, elixir-autogen, elixir-format
+msgid "in %{years} years"
+msgstr "dans %{years} ans"
+
+#: lib/lifequest_web/live/goals_live/index.ex:187
+#, elixir-autogen, elixir-format
+msgid "month"
+msgstr "mois"
+
+#: lib/lifequest_web/live/goals_live/index.ex:211
+#, elixir-autogen, elixir-format
+msgid "months"
+msgstr "mois"
+
+#: lib/lifequest_web/live/investments_live/index.ex:126
+#, elixir-autogen, elixir-format
+msgid "per year"
+msgstr "par an"
+
+#: lib/lifequest_web/live/projections_live/index.ex:38
+#: lib/lifequest_web/live/projections_live/index.ex:47
+#, elixir-autogen, elixir-format
+msgid "today"
+msgstr "aujourd'hui"
+
+#: lib/lifequest_web/live/investments_live/index.ex:69
+#, elixir-autogen, elixir-format
+msgid "year"
+msgstr "an"
+
+#: lib/lifequest_web/live/investments_live/index.ex:52
+#, elixir-autogen, elixir-format
+msgid "years"
+msgstr "ans"

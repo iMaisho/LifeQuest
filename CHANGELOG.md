@@ -7,6 +7,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 ## [Unreleased]
 
 ### Added
+- Traduction complète de l'interface en français via gettext (183 clés traduites)
 - Page de simulation d'objectifs financiers : faisabilité, scénario optimal (du plus sûr au plus risqué) et montant mensuel manquant si l'objectif est hors de portée
 - Graphiques donut SVG natifs sur le dashboard : répartition des revenus et dépenses par type
 - Bloc balance mensuelle numérique (total revenus, total dépenses, solde coloré)

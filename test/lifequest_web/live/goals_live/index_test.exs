@@ -12,16 +12,16 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
 
   test "shows no-profile warning when financial profile is missing", %{conn: conn} do
     {:ok, _live, html} = live(conn, ~p"/goals")
-    assert html =~ "financial profile"
+    assert html =~ "profil financier"
   end
 
   test "renders the goal form when profile exists", %{conn: conn, scope: scope} do
     financial_profile_fixture(scope)
     {:ok, _live, html} = live(conn, ~p"/goals")
-    assert html =~ "Goals"
-    assert html =~ "Amount needed"
-    assert html =~ "Target date"
-    assert html =~ "Your financial situation"
+    assert html =~ "Objectifs"
+    assert html =~ "Montant nécessaire"
+    assert html =~ "Date cible"
+    assert html =~ "Votre situation financière"
   end
 
   test "shows evaluation result on form submit", %{conn: conn, scope: scope} do
@@ -37,7 +37,7 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
       )
       |> render_submit()
 
-    assert html =~ "Goal"
+    assert html =~ "Objectif"
   end
 
   test "shows error flash for invalid inputs", %{conn: conn, scope: scope} do
@@ -53,6 +53,6 @@ defmodule LifequestWeb.GoalsLive.IndexTest do
       )
       |> render_submit()
 
-    assert html =~ "valid"
+    assert html =~ "valide"
   end
 end
