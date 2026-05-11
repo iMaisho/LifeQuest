@@ -1,0 +1,84 @@
+@startuml MCD Lifequest
+
+hide circle
+
+entity "users" as users {
+  * id : UUID <<PK>>
+  --
+  * email : string <<unique>>
+  hashed_password : string
+  confirmed_at : utc_datetime
+  * inserted_at : utc_datetime
+  * updated_at : utc_datetime
+}
+
+entity "financial_profiles" as profiles {
+  * id : UUID <<PK>>
+  --
+  * current_savings : decimal
+  * current_debts : decimal
+  * monthly_debt_payment : decimal
+  * net_worth : decimal
+  * employment_status : enum
+  * user_id : UUID <<FK>>
+  * inserted_at : utc_datetime
+  * updated_at : utc_datetime
+}
+
+note right of profiles::employment_status
+  cdi | cdd | freelance
+  business_owner | unemployed | retired
+end note
+
+entity "accounts" as accounts {
+  * id : UUID <<PK>>
+  --
+  * label : string
+  * type : enum
+  * balance : decimal
+  * interest_rate : decimal
+  * is_active : boolean
+  * user_id : UUID <<FK>>
+  * inserted_at : utc_datetime
+  * updated_at : utc_datetime
+}
+
+note right of accounts::type
+  checking | savings | investment
+  real_estate | retirement | crypto
+end note
+
+entity "transactions" as transactions {
+  * id : UUID <<PK>>
+  --
+  * label : string
+  * direction : enum
+  income_type : enum
+  expense_type : enum
+  * amount : decimal
+  * date : date
+  * is_recurring : boolean
+  * is_active : boolean
+  * account_id : UUID <<FK>>
+  * inserted_at : utc_datetime
+  * updated_at : utc_datetime
+}
+
+note right of transactions::direction
+  income | expense
+end note
+
+note right of transactions::income_type
+  salary | freelance | rental | bonus
+  pension | government_aid | investment | other
+end note
+
+note right of transactions::expense_type
+  essential | pleasure | savings | extra | other
+end note
+
+users ||--o| profiles : "possede"
+users ||--o{ accounts : "possede"
+accounts ||--o{ transactions : "contient"
+
+@enduml
