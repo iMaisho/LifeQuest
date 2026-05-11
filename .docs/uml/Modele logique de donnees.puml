@@ -1,0 +1,98 @@
+@startuml MLD Lifequest
+
+skinparam linetype ortho
+skinparam roundcorner 6
+skinparam class {
+  BackgroundColor #FAFAFA
+  BorderColor #555555
+  ArrowColor #333333
+  HeaderBackgroundColor #D6E4F0
+}
+
+hide circle
+hide methods
+
+class "users" {
+  # id : UUID NOT NULL
+  --
+  email : CITEXT NOT NULL UNIQUE
+  hashed_password : VARCHAR
+  confirmed_at : TIMESTAMPTZ
+  inserted_at : TIMESTAMPTZ NOT NULL
+  updated_at : TIMESTAMPTZ NOT NULL
+}
+
+class "financial_profiles" {
+  # id : UUID NOT NULL
+  --
+  current_savings : NUMERIC(18,2) DEFAULT 0
+  current_debts : NUMERIC(18,2) DEFAULT 0
+  monthly_debt_payment : NUMERIC(18,2) DEFAULT 0
+  net_worth : NUMERIC(18,2) DEFAULT 0
+  employment_status : VARCHAR
+  user_id : UUID FK
+  inserted_at : TIMESTAMPTZ NOT NULL
+  updated_at : TIMESTAMPTZ NOT NULL
+  ..indexes..
+  idx(user_id)
+}
+
+note right of financial_profiles
+  employment_status :
+  cdi | cdd | freelance |
+  business_owner | unemployed | retired
+end note
+
+class "accounts" {
+  # id : UUID NOT NULL
+  --
+  label : VARCHAR
+  type : VARCHAR
+  balance : NUMERIC(18,2)
+  interest_rate : NUMERIC(6,3)
+  is_active : BOOLEAN NOT NULL DEFAULT false
+  user_id : UUID FK
+  inserted_at : TIMESTAMPTZ NOT NULL
+  updated_at : TIMESTAMPTZ NOT NULL
+  ..indexes..
+  idx(user_id)
+}
+
+note right of accounts
+  type :
+  checking | savings | investment |
+  real_estate | retirement | crypto
+end note
+
+class "transactions" {
+  # id : UUID NOT NULL
+  --
+  label : VARCHAR
+  direction : VARCHAR
+  income_type : VARCHAR
+  expense_type : VARCHAR
+  amount : NUMERIC(18,2)
+  date : DATE
+  is_recurring : BOOLEAN NOT NULL DEFAULT false
+  is_active : BOOLEAN NOT NULL DEFAULT true
+  account_id : UUID NOT NULL FK
+  inserted_at : TIMESTAMPTZ NOT NULL
+  updated_at : TIMESTAMPTZ NOT NULL
+  ..indexes..
+  idx(account_id)
+}
+
+note right of transactions
+  direction : income | expense
+  income_type : salary | freelance | rental |
+    bonus | pension | government_aid |
+    investment | other
+  expense_type : essential | pleasure |
+    savings | extra | other
+end note
+
+users "1" -- "0..1" financial_profiles : user_id >
+users "1" -- "0..*" accounts : user_id >
+accounts "1" -- "0..*" transactions : account_id >
+
+@enduml
