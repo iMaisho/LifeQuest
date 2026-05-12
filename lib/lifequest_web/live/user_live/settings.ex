@@ -74,7 +74,7 @@ defmodule LifequestWeb.UserLive.Settings do
       <div class="space-y-4">
         <div class="flex items-center justify-between gap-4">
           <button
-            class="btn btn-outline btn-error btn-sm w-36 shrink-0"
+            class="btn btn-outline btn-error btn-sm w-48 shrink-0"
             phx-click="open_modal"
             phx-value-modal="delete_data"
           >
@@ -91,7 +91,7 @@ defmodule LifequestWeb.UserLive.Settings do
 
         <div class="flex items-center justify-between gap-4">
           <button
-            class="btn btn-error btn-sm w-36 shrink-0"
+            class="btn btn-error btn-sm w-48 shrink-0"
             phx-click="open_modal"
             phx-value-modal="delete_account"
           >
