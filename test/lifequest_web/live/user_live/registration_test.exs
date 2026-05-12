@@ -8,8 +8,8 @@ defmodule LifequestWeb.UserLive.RegistrationTest do
     test "renders registration page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/register")
 
-      assert html =~ "Register"
-      assert html =~ "Log in"
+      assert html =~ "S&#39;inscrire"
+      assert html =~ "Se connecter"
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -30,7 +30,7 @@ defmodule LifequestWeb.UserLive.RegistrationTest do
         |> element("#registration_form")
         |> render_change(user: %{"email" => "with spaces"})
 
-      assert result =~ "Register"
+      assert result =~ "Créer un compte"
       assert result =~ "must have the @ sign and no spaces"
     end
   end
@@ -47,7 +47,7 @@ defmodule LifequestWeb.UserLive.RegistrationTest do
         |> follow_redirect(conn, ~p"/users/log-in")
 
       assert html =~
-               ~r/An email was sent to .*, please access it to confirm your account/
+               ~r/Un email a été envoyé à .*, veuillez y accéder pour confirmer votre compte/
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
@@ -72,11 +72,11 @@ defmodule LifequestWeb.UserLive.RegistrationTest do
 
       {:ok, _login_live, login_html} =
         lv
-        |> element("main a", "Log in")
+        |> element("main a", "Se connecter")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert login_html =~ "Log in"
+      assert login_html =~ "Se connecter"
     end
   end
 end

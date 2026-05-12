@@ -5,6 +5,7 @@ defmodule LifequestWeb.UserAuth do
 
   import Plug.Conn
   import Phoenix.Controller
+  use Gettext, backend: LifequestWeb.Gettext
 
   alias Lifequest.Accounts
   alias Lifequest.Accounts.Scope
@@ -225,7 +226,7 @@ defmodule LifequestWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+        |> Phoenix.LiveView.put_flash(:error, gettext("You must log in to access this page."))
         |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
 
       {:halt, socket}
@@ -240,7 +241,10 @@ defmodule LifequestWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must re-authenticate to access this page.")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          gettext("You must re-authenticate to access this page.")
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
 
       {:halt, socket}
@@ -270,7 +274,7 @@ defmodule LifequestWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> put_flash(:error, gettext("You must log in to access this page."))
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log-in")
       |> halt()
