@@ -19,13 +19,13 @@ defmodule LifequestWeb.UserLive.SettingsDeleteTest do
   describe "delete data button" do
     test "renders the delete data button", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/settings")
-      assert html =~ "Delete data"
+      assert html =~ "Supprimer les données"
     end
 
     test "opens the confirmation modal on click", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/settings")
       html = lv |> element("button[phx-value-modal='delete_data']") |> render_click()
-      assert html =~ "Yes, delete my data"
+      assert html =~ "Oui, supprimer mes données"
     end
 
     test "deletes financial data and keeps the account", %{conn: conn, user: user, scope: scope} do
@@ -36,7 +36,7 @@ defmodule LifequestWeb.UserLive.SettingsDeleteTest do
       lv |> element("button[phx-value-modal='delete_data']") |> render_click()
       html = lv |> element("button[phx-click='delete_data']") |> render_click()
 
-      assert html =~ "Your data has been deleted."
+      assert html =~ "Vos données ont été supprimées."
       assert Accounts.get_user_by_email(user.email)
       assert Repo.all(from a in Account, where: a.user_id == ^user.id) == []
       assert Repo.all(from fp in FinancialProfile, where: fp.user_id == ^user.id) == []
@@ -46,13 +46,13 @@ defmodule LifequestWeb.UserLive.SettingsDeleteTest do
   describe "delete account button" do
     test "renders the delete account button", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/settings")
-      assert html =~ "Delete account"
+      assert html =~ "Supprimer le compte"
     end
 
     test "opens the confirmation modal on click", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/settings")
       html = lv |> element("button[phx-value-modal='delete_account']") |> render_click()
-      assert html =~ "Yes, delete my account"
+      assert html =~ "Oui, supprimer mon compte"
     end
 
     test "deletes the user and redirects to login", %{conn: conn, user: user, scope: scope} do
