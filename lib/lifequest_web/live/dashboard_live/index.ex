@@ -77,7 +77,7 @@ defmodule LifequestWeb.DashboardLive.Index do
     """
   end
 
-  @circumference 251.2
+  @circumference 250
 
   attr :title, :string, required: true
   attr :slices, :list, required: true
