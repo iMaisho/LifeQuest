@@ -84,6 +84,9 @@
           <button
             id="sidebar-toggle"
             onclick="toggleSidebar()"
+            aria-label={gettext("Toggle sidebar")}
+            aria-controls="sidebar"
+            aria-expanded="true"
             class="absolute top-1/2 -right-[17px] -translate-y-1/2 w-[18px] h-11 bg-base-200 border border-l-0 border-base-300 rounded-r-xl flex items-center justify-center z-10 hover:bg-base-300 transition-colors cursor-pointer"
           >
             <span
@@ -97,6 +100,9 @@
             <button
               id="profile-button"
               onclick="toggleProfileMenu()"
+              aria-label={gettext("Open user menu")}
+              aria-controls="profile-menu"
+              aria-expanded="false"
               class="flex items-center gap-3 px-2 w-full rounded-lg hover:bg-base-300 transition-colors py-2 cursor-pointer"
             >
               <div class="w-10 h-10 rounded-lg bg-base-300 flex items-center justify-center shrink-0">
@@ -140,22 +146,28 @@
         function toggleSidebar() {
           const sidebar = document.getElementById("sidebar");
           const arrow = document.getElementById("sidebar-arrow");
+          const toggle = document.getElementById("sidebar-toggle");
           const isCollapsed = sidebar.hasAttribute("data-collapsed");
 
           if (isCollapsed) {
             sidebar.removeAttribute("data-collapsed");
             arrow.classList.remove("rotate-180");
+            toggle.setAttribute("aria-expanded", "true");
           } else {
             sidebar.setAttribute("data-collapsed", "");
             arrow.classList.add("rotate-180");
+            toggle.setAttribute("aria-expanded", "false");
             // Close profile menu when collapsing
             document.getElementById("profile-menu").classList.add("hidden");
+            document.getElementById("profile-button").setAttribute("aria-expanded", "false");
           }
         }
 
         function toggleProfileMenu() {
           const menu = document.getElementById("profile-menu");
-          menu.classList.toggle("hidden");
+          const button = document.getElementById("profile-button");
+          const isHidden = menu.classList.toggle("hidden");
+          button.setAttribute("aria-expanded", isHidden ? "false" : "true");
         }
 
         // Close profile menu when clicking outside

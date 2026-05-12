@@ -480,7 +480,7 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: lib/lifequest_web/components/layouts/root.html.heex:123
+#: lib/lifequest_web/components/layouts/root.html.heex:129
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr ""
@@ -841,7 +841,7 @@ msgstr ""
 msgid "Set %{field}"
 msgstr ""
 
-#: lib/lifequest_web/components/layouts/root.html.heex:118
+#: lib/lifequest_web/components/layouts/root.html.heex:124
 #, elixir-autogen, elixir-format
 msgid "Settings"
 msgstr ""
@@ -1024,4 +1024,29 @@ msgstr ""
 #: lib/lifequest_web/live/investments_live/index.ex:52
 #, elixir-autogen, elixir-format
 msgid "years"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts.ex:134
+#, elixir-autogen, elixir-format
+msgid "Dark theme"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts.ex:125
+#, elixir-autogen, elixir-format
+msgid "Light theme"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts/root.html.heex:103
+#, elixir-autogen, elixir-format
+msgid "Open user menu"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts.ex:116
+#, elixir-autogen, elixir-format
+msgid "System theme"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts/root.html.heex:87
+#, elixir-autogen, elixir-format
+msgid "Toggle sidebar"
 msgstr ""
