@@ -6,6 +6,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ## [Unreleased]
 
+### Added
+- Page mentions légales et politique de confidentialité accessible sans connexion, avec lien dans le footer
+
 ### Changed
 - Contraste renforcé entre les niveaux de couleur de fond (cartes, sidebar, page) pour les thèmes clair et sombre
 - Labels aria ajoutés sur les boutons d'édition et suppression des transactions, le bouton de menu latéral, le menu utilisateur, les boutons de thème et le logo

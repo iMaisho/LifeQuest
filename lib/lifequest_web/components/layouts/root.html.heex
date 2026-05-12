@@ -139,9 +139,16 @@
         </aside>
 
         <%!-- Main content --%>
-        <main class="flex-1 overflow-y-auto">
-          {@inner_content}
-        </main>
+        <div class="flex-1 flex flex-col overflow-y-auto">
+          <main class="flex-1">
+            {@inner_content}
+          </main>
+          <footer class="px-6 py-3 border-t border-base-200 text-xs opacity-50 flex gap-4">
+            <.link navigate={~p"/mentions-legales"}>
+              {gettext("Legal notice & Privacy policy")}
+            </.link>
+          </footer>
+        </div>
       </div>
 
       <script>
@@ -212,6 +219,11 @@
         <main class="flex-1">
           {@inner_content}
         </main>
+        <footer class="px-6 py-3 border-t border-base-200 text-xs opacity-50 flex gap-4">
+          <.link navigate={~p"/mentions-legales"}>
+            {gettext("Legal notice & Privacy policy")}
+          </.link>
+        </footer>
       </div>
     <% end %>
   </body>
