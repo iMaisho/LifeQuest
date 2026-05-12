@@ -1,12 +1,3 @@
-# Rapport de projet — Titre Professionnel Concepteur Développeur d'Applications
-
-**Candidat** : Antonin MINGAM
-**Titre visé** : Concepteur Développeur d'Applications Niveau 6
-**Référentiel** : TP-01281 millésime 04 (24/05/2023)
-**Projet support** : Lifequest - Application de gestion financière personnelle
-
----
-
 ## Sommaire
 
 1. [Présentation du candidat et du contexte de formation](#1-présentation-du-candidat-et-du-contexte-de-formation)
@@ -14,8 +5,6 @@
    - 2.1 [Contexte et objectifs](#21-contexte-et-objectifs)
    - 2.2 [Stack technique](#22-stack-technique)
    - 2.3 [Architecture générale](#23-architecture-générale)
-
----
 
 ### BLOC 1 — Développer une application sécurisée
 
@@ -45,8 +34,6 @@
    - 6.3 [Outils collaboratifs (GitHub, conventions de commits)](#63-outils-collaboratifs-github-conventions-de-commits)
    - 6.4 [Qualité du code (Credo, mix format, CI)](#64-qualité-du-code-credo-mix-format-ci)
 
----
-
 ### BLOC 2 — Concevoir et développer une application sécurisée organisée en couches
 
 7. [CP5 — Analyser les besoins et maquetter une application](#7-cp5--analyser-les-besoins-et-maquetter-une-application)
@@ -75,8 +62,6 @@
     - 10.4 [Tests unitaires et de sécurité des accès aux données](#104-tests-unitaires-et-de-sécurité-des-accès-aux-données)
     - 10.5 [Protection contre l'injection SQL](#105-protection-contre-linjection-sql)
 
----
-
 ### BLOC 3 — Préparer le déploiement d'une application sécurisée
 
 11. [CP9 — Préparer et exécuter les plans de tests d'une application](#11-cp9--préparer-et-exécuter-les-plans-de-tests-dune-application)
@@ -99,8 +84,6 @@
     - 13.4 [Automatisation des tests](#134-automatisation-des-tests)
     - 13.5 [Interprétation des rapports CI](#135-interprétation-des-rapports-ci)
 
----
-
 ### Compétences transversales
 
 14. [Communiquer en français et en anglais](#14-communiquer-en-français-et-en-anglais)
@@ -111,8 +94,6 @@
 
 16. [Apprendre en continu — Veille technologique](#16-apprendre-en-continu--veille-technologique)
 
----
-
 17. [Conclusion et bilan de compétences](#17-conclusion-et-bilan-de-compétences)
 18. [Annexes](#18-annexes)
     - A. Diagramme MCD / MPD
@@ -120,8 +101,6 @@
     - C. Plan de tests complet
     - D. Extraits de code commentés
     - E. Captures d'écran de l'application
-
----
 
 ## 1. Présentation du candidat et du contexte de formation
 
@@ -187,3 +166,57 @@ Pour résumer, à l'appel d'une route :
 - le template HEEx s'affiche, en utilisant ces données
 
 Par la suite, les interactions utilisateurs déclencheront des fonctions `handle_event/3` qui fonctionnent de manière similaire, et qui permettront de modifier le DOM sans rechargement ou d'émettre des messages PubSub pour avertir d'autres LiveViews abonnées de la mise à jour de leur état en temps réel grâce à `handle_info/3`
+
+## 3. CP1 — Installer et configurer son environnement de travail en fonction du projet
+
+### 3.1 Environnement de développement
+
+Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'utiliser des aides au développement, comme ElixirLS pour l'autocomplétion Elixir, PlantUML pour la création et la visualisation de mes schémas UML, ou TODO pour garder en tête les tâches à effectuer. 
+
+Le projet repose principalement sur Elixir et Mix, son outil natif pour lequel j'ai créé une tâche personnalisée, `mix precommit` afin de grouper les commandes de formatage, de lint, de build et d'exécution des tests afin de m'assurer de la qualité de mon code avant de le push sur la branche distante. Toutes ces étapes sont les mêmes que les tâches éxecutées sur la pipeline CI à la création d'une pull request, me permettant de gagner du temps en capturant les problèmes plus tôt dans mon workflow.
+
+`mix.setup` permet d'installer le projet et ses dépendances, créer les bases de données et jouer leurs migrations. On a deux bases de données par défaut, la base de prod (dev en local) et de tests, permettant d'effectuer des tests reproductible sur cette dernière.
+
+Enfin, `mix phx.server` permet de lancer l'application sur le port 4000 de la machine hôte.
+
+### 3.2 Outils de gestion des versions et de collaboration
+
+Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques utilisées au quotidien chez Frixel afin de maintenir un historique propre, traçable et permettant le travail en équipe.
+
+Chaque mise à jour commence par la création d'un ticket Jira s'il n'existe pas déjà, puis par la création d'une branche GIT selon la convention de nommage établie chez Frixel. Cette convention permet de relier directement le ticket, la branche et les merges sur main, eux même nommés en suivant une convention similaire.
+
+`LQ-XX type(description)` : 
+- `LQ-XX` correspond au numéro de ticket JIRA 
+- `type` correspond à la nature de la modification (feat, fix, refactor…) 
+- description est un court résumé des changements apportés par la mise à jour
+
+Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions. 
+
+Cette pipeline exécute trois vérifications primordiales : le formatage du code avec `mix format`, le lint avec `mix credo` qui applique des règles de lisibilité et de complexité définies en amont, l'exécution des tests avec `mix test`. 
+
+Toutes ces étapes permettent de garantir de conserver un historique et une branche `main` propre, où chaque commit est validé en amont.
+
+### 3.3 Conteneurisation
+
+Dans le cadre de la conteneurisation de ce projet, j'ai été amené à créer un `Dockerfile` et un `docker-compose.yml` qui permettent de lancer l'application et sa base de données dans des conteneurs isolés, sans aucune installation locale d'Elixir ou de PostgreSQL.
+
+Le `Dockerfile` part de l'image officielle `elixir:latest`. Grâce aux commandes fournies par `Mix` qu'on a évoqué plus tôt, il : 
+- Installe Hex et Rebar (`mix local.hex && mix local.rebar`), qui sont les gestionnaires de paquets Elixir
+- Récupère les dépendances du projet (`mix deps.get`)
+- Télécharge les assets frontend (`mix assets.setup`)
+- Compile et miniefie ces assets (`mix assets.deploy`) pour produire les fichiers statiques prêts pour la production
+- Compile l'application complète en environnement de production (`MIX_ENV=prod mix compile`)
+
+Lorsque le conteneur est démarré, il joue les fichiers de migration (`mix ecto.migrate`) puis lance l'application (`mix phx.server`).
+
+Ce Dockerfile sera lui même lancé à l'aide d'une orchestration docker-compose aux côtés de la base de données pour s'assurer de la reproductibilité.
+
+L'orchestration fonctionne comme suit :
+- Le service `db` est créé sur la base de l'image officielle `postgres:16`, avec un volume persistant.
+- Un healthcheck vérifie que PostgreSQL est lancé et accepte les connexions.
+- Le service `app` est annoté comme dépendant de la condition de santé du service `db`
+- Il est construit à partir du DockerFile local, et charge les variables d'environnement depuis un fichier .env.
+- La variable `DATABASE_URL` est injectée directement pour pointer vers le service `db` via son nom de service Docker.
+
+Cette configuration permet de lancer l'environnement complet avec une seule commande (`docker compose up`), ce qui garantit la reproductibilité de l'opération indépendamment de la machine hôte.
+
