@@ -744,4 +744,27 @@ defmodule Lifequest.Finances do
 
     Account.changeset(account, attrs, scope)
   end
+
+  @doc """
+  Deletes all financial data belonging to the given scope: accounts (and their
+  transactions via cascade) and the financial profile.
+
+  Returns `:ok`.
+
+  ## Examples
+
+      iex> delete_all_user_data(scope)
+      :ok
+
+  """
+  def delete_all_user_data(%Scope{} = scope) do
+    user_id = scope.user.id
+
+    Repo.transaction(fn ->
+      Repo.delete_all(from(a in Account, where: a.user_id == ^user_id))
+      Repo.delete_all(from(fp in FinancialProfile, where: fp.user_id == ^user_id))
+    end)
+
+    :ok
+  end
 end

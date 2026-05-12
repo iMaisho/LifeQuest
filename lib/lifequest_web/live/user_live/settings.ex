@@ -4,6 +4,7 @@ defmodule LifequestWeb.UserLive.Settings do
   on_mount {LifequestWeb.UserAuth, :require_sudo_mode}
 
   alias Lifequest.Accounts
+  alias Lifequest.Finances
 
   @impl true
   def render(assigns) do
@@ -65,6 +66,98 @@ defmodule LifequestWeb.UserLive.Settings do
           Save Password
         </.button>
       </.form>
+
+      <div class="divider" />
+
+      <div class="space-y-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="font-semibold">{gettext("Delete all my data")}</p>
+            <p class="text-sm opacity-60">
+              {gettext(
+                "Permanently deletes your financial profile, accounts and transactions. Your account is kept."
+              )}
+            </p>
+          </div>
+          <button
+            class="btn btn-outline btn-error btn-sm shrink-0"
+            phx-click="open_modal"
+            phx-value-modal="delete_data"
+          >
+            {gettext("Delete data")}
+          </button>
+        </div>
+
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="font-semibold">{gettext("Delete my account")}</p>
+            <p class="text-sm opacity-60">
+              {gettext(
+                "Permanently deletes your account and all associated data. This action cannot be undone."
+              )}
+            </p>
+          </div>
+          <button
+            class="btn btn-error btn-sm shrink-0"
+            phx-click="open_modal"
+            phx-value-modal="delete_account"
+          >
+            {gettext("Delete account")}
+          </button>
+        </div>
+      </div>
+
+      <%!-- Modal : effacer les données --%>
+      <div
+        id="modal-delete-data"
+        class={["modal", @active_modal == :delete_data && "modal-open"]}
+        phx-click-away="close_modal"
+      >
+        <div class="modal-box">
+          <h3 class="font-bold text-lg mb-2">{gettext("Delete all my data")}</h3>
+          <p class="text-sm opacity-70 mb-6">
+            {gettext(
+              "This will permanently delete your financial profile, all your accounts and all your transactions. Your account and email address are kept. This action cannot be undone."
+            )}
+          </p>
+          <div class="modal-action">
+            <button class="btn btn-ghost" phx-click="close_modal">{gettext("Cancel")}</button>
+            <button
+              class="btn btn-error"
+              phx-click="delete_data"
+              phx-disable-with={gettext("Deleting...")}
+            >
+              {gettext("Yes, delete my data")}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Modal : supprimer le compte --%>
+      <div
+        id="modal-delete-account"
+        class={["modal", @active_modal == :delete_account && "modal-open"]}
+        phx-click-away="close_modal"
+      >
+        <div class="modal-box">
+          <h3 class="font-bold text-lg mb-2">{gettext("Delete my account")}</h3>
+          <p class="text-sm opacity-70 mb-6">
+            {gettext(
+              "This will permanently delete your account, your financial profile, all your accounts and all your transactions. This action cannot be undone."
+            )}
+          </p>
+          <div class="modal-action">
+            <button class="btn btn-ghost" phx-click="close_modal">{gettext("Cancel")}</button>
+            <button
+              class="btn btn-error"
+              phx-click="delete_account"
+              phx-disable-with={gettext("Deleting...")}
+            >
+              {gettext("Yes, delete my account")}
+            </button>
+          </div>
+        </div>
+      </div>
     </Layouts.app>
     """
   end
@@ -94,11 +187,35 @@ defmodule LifequestWeb.UserLive.Settings do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:active_modal, nil)
 
     {:ok, socket}
   end
 
   @impl true
+  def handle_event("open_modal", %{"modal" => modal}, socket) do
+    {:noreply, assign(socket, :active_modal, String.to_existing_atom(modal))}
+  end
+
+  def handle_event("close_modal", _params, socket) do
+    {:noreply, assign(socket, :active_modal, nil)}
+  end
+
+  def handle_event("delete_data", _params, socket) do
+    :ok = Finances.delete_all_user_data(socket.assigns.current_scope)
+
+    {:noreply,
+     socket
+     |> assign(:active_modal, nil)
+     |> put_flash(:info, gettext("Your data has been deleted."))}
+  end
+
+  def handle_event("delete_account", _params, socket) do
+    user = socket.assigns.current_scope.user
+    {:ok, _} = Accounts.delete_user(user)
+    {:noreply, redirect(socket, to: ~p"/users/log-in")}
+  end
+
   def handle_event("validate_email", params, socket) do
     %{"user" => user_params} = params
 
