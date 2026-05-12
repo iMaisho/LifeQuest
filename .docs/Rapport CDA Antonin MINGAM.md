@@ -158,11 +158,12 @@ Lifequest repose sur une architecture en trois couches strictement séparées, a
 Une autre fonctionnalité offerte par Phoenix s'appelle Scope. Il s'agit d'une struct représentant l'utilisateur actuel qui est passée en premier argument à toutes les fonctions de contexte. Cela garantit l'isolation des données entre les utilisateurs, car elle est utilisée comme filtre dans toutes les requêtes Ecto. On peut également s'appuyer sur elle pour la gestion des droits, par exemple entre admin et user, ou entre compte free ou premium.
 
 Pour résumer, à l'appel d'une route :
+**Voir Annexe 1.1**
 
 - la requête HTTP initiale déclenche le `mount/3` de la LiveView
 - les fonctions de contextes nécessaires au rendu initial sont appelées
 - les requêtes SQL sont envoyées à PostgreSQL grâce à Ecto
-- les données sont placées en assigns sur la socket et stockées en mémoire vive
+- les données sont placées en `assigns` sur la socket et stockées en mémoire vive
 - le template HEEx s'affiche, en utilisant ces données
 
 Par la suite, les interactions utilisateurs déclencheront des fonctions `handle_event/3` qui fonctionnent de manière similaire, et qui permettront de modifier le DOM sans rechargement ou d'émettre des messages PubSub pour avertir d'autres LiveViews abonnées de la mise à jour de leur état en temps réel grâce à `handle_info/3`
@@ -171,7 +172,7 @@ Par la suite, les interactions utilisateurs déclencheront des fonctions `handle
 
 ### 3.1 Environnement de développement
 
-Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'utiliser des aides au développement, comme ElixirLS pour l'autocomplétion Elixir, PlantUML pour la création et la visualisation de mes schémas UML, ou TODO pour garder en tête les tâches à effectuer. 
+Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'utiliser des aides au développement, comme ElixirLS pour l'autocomplétion Elixir, PlantUML pour la création et la visualisation de mes schémas UML, ou TODO pour garder en tête les tâches à effectuer.
 
 Le projet repose principalement sur Elixir et Mix, son outil natif pour lequel j'ai créé une tâche personnalisée, `mix precommit` afin de grouper les commandes de formatage, de lint, de build et d'exécution des tests afin de m'assurer de la qualité de mon code avant de le push sur la branche distante. Toutes ces étapes sont les mêmes que les tâches éxecutées sur la pipeline CI à la création d'une pull request, me permettant de gagner du temps en capturant les problèmes plus tôt dans mon workflow.
 
@@ -185,14 +186,15 @@ Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques
 
 Chaque mise à jour commence par la création d'un ticket Jira s'il n'existe pas déjà, puis par la création d'une branche GIT selon la convention de nommage établie chez Frixel. Cette convention permet de relier directement le ticket, la branche et les merges sur main, eux même nommés en suivant une convention similaire.
 
-`LQ-XX type(description)` : 
-- `LQ-XX` correspond au numéro de ticket JIRA 
-- `type` correspond à la nature de la modification (feat, fix, refactor…) 
-- description est un court résumé des changements apportés par la mise à jour
+`LQ-XX type(description)` :
 
-Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions. 
+- `LQ-XX` correspond au numéro de ticket JIRA
+- `type` correspond à la nature de la modification (feat, fix, refactor…)
+- `description` est un court résumé des changements apportés par la mise à jour
 
-Cette pipeline exécute trois vérifications primordiales : le formatage du code avec `mix format`, le lint avec `mix credo` qui applique des règles de lisibilité et de complexité définies en amont, l'exécution des tests avec `mix test`. 
+Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions.
+
+Cette pipeline exécute trois vérifications primordiales : le formatage du code avec `mix format`, le lint avec `mix credo` qui applique des règles de lisibilité et de complexité définies en amont, l'exécution des tests avec `mix test`.
 
 Toutes ces étapes permettent de garantir de conserver un historique et une branche `main` propre, où chaque commit est validé en amont.
 
@@ -200,7 +202,8 @@ Toutes ces étapes permettent de garantir de conserver un historique et une bran
 
 Dans le cadre de la conteneurisation de ce projet, j'ai été amené à créer un `Dockerfile` et un `docker-compose.yml` qui permettent de lancer l'application et sa base de données dans des conteneurs isolés, sans aucune installation locale d'Elixir ou de PostgreSQL.
 
-Le `Dockerfile` part de l'image officielle `elixir:latest`. Grâce aux commandes fournies par `Mix` qu'on a évoqué plus tôt, il : 
+Le `Dockerfile` part de l'image officielle `elixir:latest`. Grâce aux commandes fournies par `Mix` qu'on a évoqué plus tôt, il :
+
 - Installe Hex et Rebar (`mix local.hex && mix local.rebar`), qui sont les gestionnaires de paquets Elixir
 - Récupère les dépendances du projet (`mix deps.get`)
 - Télécharge les assets frontend (`mix assets.setup`)
@@ -212,6 +215,7 @@ Lorsque le conteneur est démarré, il joue les fichiers de migration (`mix ecto
 Ce Dockerfile sera lui même lancé à l'aide d'une orchestration docker-compose aux côtés de la base de données pour s'assurer de la reproductibilité.
 
 L'orchestration fonctionne comme suit :
+
 - Le service `db` est créé sur la base de l'image officielle `postgres:16`, avec un volume persistant.
 - Un healthcheck vérifie que PostgreSQL est lancé et accepte les connexions.
 - Le service `app` est annoté comme dépendant de la condition de santé du service `db`
@@ -220,3 +224,101 @@ L'orchestration fonctionne comme suit :
 
 Cette configuration permet de lancer l'environnement complet avec une seule commande (`docker compose up`), ce qui garantit la reproductibilité de l'opération indépendamment de la machine hôte.
 
+## 4. CP2 — Développer des interfaces utilisateur
+
+### 4.1 Conception des interfaces avec Phoenix LiveView
+
+Lifequest repose entièrement sur Phoenix LiveView pour la construction de ses interfaces. Ce modèle se distingue des approches frontend classiques (React, Vue) en maintenant l'état de l'interface côté serveur : le navigateur établit une connexion WebSocket persistante avec le serveur, qui calcule les changements de DOM et envoie uniquement les diffs nécessaires au client. Cette architecture élimine le besoin d'un framework JavaScript séparé et d'une API entre le front et le back, tout en offrant une réactivité comparable à celle d'une Single Page Application.
+
+Chaque LiveView suit une structure définie par trois callbacks principaux :
+
+- `mount/3` initialise l'état de la page en chargeant les données nécessaires dans les assigns.
+
+- `handle_event/3` traite les interactions utilisateur comme les clics ou les soumissions de formulaire et met à jour l'état en conséquence.
+
+- `handle_info/3` reçoit les messages asynchrones, notamment ceux émis via PubSub.
+
+Le template HEEx associé reflète automatiquement chaque changement d'état sans rechargement de page.
+
+Il est possible de factoriser les composants réutilisables dans des modules personnalisés, pour permettre une organisation propre à chaque équipe.
+
+L'implémentation de base de Phoenix les regroupe dans `core_components.ex`, qui expose des composants fonctionnels tels que `<.input>`, `<.form>` et `<.icon>`. Cette centralisation garantit la cohérence visuelle et comportementale à travers l'application : un champ de formulaire se comporte et s'affiche de manière identique partout, et toute modification s'applique en un seul point.
+
+#### Exemple concret de la LiveView `dashboard_live` : **_Voir annexe 2.1_**
+
+A l'initiatialisation de la LiveView, la fonction `mount\3` est appelée, et appelle elle même les différentes fonctions du contexte permettant de récupérer les données en base permettant l'affichage des données sur le dashboard, avant de les placer dans les assigns.
+Parmi elles, la fonction `load_dashboard_data` qui vient appeler différentes fonctions du contexte `Finances` pour récupérer les revenus et les dépenses de l'utilisateur en base.
+Cela permet de générer les deux graphiques. Si des revenus ou des dépenses récurrentes ont été générées automatiquement en base sans avoir été validées, elles apparaissent dans une section de la page, `pending_recurring_section`, permettant à l'utilisateur de les valider une par une.
+En cliquant sur le bouton valider, l'évènement `validate_recurring` est déclenché et capté par un `handle_event` qui va lui même essayer d'appeler la fonction `validate_recurring/3` du contexte `Finances` pour mettre à jour les informations dans les assigns de la socket.
+La transaction perd son état pending, elle disparait donc de la section dédiée à ces dernières.
+
+### 4.2 Charte graphique et responsive design (Tailwind CSS / daisyUI)
+
+Pour la couche de présentation, j'ai utilisé Tailwind CSS v4 associé à daisyUI, qui sont les outils fournis par Phoenix et que j'utilise au quotidien chez Frixel.
+
+Tailwind est un framework CSS utility-first : plutôt que de définir des classes sémantiques, on compose les styles directement dans le HTML grâce à des classes atomiques (`flex`, `gap-4`, `rounded-lg`...). Cela évite d'écrire du CSS custom et élimine les conflits de nommage.
+
+A la compilation, seules les classes effectivement utilisées sont incluses dans le bundle final, ce qui allège le poids des assets en production.
+
+daisyUI vient compléter Tailwind en proposant des composants prêts à l'emploi : `btn`, `card`, `badge`, `menu`... Ce sont de simples classes CSS qui regroupent des combinaisons de classes Tailwind, sans JavaScript embarqué.
+
+Le système de thèmes est configuré dans `app.css` où l'on définit nos couleurs `primary`, `base-100`, `base-200`... Changer le thème revient à changer la valeur de ces variables, sans toucher aux composants. Lifequest propose trois modes : clair, sombre, et système. Ce dernier détecte automatiquement la préférence du navigateur.
+
+La bascule est gérée côté client via l'attribut `data-theme` sur la balise `html`, ce qui évite un rechargement de page.
+
+Pour le responsive, j'ai utilisé les préfixes de breakpoints de Tailwind (`sm:`, `md:`, `lg:`), qui permettent de modifier les valeurs voulues selon la taille de l'écran inline, sans avoir à écrire de media-queries.
+
+### 4.3 Accessibilité (RGAA)
+
+Pour travailler sur l'accessibilité, je me suis basé sur les retours d'audit de Lighthouse sur chacune des pages de l'application, ce qui m'a amené à étudier les attributs aria manquants et les contrastes de couleur.
+
+Les composants daisyUI fournissent des labels aria de base sur les éléments courants. J'ai ajouté les labels manquants sur les boutons sans texte.
+
+De plus, sur certains éléments qui se répètent sur une même page, j'ai ajouté un label dynamique. Par exemple sur les icônes de modification et de suppression des différentes transactions de la page "Finances" j'ai inclu le libellé de la transaction ciblée, ce qui donne des labels comme "Modifier Loyer" ou "Supprimer Salaire net", permettant à l'utilisateur de distinguer chaque bouton sans ambigüité.
+
+Toutes les pages de l'application ont un score d'accessibilité supérieur à 90 suite aux audits Lighthouse.
+
+Certaines interactions complexes comme les graphiques n'ont pas fait l'objet de tests spécifiques avec des lecteurs d'écran.
+
+### 4.4 Conformité RGPD — Mentions légales
+
+Lifequest collecte et traite des données personnelles, ce qui implique de respecter le Règlement Général sur la Protection des Données. J'ai créé une page dédiée, accessible depuis le footer sur l'ensemble de l'application, y compris sans être connecté.
+
+La base légale retenue est l'exécution d'un contrat au sens de l'article 6(1)(b) du RGPD : en créant un compte, l'utilisateur accepte que ses données soient traitées pour lui permettre d'utiliser le service. Les données sont conservées pendant toute la durée d'activité du compte, puis supprimées à sa résiliation. Les tokens d'authentification expirent automatiquement après 60 jours.
+
+La page liste les droits de l'utilisateur : accès, rectification, effacement, portabilité et opposition. Le droit à l'effacement est directement accessible depuis les paramètres du compte. La suppression du compte entraîne la suppression en cascade de toutes les données associées en base.
+
+### 4.5 Tests des composants d'interface
+
+Les interfaces de Lifequest sont testées via le module `Phoenix.LiveViewTest` qui simule le cycle de vie complet d'une LiveView dans un environnement de test.
+
+Les tests utilisent le module `ConnCase` pour établir une connexion HTTP simulée avec une session authentifiée.
+
+La stratégie de test porte sur trois aspects : la vérification du rendu HTML attendu, la présence des éléments d'interface critiques et le comportement en réponse aux interactions utilisateur.
+
+`describe` permet de grouper des tests unitaires qui partagent la même situation initiale
+`test` est un test unitaire, qui contient nos assertions
+`assert html =~ "texte attendu"` permet de vérifier la présence d'un contenu textuel dans le rendu
+`assert has_element?(live_view, "sélecteur CSS")` permet de vérifier la présence d'un élément spécifique dans le DOM.
+
+#### Exemple concret des tests de la LiveView `dashboard_live` : **_Voir annexe 2.1_**
+
+`setup :register_and_log_in_user` permet de simuler la situation initiale : un utilisateur est connecté. C'est nécessaire car toutes les opérations testés ne sont déclenchables que dans cette situation précise.
+
+`create_recurring_last_month(scope, attrs \\ %{})` est une fonction qui permettra de créer une opération récurrente au besoin. Des valeurs par défaut sont définies, mais peuvent être écrasées en fournissant le deuxième argument facultatif.
+
+`test "shows pending recurring incomes from last month"` crée une opération récurrente à valider par défaut et s'assure qu'elle s'affiche bien sur la page
+
+`test "does not show recurring already validated this month"` crée une opération récurente et insère sa validation en base pour le mois courant, puis vérifie qu'elle n'apparait bien pas dans la liste des revenus à valider
+
+`test "validate_recurring duplicates transaction to current month"` simule la validation manuelle par l'utilisateur, et s'assure que cela entraine la disparition de la ligne sur la page
+
+### 4.6 Sécurité des interfaces (XSS, CSRF)
+
+Phoenix fournit des protections contre les principales vulnérabilités web directement dans sa couche de templating. Contre le Cross-Site Scripting (XSS), HEEx échappe automatiquement toute variable interpolée via `{@assign}` : si une donnée utilisateur contient du HTML ou du JavaScript, le contenu est affiché tel quel, sans être interprété par le navigateur.
+
+Aucune balise `<script>` inline n'est présente dans les templates HEEx de Lifequest : l'ensemble du JavaScript est isolé dans le répertoire `assets/js/`.
+
+Contre les attaques Cross-Site Request Forgery (CSRF), Phoenix génère un token unique intégré à chaque formulaire via le composant `<.form>`. Ce token est vérifié côté serveur à chaque soumission, ce qui garantit que la requête provient bien de l'application et non d'un site tiers.
+
+Les Scopes et leur présence dans les arguments des fonctions de Repo garantissent que l'utilisateur actif peut récupérer les données lui appartenant, et seulement celles-ci.
