@@ -209,10 +209,14 @@
           </div>
           <ul class="flex gap-4">
             <li>
-              <.link href={~p"/users/register"} class="btn btn-ghost btn-sm">Register</.link>
+              <.link href={~p"/users/register"} class="btn btn-ghost btn-sm">
+                {gettext("Register")}
+              </.link>
             </li>
             <li>
-              <.link href={~p"/users/log-in"} class="btn btn-primary btn-sm">Log in</.link>
+              <.link href={~p"/users/log-in"} class="btn btn-primary btn-sm">
+                {gettext("Log in")}
+              </.link>
             </li>
           </ul>
         </nav>

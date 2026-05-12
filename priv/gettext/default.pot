@@ -121,8 +121,8 @@ msgstr ""
 
 #: lib/lifequest_web/live/financial_profile_live/form.ex:29
 #: lib/lifequest_web/live/transaction_live/form.ex:49
-#: lib/lifequest_web/live/user_live/settings.ex:122
-#: lib/lifequest_web/live/user_live/settings.ex:148
+#: lib/lifequest_web/live/user_live/settings.ex:124
+#: lib/lifequest_web/live/user_live/settings.ex:150
 #, elixir-autogen, elixir-format
 msgid "Cancel"
 msgstr ""
@@ -1151,7 +1151,7 @@ msgid "Legal notice"
 msgstr ""
 
 #: lib/lifequest_web/components/layouts/root.html.heex:148
-#: lib/lifequest_web/components/layouts/root.html.heex:224
+#: lib/lifequest_web/components/layouts/root.html.heex:228
 #: lib/lifequest_web/live/legal_live/index.ex:10
 #, elixir-autogen, elixir-format
 msgid "Legal notice & Privacy policy"
@@ -1297,7 +1297,7 @@ msgstr ""
 msgid "you may request an export of your data by contacting us."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:242
+#: lib/lifequest_web/live/user_live/settings.ex:244
 #, elixir-autogen, elixir-format
 msgid "A link to confirm your email change has been sent to the new address."
 msgstr ""
@@ -1307,7 +1307,7 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:29
+#: lib/lifequest_web/live/user_live/settings.ex:30
 #, elixir-autogen, elixir-format
 msgid "Change Email"
 msgstr ""
@@ -1317,7 +1317,7 @@ msgstr ""
 msgid "Changing..."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:61
+#: lib/lifequest_web/live/user_live/settings.ex:63
 #, elixir-autogen, elixir-format
 msgid "Confirm new password"
 msgstr ""
@@ -1327,43 +1327,46 @@ msgstr ""
 msgid "Contact: contact@lifequest.com"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:96
+#: lib/lifequest_web/live/user_live/settings.ex:98
 #, elixir-autogen, elixir-format
 msgid "Delete account"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:115
+#: lib/lifequest_web/live/user_live/settings.ex:117
 #, elixir-autogen, elixir-format
 msgid "Delete all my data"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:79
+#: lib/lifequest_web/live/user_live/settings.ex:81
 #, elixir-autogen, elixir-format
 msgid "Delete data"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:141
+#: lib/lifequest_web/live/user_live/settings.ex:143
 #, elixir-autogen, elixir-format
 msgid "Delete my account"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:126
-#: lib/lifequest_web/live/user_live/settings.ex:152
+#: lib/lifequest_web/live/user_live/settings.ex:128
+#: lib/lifequest_web/live/user_live/settings.ex:154
 #, elixir-autogen, elixir-format
 msgid "Deleting..."
 msgstr ""
 
+#: lib/lifequest_web/live/user_live/login.ex:49
+#: lib/lifequest_web/live/user_live/login.ex:74
+#: lib/lifequest_web/live/user_live/registration.ex:31
 #: lib/lifequest_web/live/user_live/settings.ex:24
 #, elixir-autogen, elixir-format
 msgid "Email"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:171
+#: lib/lifequest_web/live/user_live/settings.ex:173
 #, elixir-autogen, elixir-format
 msgid "Email change link is invalid or it has expired."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:168
+#: lib/lifequest_web/live/user_live/settings.ex:170
 #, elixir-autogen, elixir-format
 msgid "Email changed successfully."
 msgstr ""
@@ -1373,37 +1376,37 @@ msgstr ""
 msgid "Manage your account email address and password settings"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:53
+#: lib/lifequest_web/live/user_live/settings.ex:55
 #, elixir-autogen, elixir-format
 msgid "New password"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:100
+#: lib/lifequest_web/live/user_live/settings.ex:102
 #, elixir-autogen, elixir-format
 msgid "Permanently deletes your account and all associated data. This action cannot be undone."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:83
+#: lib/lifequest_web/live/user_live/settings.ex:85
 #, elixir-autogen, elixir-format
 msgid "Permanently deletes your financial profile, accounts and transactions. Your account is kept."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:66
+#: lib/lifequest_web/live/user_live/settings.ex:68
 #, elixir-autogen, elixir-format
 msgid "Save Password"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:65
+#: lib/lifequest_web/live/user_live/settings.ex:67
 #, elixir-autogen, elixir-format
 msgid "Saving..."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:143
+#: lib/lifequest_web/live/user_live/settings.ex:145
 #, elixir-autogen, elixir-format
 msgid "This will permanently delete your account, your financial profile, all your accounts and all your transactions. This action cannot be undone."
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:117
+#: lib/lifequest_web/live/user_live/settings.ex:119
 #, elixir-autogen, elixir-format
 msgid "This will permanently delete your financial profile, all your accounts and all your transactions. Your account and email address are kept. This action cannot be undone."
 msgstr ""
@@ -1413,17 +1416,184 @@ msgstr ""
 msgid "To exercise these rights, contact us at: contact@lifequest.com"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:154
+#: lib/lifequest_web/live/user_live/settings.ex:156
 #, elixir-autogen, elixir-format
 msgid "Yes, delete my account"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:128
+#: lib/lifequest_web/live/user_live/settings.ex:130
 #, elixir-autogen, elixir-format
 msgid "Yes, delete my data"
 msgstr ""
 
-#: lib/lifequest_web/live/user_live/settings.ex:208
+#: lib/lifequest_web/live/user_live/settings.ex:210
 #, elixir-autogen, elixir-format
 msgid "Your data has been deleted."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:18
+#, elixir-autogen, elixir-format
+msgid "Already registered?"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:76
+#, elixir-autogen, elixir-format
+msgid "An email was sent to %{email}, please access it to confirm your account."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:37
+#, elixir-autogen, elixir-format
+msgid "Confirm and log in only this time"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:31
+#, elixir-autogen, elixir-format
+msgid "Confirm and stay logged in"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:28
+#: lib/lifequest_web/live/user_live/confirmation.ex:34
+#, elixir-autogen, elixir-format
+msgid "Confirming..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:39
+#, elixir-autogen, elixir-format
+msgid "Create an account"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:38
+#, elixir-autogen, elixir-format
+msgid "Creating account..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:18
+#, elixir-autogen, elixir-format
+msgid "Don't have an account?"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:123
+#, elixir-autogen, elixir-format
+msgid "If your email is in our system, you will receive instructions for logging in shortly."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:62
+#, elixir-autogen, elixir-format
+msgid "Keep me logged in on this device"
+msgstr ""
+
+#: lib/lifequest_web/components/layouts/root.html.heex:218
+#: lib/lifequest_web/live/user_live/confirmation.ex:53
+#: lib/lifequest_web/live/user_live/login.ex:13
+#: lib/lifequest_web/live/user_live/registration.ex:20
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:87
+#, elixir-autogen, elixir-format
+msgid "Log in and stay logged in"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:90
+#, elixir-autogen, elixir-format
+msgid "Log in only this time"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:56
+#, elixir-autogen, elixir-format
+msgid "Log in with email"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:68
+#, elixir-autogen, elixir-format
+msgid "Log me in only this time"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:52
+#: lib/lifequest_web/live/user_live/confirmation.ex:59
+#: lib/lifequest_web/live/user_live/confirmation.ex:65
+#, elixir-autogen, elixir-format
+msgid "Logging in..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:91
+#, elixir-autogen, elixir-format
+msgid "Magic link is invalid or it has expired."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:82
+#, elixir-autogen, elixir-format
+msgid "Password"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:16
+#, elixir-autogen, elixir-format
+msgid "Register for an account"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:22
+#, elixir-autogen, elixir-format
+msgid "Sign up"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:74
+#, elixir-autogen, elixir-format
+msgid "Tip: If you prefer passwords, you can enable them in the user settings."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:33
+#, elixir-autogen, elixir-format
+msgid "To see sent emails, visit"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/confirmation.ex:12
+#, elixir-autogen, elixir-format
+msgid "Welcome"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:31
+#, elixir-autogen, elixir-format
+msgid "You are running the local mail adapter."
+msgstr ""
+
+#: lib/lifequest_web/user_auth.ex:229
+#: lib/lifequest_web/user_auth.ex:277
+#, elixir-autogen, elixir-format
+msgid "You must log in to access this page."
+msgstr ""
+
+#: lib/lifequest_web/user_auth.ex:246
+#, elixir-autogen, elixir-format
+msgid "You must re-authenticate to access this page."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:16
+#, elixir-autogen, elixir-format
+msgid "You need to reauthenticate to perform sensitive actions on your account."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:22
+#, elixir-autogen, elixir-format
+msgid "for an account now."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:60
+#, elixir-autogen, elixir-format
+msgid "or"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/login.ex:33
+#, elixir-autogen, elixir-format
+msgid "the mailbox page"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/registration.ex:22
+#, elixir-autogen, elixir-format
+msgid "to your account now."
+msgstr ""
+
+#: lib/lifequest_web/components/layouts/root.html.heex:213
+#, elixir-autogen, elixir-format
+msgid "Register"
 msgstr ""

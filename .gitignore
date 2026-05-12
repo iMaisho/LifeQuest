@@ -39,7 +39,8 @@ npm-debug.log
 .idea/
 
 CLAUDE.md
-
-.docs/
+AGENTS.md
 
 .claude/
+
+.env
