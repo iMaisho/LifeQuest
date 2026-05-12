@@ -1,0 +1,56 @@
+@startuml Activité - Évaluation d'un objectif financier
+
+skinparam activityBackgroundColor #FAFAFA
+skinparam activityBorderColor #555555
+skinparam activityArrowColor #333333
+skinparam activityStartColor #333333
+skinparam activityEndColor #333333
+skinparam activityDiamondBackgroundColor #E8EFF8
+skinparam activityDiamondBorderColor #555555
+skinparam defaultFontSize 12
+
+title Évaluation d'un objectif financier (GoalsLive)
+
+start
+
+:Utilisateur accède à /goals;
+
+if (profil financier existe ?) then (non)
+  :Afficher alerte\n"Complétez votre profil financier";
+  stop
+else (oui)
+  :Calculer et afficher le contexte financier\n et le formulaire;
+endif
+
+:Utilisateur saisit montant et date cible\npuis clique sur "Évaluer";
+
+if (montant > 0 ?) then (non)
+  :Flash erreur\n"Montant invalide";
+  stop
+else (oui)
+endif
+
+if (date ISO 8601 valide ?) then (non)
+  :Flash erreur\n"Date invalide";
+  stop
+else (oui)
+endif
+
+if (date > aujourd'hui ?) then (non)
+  :Flash erreur\n"La date doit être dans le futur";
+  stop
+else (oui)
+endif
+
+:Simulation financière;
+note right
+  Voir 02.b. Activite Goals.puml
+end note
+
+:Assignation de l'évaluation sur le socket\n(assign :evaluation);
+
+:Mise à jour du DOM via diff LiveView\n(aucun rechargement de page);
+
+stop
+
+@enduml

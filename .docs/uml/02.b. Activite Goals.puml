@@ -1,0 +1,47 @@
+@startuml Activité - Simulation financière d'un objectif
+
+skinparam activityBackgroundColor #FAFAFA
+skinparam activityBorderColor #555555
+skinparam activityArrowColor #333333
+skinparam activityStartColor #333333
+skinparam activityEndColor #333333
+skinparam activityDiamondBackgroundColor #E8EFF8
+skinparam activityDiamondBorderColor #555555
+skinparam defaultFontSize 12
+
+title Simulation financière d'un objectif (détail)
+
+start
+
+:Calcul de la durée, des paramètres de simulation\net simulation du placement sécurisé (+3%/an);
+
+if (safe_final ≥ montant_cible ?) then (oui)
+  :Statut : SAFE\nObjectif atteignable sans risque;
+
+  :Afficher carte verte\n- Capital initial\n- Versement mensuel\n- Durée\n- Valeur projetée (placement sécurisé +3%);
+
+else (non)
+  :Simulation scénarios risqués\n- pessimiste -15%/an\n- attendu +8%/an\n- optimiste +20%/an;
+
+  if (attendu ≥ montant_cible ?) then (oui)
+    :Statut : RISKY_EXPECTED\nObjectif atteignable avec risque modéré;
+
+    :Afficher carte orange\n- Résumé simulation\n- 3 scénarios (pessimiste / attendu / optimiste);
+
+  elseif (optimiste ≥ montant_cible ?) then (oui)
+    :Statut : RISKY_OPTIMISTIC_ONLY\nObjectif atteignable seulement dans le meilleur cas;
+
+    :Afficher carte rouge (warning)\n- Résumé simulation\n- 3 scénarios;
+
+  else (non)
+    :Statut : UNREACHABLE\nObjectif hors de portée;
+
+    :Calcul de l'effort supplémentaire\n(versement mensuel manquant);
+
+    :Afficher carte rouge (erreur)\n- Résumé simulation\n- 3 scénarios\n- Versement mensuel supplémentaire nécessaire;
+  endif
+endif
+
+stop
+
+@enduml
