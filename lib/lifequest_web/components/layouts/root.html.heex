@@ -41,8 +41,10 @@
           <div>
             <%!-- Logo --%>
             <div class="flex items-center gap-2 mb-8 px-2 overflow-hidden">
-              <img src={~p"/images/logo.svg"} width="32" class="shrink-0" />
-              <span class="text-lg font-bold whitespace-nowrap sidebar-label">LifeQuest</span>
+              <img src={~p"/images/logo.svg"} width="32" class="shrink-0" alt="LifeQuest" />
+              <span class="text-lg font-bold whitespace-nowrap sidebar-label" aria-hidden="true">
+                LifeQuest
+              </span>
             </div>
 
             <%!-- Navigation --%>
@@ -195,8 +197,8 @@
       <div class="min-h-full flex flex-col">
         <nav class="flex items-center justify-between px-6 py-4 border-b border-base-200">
           <div class="flex items-center gap-2">
-            <img src={~p"/images/logo.svg"} width="32" />
-            <span class="text-lg font-bold">LifeQuest</span>
+            <img src={~p"/images/logo.svg"} width="32" alt="LifeQuest" />
+            <span class="text-lg font-bold" aria-hidden="true">LifeQuest</span>
           </div>
           <ul class="flex gap-4">
             <li>
