@@ -283,6 +283,21 @@ defmodule Lifequest.Accounts do
 
   ## Token helper
 
+  @doc """
+  Deletes the given user and all associated data via database cascade.
+
+  Returns `{:ok, %User{}}` or `{:error, %Ecto.Changeset{}}`.
+
+  ## Examples
+
+      iex> delete_user(user)
+      {:ok, %User{}}
+
+  """
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
+  end
+
   defp update_user_and_delete_all_tokens(changeset) do
     Repo.transact(fn ->
       with {:ok, user} <- Repo.update(changeset) do

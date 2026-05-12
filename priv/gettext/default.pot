@@ -121,6 +121,8 @@ msgstr ""
 
 #: lib/lifequest_web/live/financial_profile_live/form.ex:29
 #: lib/lifequest_web/live/transaction_live/form.ex:49
+#: lib/lifequest_web/live/user_live/settings.ex:122
+#: lib/lifequest_web/live/user_live/settings.ex:148
 #, elixir-autogen, elixir-format
 msgid "Cancel"
 msgstr ""
@@ -328,7 +330,7 @@ msgid "Financial information"
 msgstr ""
 
 #: lib/lifequest_web/live/finances_live/index.ex:11
-#: lib/lifequest_web/live/legal_live/index.ex:30
+#: lib/lifequest_web/live/legal_live/index.ex:37
 #, elixir-autogen, elixir-format
 msgid "Financial profile"
 msgstr ""
@@ -899,7 +901,7 @@ msgstr ""
 msgid "Transaction updated successfully"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:40
+#: lib/lifequest_web/live/legal_live/index.ex:45
 #: lib/lifequest_web/live/transaction_live/index.ex:11
 #: lib/lifequest_web/live/transaction_live/index.ex:133
 #, elixir-autogen, elixir-format
@@ -1063,244 +1065,365 @@ msgstr ""
 msgid "Edit %{label}"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:12
+#: lib/lifequest_web/live/legal_live/index.ex:16
 #, elixir-autogen, elixir-format
 msgid "1. Data controller"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:20
+#: lib/lifequest_web/live/legal_live/index.ex:28
 #, elixir-autogen, elixir-format
 msgid "2. Data collected"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:56
+#: lib/lifequest_web/live/legal_live/index.ex:62
 #, elixir-autogen, elixir-format
 msgid "3. Purpose and legal basis"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:63
+#: lib/lifequest_web/live/legal_live/index.ex:73
 #, elixir-autogen, elixir-format
 msgid "4. Data retention"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:70
+#: lib/lifequest_web/live/legal_live/index.ex:84
 #, elixir-autogen, elixir-format
 msgid "5. Data sharing"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:77
+#: lib/lifequest_web/live/legal_live/index.ex:95
 #, elixir-autogen, elixir-format
 msgid "6. Security"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:84
+#: lib/lifequest_web/live/legal_live/index.ex:106
 #, elixir-autogen, elixir-format
 msgid "7. Cookies and local storage"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:102
+#: lib/lifequest_web/live/legal_live/index.ex:130
 #, elixir-autogen, elixir-format
 msgid "8. Your rights"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:124
+#: lib/lifequest_web/live/legal_live/index.ex:169
 #, elixir-autogen, elixir-format
 msgid "9. Changes to this policy"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:94
+#: lib/lifequest_web/live/legal_live/index.ex:118
 #, elixir-autogen, elixir-format
 msgid "A localStorage entry"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:88
+#: lib/lifequest_web/live/legal_live/index.ex:111
 #, elixir-autogen, elixir-format
 msgid "A session cookie"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:79
+#: lib/lifequest_web/live/legal_live/index.ex:98
 #, elixir-autogen, elixir-format
 msgid "All exchanges between your browser and the server are encrypted via HTTPS. Each user's data is strictly isolated: every database query is filtered by an authenticated scope, making it technically impossible to access another user's data. No password is stored — authentication relies exclusively on single-use tokens sent by email."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:36
+#: lib/lifequest_web/live/legal_live/index.ex:41
 #, elixir-autogen, elixir-format
 msgid "Bank accounts"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:18
-#, elixir-autogen, elixir-format
-msgid "Contact: antoninmingam@gmail.com"
-msgstr ""
-
-#: lib/lifequest_web/live/legal_live/index.ex:24
+#: lib/lifequest_web/live/legal_live/index.ex:33
 #, elixir-autogen, elixir-format
 msgid "Email address"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:46
+#: lib/lifequest_web/live/legal_live/index.ex:49
 #, elixir-autogen, elixir-format
 msgid "Financial goals"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:10
+#: lib/lifequest_web/live/legal_live/index.ex:11
 #, elixir-autogen, elixir-format
 msgid "Last updated: May 2025"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:137
+#: lib/lifequest_web/live/legal_live/index.ex:184
 #, elixir-autogen, elixir-format
 msgid "Legal notice"
 msgstr ""
 
-#: lib/lifequest_web/components/layouts/root.html.heex:147
-#: lib/lifequest_web/components/layouts/root.html.heex:221
-#: lib/lifequest_web/live/legal_live/index.ex:9
+#: lib/lifequest_web/components/layouts/root.html.heex:148
+#: lib/lifequest_web/components/layouts/root.html.heex:224
+#: lib/lifequest_web/live/legal_live/index.ex:10
 #, elixir-autogen, elixir-format
 msgid "Legal notice & Privacy policy"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:21
+#: lib/lifequest_web/live/legal_live/index.ex:30
 #, elixir-autogen, elixir-format
 msgid "Lifequest collects only the data you explicitly provide:"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:85
+#: lib/lifequest_web/live/legal_live/index.ex:108
 #, elixir-autogen, elixir-format
 msgid "Lifequest uses:"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:100
+#: lib/lifequest_web/live/legal_live/index.ex:125
 #, elixir-autogen, elixir-format
 msgid "No advertising or analytics cookies are used."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:51
+#: lib/lifequest_web/live/legal_live/index.ex:54
 #, elixir-autogen, elixir-format
 msgid "No payment data, no social security number, no sensitive data within the meaning of Article 9 of the GDPR is collected."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:109
+#: lib/lifequest_web/live/legal_live/index.ex:137
 #, elixir-autogen, elixir-format
 msgid "Right of access"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:112
+#: lib/lifequest_web/live/legal_live/index.ex:149
 #, elixir-autogen, elixir-format
 msgid "Right to data portability"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:111
+#: lib/lifequest_web/live/legal_live/index.ex:145
 #, elixir-autogen, elixir-format
 msgid "Right to erasure"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:113
+#: lib/lifequest_web/live/legal_live/index.ex:153
 #, elixir-autogen, elixir-format
 msgid "Right to object"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:110
+#: lib/lifequest_web/live/legal_live/index.ex:141
 #, elixir-autogen, elixir-format
 msgid "Right to rectification"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:58
+#: lib/lifequest_web/live/legal_live/index.ex:65
 #, elixir-autogen, elixir-format
 msgid "The data is processed solely to provide the features of the application: projections, goal tracking and financial summaries. The legal basis is the performance of a contract (Article 6(1)(b) GDPR): by creating an account, you accept that your data be processed in order to use the service."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:14
+#: lib/lifequest_web/live/legal_live/index.ex:19
 #, elixir-autogen, elixir-format
 msgid "This application is developed and operated by Antonin Mingam as part of a vocational training project (CDA — Concepteur Développeur d'Applications). It is not a commercial service."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:126
+#: lib/lifequest_web/live/legal_live/index.ex:172
 #, elixir-autogen, elixir-format
 msgid "This policy may be updated. Any significant change will be communicated via the application. Continued use of the service after an update constitutes acceptance of the new policy."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:116
-#, elixir-autogen, elixir-format
-msgid "To exercise these rights, contact us at: antoninmingam@gmail.com"
-msgstr ""
-
-#: lib/lifequest_web/live/legal_live/index.ex:104
+#: lib/lifequest_web/live/legal_live/index.ex:133
 #, elixir-autogen, elixir-format
 msgid "Under the GDPR, you have the following rights regarding your personal data:"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:119
+#: lib/lifequest_web/live/legal_live/index.ex:161
 #, elixir-autogen, elixir-format
 msgid "You also have the right to lodge a complaint with the CNIL (Commission Nationale de l'Informatique et des Libertés): www.cnil.fr"
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:65
+#: lib/lifequest_web/live/legal_live/index.ex:76
 #, elixir-autogen, elixir-format
 msgid "Your data is kept for as long as your account is active. If you delete your account, all associated data (profile, accounts, transactions, goals) is permanently deleted from our database. Authentication tokens expire automatically after 60 days."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:72
+#: lib/lifequest_web/live/legal_live/index.ex:87
 #, elixir-autogen, elixir-format
 msgid "Your data is never sold, rented or shared with third parties. The application does not integrate any advertising or analytics tracking service. The only sub-processor is the hosting provider, which stores the PostgreSQL database."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:31
+#: lib/lifequest_web/live/legal_live/index.ex:38
 #, elixir-autogen, elixir-format
 msgid "current savings, debts, monthly repayment, net worth and employment status."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:37
+#: lib/lifequest_web/live/legal_live/index.ex:42
 #, elixir-autogen, elixir-format
 msgid "label and type (bank account or investment)."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:41
+#: lib/lifequest_web/live/legal_live/index.ex:46
 #, elixir-autogen, elixir-format
 msgid "label, amount, date, category (income or expense) and recurrence status."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:47
+#: lib/lifequest_web/live/legal_live/index.ex:50
 #, elixir-autogen, elixir-format
 msgid "name, target amount and deadline."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:89
+#: lib/lifequest_web/live/legal_live/index.ex:112
 #, elixir-autogen, elixir-format
 msgid "required for CSRF protection and session management. It is deleted when you log out."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:95
+#: lib/lifequest_web/live/legal_live/index.ex:120
 #, elixir-autogen, elixir-format
 msgid "stores your theme preference (light, dark or system) locally in your browser. It contains no personal data."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:25
+#: lib/lifequest_web/live/legal_live/index.ex:34
 #, elixir-autogen, elixir-format
 msgid "used solely for authentication via magic link. No password is stored."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:109
+#: lib/lifequest_web/live/legal_live/index.ex:138
 #, elixir-autogen, elixir-format
 msgid "you can consult all your data directly in the application."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:111
+#: lib/lifequest_web/live/legal_live/index.ex:146
 #, elixir-autogen, elixir-format
 msgid "you can delete your account and all associated data from the settings page."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:110
+#: lib/lifequest_web/live/legal_live/index.ex:142
 #, elixir-autogen, elixir-format
 msgid "you can edit your data at any time from the settings."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:113
+#: lib/lifequest_web/live/legal_live/index.ex:154
 #, elixir-autogen, elixir-format
 msgid "you may object to the processing of your data at any time by deleting your account."
 msgstr ""
 
-#: lib/lifequest_web/live/legal_live/index.ex:112
+#: lib/lifequest_web/live/legal_live/index.ex:150
 #, elixir-autogen, elixir-format
 msgid "you may request an export of your data by contacting us."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:242
+#, elixir-autogen, elixir-format
+msgid "A link to confirm your email change has been sent to the new address."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:15
+#, elixir-autogen, elixir-format
+msgid "Account Settings"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:29
+#, elixir-autogen, elixir-format
+msgid "Change Email"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:29
+#, elixir-autogen, elixir-format
+msgid "Changing..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:61
+#, elixir-autogen, elixir-format
+msgid "Confirm new password"
+msgstr ""
+
+#: lib/lifequest_web/live/legal_live/index.ex:23
+#, elixir-autogen, elixir-format
+msgid "Contact: contact@lifequest.com"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:96
+#, elixir-autogen, elixir-format
+msgid "Delete account"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:115
+#, elixir-autogen, elixir-format
+msgid "Delete all my data"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:79
+#, elixir-autogen, elixir-format
+msgid "Delete data"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:141
+#, elixir-autogen, elixir-format
+msgid "Delete my account"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:126
+#: lib/lifequest_web/live/user_live/settings.ex:152
+#, elixir-autogen, elixir-format
+msgid "Deleting..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:24
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:171
+#, elixir-autogen, elixir-format
+msgid "Email change link is invalid or it has expired."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:168
+#, elixir-autogen, elixir-format
+msgid "Email changed successfully."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:16
+#, elixir-autogen, elixir-format
+msgid "Manage your account email address and password settings"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:53
+#, elixir-autogen, elixir-format
+msgid "New password"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:100
+#, elixir-autogen, elixir-format
+msgid "Permanently deletes your account and all associated data. This action cannot be undone."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:83
+#, elixir-autogen, elixir-format
+msgid "Permanently deletes your financial profile, accounts and transactions. Your account is kept."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:66
+#, elixir-autogen, elixir-format
+msgid "Save Password"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:65
+#, elixir-autogen, elixir-format
+msgid "Saving..."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:143
+#, elixir-autogen, elixir-format
+msgid "This will permanently delete your account, your financial profile, all your accounts and all your transactions. This action cannot be undone."
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:117
+#, elixir-autogen, elixir-format
+msgid "This will permanently delete your financial profile, all your accounts and all your transactions. Your account and email address are kept. This action cannot be undone."
+msgstr ""
+
+#: lib/lifequest_web/live/legal_live/index.ex:159
+#, elixir-autogen, elixir-format
+msgid "To exercise these rights, contact us at: contact@lifequest.com"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:154
+#, elixir-autogen, elixir-format
+msgid "Yes, delete my account"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:128
+#, elixir-autogen, elixir-format
+msgid "Yes, delete my data"
+msgstr ""
+
+#: lib/lifequest_web/live/user_live/settings.ex:208
+#, elixir-autogen, elixir-format
+msgid "Your data has been deleted."
 msgstr ""

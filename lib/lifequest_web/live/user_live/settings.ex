@@ -4,6 +4,7 @@ defmodule LifequestWeb.UserLive.Settings do
   on_mount {LifequestWeb.UserAuth, :require_sudo_mode}
 
   alias Lifequest.Accounts
+  alias Lifequest.Finances
 
   @impl true
   def render(assigns) do
@@ -11,8 +12,8 @@ defmodule LifequestWeb.UserLive.Settings do
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <div class="text-center">
         <.header>
-          Account Settings
-          <:subtitle>Manage your account email address and password settings</:subtitle>
+          {gettext("Account Settings")}
+          <:subtitle>{gettext("Manage your account email address and password settings")}</:subtitle>
         </.header>
       </div>
 
@@ -20,12 +21,14 @@ defmodule LifequestWeb.UserLive.Settings do
         <.input
           field={@email_form[:email]}
           type="email"
-          label="Email"
+          label={gettext("Email")}
           autocomplete="username"
           spellcheck="false"
           required
         />
-        <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
+        <.button variant="primary" phx-disable-with={gettext("Changing...")}>
+          {gettext("Change Email")}
+        </.button>
       </.form>
 
       <div class="divider" />
@@ -49,7 +52,7 @@ defmodule LifequestWeb.UserLive.Settings do
         <.input
           field={@password_form[:password]}
           type="password"
-          label="New password"
+          label={gettext("New password")}
           autocomplete="new-password"
           spellcheck="false"
           required
@@ -57,14 +60,104 @@ defmodule LifequestWeb.UserLive.Settings do
         <.input
           field={@password_form[:password_confirmation]}
           type="password"
-          label="Confirm new password"
+          label={gettext("Confirm new password")}
           autocomplete="new-password"
           spellcheck="false"
         />
-        <.button variant="primary" phx-disable-with="Saving...">
-          Save Password
+        <.button variant="primary" phx-disable-with={gettext("Saving...")}>
+          {gettext("Save Password")}
         </.button>
       </.form>
+
+      <div class="divider" />
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between gap-4">
+          <button
+            class="btn btn-outline btn-error btn-sm w-48 shrink-0"
+            phx-click="open_modal"
+            phx-value-modal="delete_data"
+          >
+            {gettext("Delete data")}
+          </button>
+          <div>
+            <p class="text-sm opacity-60">
+              {gettext(
+                "Permanently deletes your financial profile, accounts and transactions. Your account is kept."
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <button
+            class="btn btn-error btn-sm w-48 shrink-0"
+            phx-click="open_modal"
+            phx-value-modal="delete_account"
+          >
+            {gettext("Delete account")}
+          </button>
+          <div>
+            <p class="text-sm opacity-60">
+              {gettext(
+                "Permanently deletes your account and all associated data. This action cannot be undone."
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Modal : effacer les données --%>
+      <div
+        id="modal-delete-data"
+        class={["modal", @active_modal == :delete_data && "modal-open"]}
+        phx-click-away="close_modal"
+      >
+        <div class="modal-box">
+          <h3 class="font-bold text-lg mb-2">{gettext("Delete all my data")}</h3>
+          <p class="text-sm opacity-70 mb-6">
+            {gettext(
+              "This will permanently delete your financial profile, all your accounts and all your transactions. Your account and email address are kept. This action cannot be undone."
+            )}
+          </p>
+          <div class="modal-action">
+            <button class="btn btn-ghost" phx-click="close_modal">{gettext("Cancel")}</button>
+            <button
+              class="btn btn-error"
+              phx-click="delete_data"
+              phx-disable-with={gettext("Deleting...")}
+            >
+              {gettext("Yes, delete my data")}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Modal : supprimer le compte --%>
+      <div
+        id="modal-delete-account"
+        class={["modal", @active_modal == :delete_account && "modal-open"]}
+        phx-click-away="close_modal"
+      >
+        <div class="modal-box">
+          <h3 class="font-bold text-lg mb-2">{gettext("Delete my account")}</h3>
+          <p class="text-sm opacity-70 mb-6">
+            {gettext(
+              "This will permanently delete your account, your financial profile, all your accounts and all your transactions. This action cannot be undone."
+            )}
+          </p>
+          <div class="modal-action">
+            <button class="btn btn-ghost" phx-click="close_modal">{gettext("Cancel")}</button>
+            <button
+              class="btn btn-error"
+              phx-click="delete_account"
+              phx-disable-with={gettext("Deleting...")}
+            >
+              {gettext("Yes, delete my account")}
+            </button>
+          </div>
+        </div>
+      </div>
     </Layouts.app>
     """
   end
@@ -74,10 +167,10 @@ defmodule LifequestWeb.UserLive.Settings do
     socket =
       case Accounts.update_user_email(socket.assigns.current_scope.user, token) do
         {:ok, _user} ->
-          put_flash(socket, :info, "Email changed successfully.")
+          put_flash(socket, :info, gettext("Email changed successfully."))
 
         {:error, _} ->
-          put_flash(socket, :error, "Email change link is invalid or it has expired.")
+          put_flash(socket, :error, gettext("Email change link is invalid or it has expired."))
       end
 
     {:ok, push_navigate(socket, to: ~p"/users/settings")}
@@ -94,11 +187,35 @@ defmodule LifequestWeb.UserLive.Settings do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:active_modal, nil)
 
     {:ok, socket}
   end
 
   @impl true
+  def handle_event("open_modal", %{"modal" => modal}, socket) do
+    {:noreply, assign(socket, :active_modal, String.to_existing_atom(modal))}
+  end
+
+  def handle_event("close_modal", _params, socket) do
+    {:noreply, assign(socket, :active_modal, nil)}
+  end
+
+  def handle_event("delete_data", _params, socket) do
+    :ok = Finances.delete_all_user_data(socket.assigns.current_scope)
+
+    {:noreply,
+     socket
+     |> assign(:active_modal, nil)
+     |> put_flash(:info, gettext("Your data has been deleted."))}
+  end
+
+  def handle_event("delete_account", _params, socket) do
+    user = socket.assigns.current_scope.user
+    {:ok, _} = Accounts.delete_user(user)
+    {:noreply, redirect(socket, to: ~p"/users/log-in")}
+  end
+
   def handle_event("validate_email", params, socket) do
     %{"user" => user_params} = params
 
@@ -124,7 +241,7 @@ defmodule LifequestWeb.UserLive.Settings do
           &url(~p"/users/settings/confirm-email/#{&1}")
         )
 
-        info = "A link to confirm your email change has been sent to the new address."
+        info = gettext("A link to confirm your email change has been sent to the new address.")
         {:noreply, socket |> put_flash(:info, info)}
 
       changeset ->
