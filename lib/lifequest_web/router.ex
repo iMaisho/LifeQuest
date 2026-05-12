@@ -92,6 +92,8 @@ defmodule LifequestWeb.Router do
       live "/users/register", UserLive.Registration, :new
       live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new
+
+      live "/mentions-legales", LegalLive.Index, :index
     end
 
     post "/users/log-in", UserSessionController, :create
