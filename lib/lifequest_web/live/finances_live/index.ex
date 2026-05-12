@@ -173,13 +173,18 @@ defmodule LifequestWeb.FinancesLive.Index do
                 </td>
                 <td>
                   <div class="flex gap-1">
-                    <.link navigate={~p"/transactions/#{t}/edit"} class="btn btn-xs btn-ghost">
+                    <.link
+                      navigate={~p"/transactions/#{t}/edit"}
+                      class="btn btn-xs btn-ghost"
+                      aria-label={gettext("Edit %{label}", label: t.label)}
+                    >
                       <.icon name="hero-pencil-square" class="size-4" />
                     </.link>
                     <button
                       phx-click="delete_transaction"
                       phx-value-id={t.id}
                       data-confirm={gettext("Delete this transaction?")}
+                      aria-label={gettext("Delete %{label}", label: t.label)}
                       class="btn btn-xs btn-ghost text-error"
                     >
                       <.icon name="hero-trash" class="size-4" />

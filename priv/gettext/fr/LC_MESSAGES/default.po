@@ -16,7 +16,7 @@ msgstr ""
 msgid "%{years} years"
 msgstr "%{years} ans"
 
-#: lib/lifequest_web/live/finances_live/index.ex:375
+#: lib/lifequest_web/live/finances_live/index.ex:380
 #, elixir-autogen, elixir-format
 msgid "APL, RSA, benefits"
 msgstr "APL, RSA, aides sociales"
@@ -79,7 +79,7 @@ msgstr "Montant"
 msgid "Amount needed (€)"
 msgstr "Montant nécessaire (€)"
 
-#: lib/lifequest_web/live/finances_live/index.ex:373
+#: lib/lifequest_web/live/finances_live/index.ex:378
 #, elixir-autogen, elixir-format
 msgid "Annual bonuses, profit sharing"
 msgstr "Primes annuelles, intéressement"
@@ -95,20 +95,20 @@ msgstr "Êtes-vous sûr ?"
 msgid "Attempting to reconnect"
 msgstr "Tentative de reconnexion"
 
-#: lib/lifequest_web/live/finances_live/index.ex:387
+#: lib/lifequest_web/live/finances_live/index.ex:392
 #, elixir-autogen, elixir-format
 msgid "Automatic transfers to savings"
 msgstr "Virements automatiques vers l'épargne"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:250
-#: lib/lifequest_web/live/finances_live/index.ex:373
+#: lib/lifequest_web/live/finances_live/index.ex:378
 #: lib/lifequest_web/live/transaction_live/index.ex:215
 #: lib/lifequest_web/live/transaction_live/index.ex:238
 #, elixir-autogen, elixir-format
 msgid "Bonus"
 msgstr "Prime"
 
-#: lib/lifequest_web/live/finances_live/index.ex:330
+#: lib/lifequest_web/live/finances_live/index.ex:335
 #: lib/lifequest_web/live/financial_profile_live/form.ex:181
 #, elixir-autogen, elixir-format
 msgid "Business owner"
@@ -145,21 +145,21 @@ msgstr "Choisir une valeur"
 msgid "Choose an account"
 msgstr "Choisir un compte"
 
-#: lib/lifequest_web/live/finances_live/index.ex:341
-#: lib/lifequest_web/live/finances_live/index.ex:355
+#: lib/lifequest_web/live/finances_live/index.ex:346
+#: lib/lifequest_web/live/finances_live/index.ex:360
 #: lib/lifequest_web/live/financial_profile_live/form.ex:171
 #, elixir-autogen, elixir-format
 msgid "Current debts"
 msgstr "Dettes actuelles"
 
-#: lib/lifequest_web/live/finances_live/index.ex:347
-#: lib/lifequest_web/live/finances_live/index.ex:363
+#: lib/lifequest_web/live/finances_live/index.ex:352
+#: lib/lifequest_web/live/finances_live/index.ex:368
 #, elixir-autogen, elixir-format
 msgid "Current professional situation"
 msgstr "Situation professionnelle actuelle"
 
-#: lib/lifequest_web/live/finances_live/index.ex:339
-#: lib/lifequest_web/live/finances_live/index.ex:353
+#: lib/lifequest_web/live/finances_live/index.ex:344
+#: lib/lifequest_web/live/finances_live/index.ex:358
 #: lib/lifequest_web/live/financial_profile_live/form.ex:170
 #: lib/lifequest_web/live/goals_live/index.ex:64
 #, elixir-autogen, elixir-format
@@ -200,17 +200,17 @@ msgstr "Définir votre objectif"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: lib/lifequest_web/live/finances_live/index.ex:182
+#: lib/lifequest_web/live/finances_live/index.ex:186
 #, elixir-autogen, elixir-format
 msgid "Delete this transaction?"
 msgstr "Supprimer cette transaction ?"
 
-#: lib/lifequest_web/live/finances_live/index.ex:385
+#: lib/lifequest_web/live/finances_live/index.ex:390
 #, elixir-autogen, elixir-format
 msgid "Dining out, entertainment, shopping"
 msgstr "Restaurants, loisirs, shopping"
 
-#: lib/lifequest_web/live/finances_live/index.ex:377
+#: lib/lifequest_web/live/finances_live/index.ex:382
 #, elixir-autogen, elixir-format
 msgid "Dividends, interest"
 msgstr "Dividendes, intérêts"
@@ -256,8 +256,8 @@ msgstr "Modifier le revenu"
 msgid "Edit transaction"
 msgstr "Modifier la transaction"
 
-#: lib/lifequest_web/live/finances_live/index.ex:346
-#: lib/lifequest_web/live/finances_live/index.ex:362
+#: lib/lifequest_web/live/finances_live/index.ex:351
+#: lib/lifequest_web/live/finances_live/index.ex:367
 #: lib/lifequest_web/live/financial_profile_live/form.ex:44
 #: lib/lifequest_web/live/financial_profile_live/form.ex:174
 #, elixir-autogen, elixir-format
@@ -270,7 +270,7 @@ msgid "Error validating transaction"
 msgstr "Erreur lors de la validation de la transaction"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:257
-#: lib/lifequest_web/live/finances_live/index.ex:384
+#: lib/lifequest_web/live/finances_live/index.ex:389
 #: lib/lifequest_web/live/transaction_live/index.ex:225
 #: lib/lifequest_web/live/transaction_live/index.ex:245
 #, elixir-autogen, elixir-format
@@ -303,13 +303,13 @@ msgstr "Dépense"
 msgid "Expenses"
 msgstr "Dépenses"
 
-#: lib/lifequest_web/live/finances_live/index.ex:210
+#: lib/lifequest_web/live/finances_live/index.ex:215
 #, elixir-autogen, elixir-format
 msgid "Expenses by category"
 msgstr "Dépenses par catégorie"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:260
-#: lib/lifequest_web/live/finances_live/index.ex:389
+#: lib/lifequest_web/live/finances_live/index.ex:394
 #: lib/lifequest_web/live/transaction_live/index.ex:228
 #: lib/lifequest_web/live/transaction_live/index.ex:248
 #, elixir-autogen, elixir-format
@@ -322,7 +322,7 @@ msgid "Finances"
 msgstr "Finances"
 
 #: lib/lifequest_web/live/finances_live/index.ex:10
-#: lib/lifequest_web/live/finances_live/index.ex:255
+#: lib/lifequest_web/live/finances_live/index.ex:260
 #, elixir-autogen, elixir-format
 msgid "Financial information"
 msgstr "Informations financières"
@@ -347,7 +347,7 @@ msgstr "Profil financier mis à jour avec succès"
 msgid "Find out whether your financial goal is realistic and how to reach it."
 msgstr "Découvrez si votre objectif financier est réaliste et comment l'atteindre."
 
-#: lib/lifequest_web/live/finances_live/index.ex:328
+#: lib/lifequest_web/live/finances_live/index.ex:333
 #, elixir-autogen, elixir-format
 msgid "Fixed-term contract"
 msgstr "CDD"
@@ -358,8 +358,8 @@ msgid "Fixed-term contract (CDD)"
 msgstr "Contrat à durée déterminée (CDD)"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:248
-#: lib/lifequest_web/live/finances_live/index.ex:329
-#: lib/lifequest_web/live/finances_live/index.ex:370
+#: lib/lifequest_web/live/finances_live/index.ex:334
+#: lib/lifequest_web/live/finances_live/index.ex:375
 #: lib/lifequest_web/live/financial_profile_live/form.ex:180
 #: lib/lifequest_web/live/transaction_live/index.ex:213
 #: lib/lifequest_web/live/transaction_live/index.ex:236
@@ -400,7 +400,7 @@ msgid "Goals"
 msgstr "Objectifs"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:252
-#: lib/lifequest_web/live/finances_live/index.ex:375
+#: lib/lifequest_web/live/finances_live/index.ex:380
 #: lib/lifequest_web/live/transaction_live/index.ex:217
 #: lib/lifequest_web/live/transaction_live/index.ex:240
 #, elixir-autogen, elixir-format
@@ -417,7 +417,7 @@ msgstr "Garanti"
 msgid "Income"
 msgstr "Revenu"
 
-#: lib/lifequest_web/live/finances_live/index.ex:208
+#: lib/lifequest_web/live/finances_live/index.ex:213
 #, elixir-autogen, elixir-format
 msgid "Income by category"
 msgstr "Revenus par catégorie"
@@ -427,7 +427,7 @@ msgstr "Revenus par catégorie"
 msgid "Income sources"
 msgstr "Sources de revenus"
 
-#: lib/lifequest_web/live/finances_live/index.ex:370
+#: lib/lifequest_web/live/finances_live/index.ex:375
 #, elixir-autogen, elixir-format
 msgid "Independent work, contracts"
 msgstr "Travail indépendant, contrats"
@@ -459,7 +459,7 @@ msgid "Invested capital: %{amount} €"
 msgstr "Capital investi : %{amount} €"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:253
-#: lib/lifequest_web/live/finances_live/index.ex:377
+#: lib/lifequest_web/live/finances_live/index.ex:382
 #: lib/lifequest_web/live/transaction_live/index.ex:218
 #: lib/lifequest_web/live/transaction_live/index.ex:241
 #, elixir-autogen, elixir-format
@@ -495,12 +495,12 @@ msgstr "Gérez les informations de votre profil financier."
 msgid "Manage your transaction."
 msgstr "Gérez votre transaction."
 
-#: lib/lifequest_web/live/finances_live/index.ex:390
+#: lib/lifequest_web/live/finances_live/index.ex:395
 #, elixir-autogen, elixir-format
 msgid "Miscellaneous expenses"
 msgstr "Dépenses diverses"
 
-#: lib/lifequest_web/live/finances_live/index.ex:378
+#: lib/lifequest_web/live/finances_live/index.ex:383
 #, elixir-autogen, elixir-format
 msgid "Miscellaneous income"
 msgstr "Revenus divers"
@@ -515,8 +515,8 @@ msgstr "Détail mensuel"
 msgid "Monthly contribution"
 msgstr "Versement mensuel"
 
-#: lib/lifequest_web/live/finances_live/index.ex:343
-#: lib/lifequest_web/live/finances_live/index.ex:357
+#: lib/lifequest_web/live/finances_live/index.ex:348
+#: lib/lifequest_web/live/finances_live/index.ex:362
 #: lib/lifequest_web/live/financial_profile_live/form.ex:172
 #, elixir-autogen, elixir-format
 msgid "Monthly debt payment"
@@ -538,8 +538,8 @@ msgstr "Revenus mensuels"
 msgid "Monthly net change"
 msgstr "Évolution nette mensuelle"
 
-#: lib/lifequest_web/live/finances_live/index.ex:344
-#: lib/lifequest_web/live/finances_live/index.ex:358
+#: lib/lifequest_web/live/finances_live/index.ex:349
+#: lib/lifequest_web/live/finances_live/index.ex:363
 #, elixir-autogen, elixir-format
 msgid "Monthly repayment amount"
 msgstr "Montant du remboursement mensuel"
@@ -555,7 +555,7 @@ msgstr "Excédent mensuel"
 msgid "Monthly transfer (€)"
 msgstr "Versement mensuel (€)"
 
-#: lib/lifequest_web/live/finances_live/index.ex:369
+#: lib/lifequest_web/live/finances_live/index.ex:374
 #, elixir-autogen, elixir-format
 msgid "Monthly wages, net income"
 msgstr "Salaires mensuels, revenus nets"
@@ -565,8 +565,8 @@ msgstr "Salaires mensuels, revenus nets"
 msgid "Net"
 msgstr "Net"
 
-#: lib/lifequest_web/live/finances_live/index.ex:345
-#: lib/lifequest_web/live/finances_live/index.ex:360
+#: lib/lifequest_web/live/finances_live/index.ex:350
+#: lib/lifequest_web/live/finances_live/index.ex:365
 #: lib/lifequest_web/live/financial_profile_live/form.ex:173
 #, elixir-autogen, elixir-format
 msgid "Net worth"
@@ -610,7 +610,7 @@ msgid "No income this month."
 msgstr "Aucun revenu ce mois-ci."
 
 #: lib/lifequest_web/live/finances_live/index.ex:149
-#: lib/lifequest_web/live/finances_live/index.ex:214
+#: lib/lifequest_web/live/finances_live/index.ex:219
 #, elixir-autogen, elixir-format
 msgid "No transactions yet"
 msgstr "Aucune transaction pour l'instant"
@@ -641,31 +641,31 @@ msgstr "Optimiste"
 msgid "Other"
 msgstr "Autre"
 
-#: lib/lifequest_web/live/finances_live/index.ex:390
+#: lib/lifequest_web/live/finances_live/index.ex:395
 #, elixir-autogen, elixir-format
 msgid "Other expenses"
 msgstr "Autres dépenses"
 
-#: lib/lifequest_web/live/finances_live/index.ex:378
+#: lib/lifequest_web/live/finances_live/index.ex:383
 #, elixir-autogen, elixir-format
 msgid "Other income"
 msgstr "Autres revenus"
 
-#: lib/lifequest_web/live/finances_live/index.ex:341
-#: lib/lifequest_web/live/finances_live/index.ex:355
+#: lib/lifequest_web/live/finances_live/index.ex:346
+#: lib/lifequest_web/live/finances_live/index.ex:360
 #, elixir-autogen, elixir-format
 msgid "Outstanding debts"
 msgstr "Dettes en cours"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:251
-#: lib/lifequest_web/live/finances_live/index.ex:374
+#: lib/lifequest_web/live/finances_live/index.ex:379
 #: lib/lifequest_web/live/transaction_live/index.ex:216
 #: lib/lifequest_web/live/transaction_live/index.ex:239
 #, elixir-autogen, elixir-format
 msgid "Pension"
 msgstr "Retraite"
 
-#: lib/lifequest_web/live/finances_live/index.ex:327
+#: lib/lifequest_web/live/finances_live/index.ex:332
 #, elixir-autogen, elixir-format
 msgid "Permanent contract"
 msgstr "CDI"
@@ -698,7 +698,7 @@ msgid "Please set up your"
 msgstr "Veuillez configurer votre"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:258
-#: lib/lifequest_web/live/finances_live/index.ex:385
+#: lib/lifequest_web/live/finances_live/index.ex:390
 #: lib/lifequest_web/live/transaction_live/index.ex:226
 #: lib/lifequest_web/live/transaction_live/index.ex:246
 #, elixir-autogen, elixir-format
@@ -732,7 +732,7 @@ msgstr "Projection sur %{months} mois"
 msgid "Projections"
 msgstr "Projections"
 
-#: lib/lifequest_web/live/finances_live/index.ex:372
+#: lib/lifequest_web/live/finances_live/index.ex:377
 #, elixir-autogen, elixir-format
 msgid "Property rental income"
 msgstr "Revenus locatifs"
@@ -770,26 +770,26 @@ msgstr "Revenus récurrents à valider"
 msgid "Remaining debts"
 msgstr "Dettes restantes"
 
-#: lib/lifequest_web/live/finances_live/index.ex:384
+#: lib/lifequest_web/live/finances_live/index.ex:389
 #, elixir-autogen, elixir-format
 msgid "Rent, insurance, subscriptions"
 msgstr "Loyer, assurances, abonnements"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:249
-#: lib/lifequest_web/live/finances_live/index.ex:372
+#: lib/lifequest_web/live/finances_live/index.ex:377
 #: lib/lifequest_web/live/transaction_live/index.ex:214
 #: lib/lifequest_web/live/transaction_live/index.ex:237
 #, elixir-autogen, elixir-format
 msgid "Rental"
 msgstr "Location"
 
-#: lib/lifequest_web/live/finances_live/index.ex:332
+#: lib/lifequest_web/live/finances_live/index.ex:337
 #: lib/lifequest_web/live/financial_profile_live/form.ex:183
 #, elixir-autogen, elixir-format
 msgid "Retired"
 msgstr "Retraité"
 
-#: lib/lifequest_web/live/finances_live/index.ex:374
+#: lib/lifequest_web/live/finances_live/index.ex:379
 #, elixir-autogen, elixir-format
 msgid "Retirement, alimony received"
 msgstr "Retraite, pension alimentaire"
@@ -805,7 +805,7 @@ msgid "Safety net (%{n} months income)"
 msgstr "Épargne de précaution (%{n} mois de revenus)"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:247
-#: lib/lifequest_web/live/finances_live/index.ex:369
+#: lib/lifequest_web/live/finances_live/index.ex:374
 #: lib/lifequest_web/live/transaction_live/index.ex:212
 #: lib/lifequest_web/live/transaction_live/index.ex:235
 #, elixir-autogen, elixir-format
@@ -819,7 +819,7 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:259
-#: lib/lifequest_web/live/finances_live/index.ex:387
+#: lib/lifequest_web/live/finances_live/index.ex:392
 #: lib/lifequest_web/live/transaction_live/index.ex:227
 #: lib/lifequest_web/live/transaction_live/index.ex:247
 #, elixir-autogen, elixir-format
@@ -876,14 +876,14 @@ msgstr "Le placement sécurisé ne suffit pas. Le Portefeuille Dynamique (+8%/an
 msgid "To reach your goal with the safe placement, you would need:"
 msgstr "Pour atteindre votre objectif avec le placement sécurisé, il vous faudrait :"
 
-#: lib/lifequest_web/live/finances_live/index.ex:339
-#: lib/lifequest_web/live/finances_live/index.ex:353
+#: lib/lifequest_web/live/finances_live/index.ex:344
+#: lib/lifequest_web/live/finances_live/index.ex:358
 #, elixir-autogen, elixir-format
 msgid "Total available savings"
 msgstr "Épargne totale disponible"
 
-#: lib/lifequest_web/live/finances_live/index.ex:345
-#: lib/lifequest_web/live/finances_live/index.ex:360
+#: lib/lifequest_web/live/finances_live/index.ex:350
+#: lib/lifequest_web/live/finances_live/index.ex:365
 #, elixir-autogen, elixir-format
 msgid "Total estimated assets"
 msgstr "Patrimoine total estimé"
@@ -904,20 +904,20 @@ msgstr "Transaction mise à jour avec succès"
 msgid "Transactions"
 msgstr "Transactions"
 
-#: lib/lifequest_web/live/finances_live/index.ex:331
+#: lib/lifequest_web/live/finances_live/index.ex:336
 #: lib/lifequest_web/live/financial_profile_live/form.ex:182
 #, elixir-autogen, elixir-format
 msgid "Unemployed"
 msgstr "Sans emploi"
 
-#: lib/lifequest_web/live/finances_live/index.ex:389
+#: lib/lifequest_web/live/finances_live/index.ex:394
 #, elixir-autogen, elixir-format
 msgid "Unexpected expenses"
 msgstr "Dépenses imprévues"
 
 #: lib/lifequest_web/live/dashboard_live/index.ex:255
 #: lib/lifequest_web/live/dashboard_live/index.ex:262
-#: lib/lifequest_web/live/finances_live/index.ex:333
+#: lib/lifequest_web/live/finances_live/index.ex:338
 #: lib/lifequest_web/live/transaction_live/index.ex:243
 #: lib/lifequest_web/live/transaction_live/index.ex:250
 #, elixir-autogen, elixir-format
@@ -1050,3 +1050,13 @@ msgstr "Thème système"
 #, elixir-autogen, elixir-format
 msgid "Toggle sidebar"
 msgstr "Réduire/agrandir le menu"
+
+#: lib/lifequest_web/live/finances_live/index.ex:187
+#, elixir-autogen, elixir-format
+msgid "Delete %{label}"
+msgstr "Supprimer %{label}"
+
+#: lib/lifequest_web/live/finances_live/index.ex:179
+#, elixir-autogen, elixir-format
+msgid "Edit %{label}"
+msgstr "Modifier %{label}"

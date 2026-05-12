@@ -6,6 +6,10 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ## [Unreleased]
 
+### Changed
+- Contraste renforcé entre les niveaux de couleur de fond (cartes, sidebar, page) pour les thèmes clair et sombre
+- Labels aria ajoutés sur les boutons d'édition et suppression des transactions, le bouton de menu latéral, le menu utilisateur, les boutons de thème et le logo
+
 ### Added
 - Traduction complète de l'interface en français via gettext (183 clés traduites)
 - Page de simulation d'objectifs financiers : faisabilité, scénario optimal (du plus sûr au plus risqué) et montant mensuel manquant si l'objectif est hors de portée
