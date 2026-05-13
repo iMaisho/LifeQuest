@@ -4,7 +4,6 @@
 
 TODO: Insérer le diagramme puml
 
-
 ## 2.1 Exemple d'utilisation de LiveView : `dashboard_live`
 
 ```elixir
@@ -206,4 +205,71 @@ describe "Dashboard with recurring transactions" do
     end
   end
 end
-  ```
+```
+
+## 3.1 Pattern matching : clauses multiples et gestion des retours
+
+```elixir
+defp format_transaction_type(%{direction: :income, income_type: type}),
+  do: format_income_type(type)
+
+defp format_transaction_type(%{direction: :expense, expense_type: type}),
+  do: format_expense_type(type)
+
+
+defp format_income_type(:salary), do: gettext("Salary")
+defp format_income_type(:freelance), do: gettext("Freelance")
+defp format_income_type(:rental), do: gettext("Rental")
+defp format_income_type(:bonus), do: gettext("Bonus")
+defp format_income_type(_), do: gettext("Unknown")
+```
+
+```elixir
+def handle_event("validate_recurring", %{"id" => id}, socket) do
+  scope = socket.assigns.current_scope
+  transaction = Finances.get_transaction!(scope, id)
+  date = socket.assigns.current_month
+
+  case Finances.validate_recurring(scope, transaction, date) do
+    {:ok, _new_transaction} ->
+      {:noreply, load_dashboard_data(socket, scope, date)}
+
+    {:error, _changeset} ->
+      {:noreply, put_flash(socket, :error, gettext("Error validating transaction"))}
+  end
+end
+```
+
+## 3.2 Tests unitaires du contexte `Finances` : isolation par scope
+
+```elixir
+describe "transactions" do
+  import Lifequest.AccountsFixtures, only: [user_scope_fixture: 0]
+  import Lifequest.FinancesFixtures
+
+  test "list_transactions/1 returns all scoped transactions" do
+    scope = user_scope_fixture()
+    other_scope = user_scope_fixture()
+    transaction = transaction_fixture(scope)
+    other_transaction = transaction_fixture(other_scope)
+
+    assert [result] = Finances.list_transactions(scope)
+    assert result.id == transaction.id
+
+    assert [other_result] = Finances.list_transactions(other_scope)
+    assert other_result.id == other_transaction.id
+  end
+
+  test "get_transaction!/2 returns the transaction with given id" do
+    scope = user_scope_fixture()
+    transaction = transaction_fixture(scope)
+    other_scope = user_scope_fixture()
+
+    assert Finances.get_transaction!(scope, transaction.id) == transaction
+
+    assert_raise Ecto.NoResultsError, fn ->
+      Finances.get_transaction!(other_scope, transaction.id)
+    end
+  end
+end
+```

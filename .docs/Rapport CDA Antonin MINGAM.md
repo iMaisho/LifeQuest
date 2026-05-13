@@ -91,10 +91,19 @@
     - 14.2 [Lecture de documentation technique en anglais (niveau B1)](#142-lecture-de-documentation-technique-en-anglais-niveau-b1)
 
 15. [Mettre en œuvre une démarche de résolution de problème](#15-mettre-en-œuvre-une-démarche-de-résolution-de-problème)
+    - 15.1 [Refactoring du modèle de données (LQ-5)](#151-refactoring-du-modèle-de-données-lq-5)
+    - 15.2 [Encodage des apostrophes dans les tests LiveView](#152-encodage-des-apostrophes-dans-les-tests-liveview)
+    - 15.3 [Diagnostic d'une CI rouge inattendue](#153-diagnostic-dune-ci-rouge-inattendue)
 
 16. [Apprendre en continu — Veille technologique](#16-apprendre-en-continu--veille-technologique)
+    - 16.1 [Sources suivies](#161-sources-suivies)
+    - 16.2 [Format et méthode](#162-format-et-méthode)
+    - 16.3 [Exemple concret : adoption de Tailwind CSS v4](#163-exemple-concret--adoption-de-tailwind-css-v4)
 
 17. [Conclusion et bilan de compétences](#17-conclusion-et-bilan-de-compétences)
+    - 17.1 [Bilan technique](#171-bilan-technique)
+    - 17.2 [Bilan personnel](#172-bilan-personnel)
+    - 17.3 [Suite et perspectives](#173-suite-et-perspectives)
 18. [Annexes](#18-annexes)
     - A. Diagramme MCD / MPD
     - B. Maquettes des interfaces
@@ -104,23 +113,27 @@
 
 ## 1. Présentation du candidat et du contexte de formation
 
-Avant d'entrer en formation, mon parcours étudiant et professionnel ont été un long processus exploratoire. Après une scolarité exemplaire, j'ai traversé plusieurs filières "sérieuse" avant de succomber au choix du coeur. J'ai finalement jeté mon dévolu sur une carrière mêlant technique et artistique, en tant qu'ingénieur du son. J'ai exercé cette activité pendant 5 ans en autoentreprise, acquérant au passage des compétences techniques et transversales, d'autonomie et de gestion d'entreprise.
+Avant d'entrer en formation, mon parcours étudiant et professionnel a été un long processus exploratoire. Après une scolarité exemplaire, j'ai traversé plusieurs filières classiques qui ne me correspondaient pas, avant de faire le choix d'une carrière mêlant technique et artistique, en tant qu'ingénieur du son. J'ai exercé cette activité pendant 5 ans en autoentreprise, acquérant des compétences techniques et transversales en autonomie et en gestion d'entreprise.
+
 Mon choix de changer de direction arrive à la rencontre de plusieurs évènements simultanés dans ma vie d'entrepreneur :
 
 - la sensation d'avoir atteint un plafond de verre
 - la frustration de ne pas avoir de diplôme qualifiant
 - l'arrivée imminente de mes 30 ans
 - la rencontre avec le monde du développement
-  En effet, malgré une rapide découverte au cours de mon adolescence, je n'avais jamais vraiment compris ce monde si vaste et riche. Mais lors de mon parcours, j'ai été amené à rédiger des newsletters en HTML/CSS d'abord, puis à vouloir refondre mon site web professionnel qui avait été créé grâce à un outil no-code à l'origine. J'ai fini par consacrer une grande partie de mon temps libre à l'apprentissage des bases du développement, grâce aux cours en ligne d'OpenClassrooms puis de l'université d'Harvard. Cette montée en compétences progressive m'a convaincu de mon attrait pour le développement, et de ma motivation à concrétiser ces nouvelles compétences grâce à des études traditionnelles.
-  C'est dans la suite logique de ma formation en autodidacte que j'ai décidé d'intégrer la 2iAcademy en Conception et Developpement d'Applications et en alternance chez Frixel afin de renforcer mes compétences et d'en acquérir de nouvelles en conception, ainsi que d'obtenir un diplôme reconnu et qualifiant.
-  À l'issue de cette formation, je poursuivrai au sein de l'ESGI Paris en Mastère Big Data & Intelligence Artificielle dans le but de me spécialiser dans un secteur en forte croissance. À plus long terme, je me réserve le droit de retrouver le chemin de l'entrepreneuriat, fort cette fois d'une double compétence technique et d'un diplôme reconnu.
+
+En effet, malgré une rapide découverte au cours de mon adolescence, je n'avais jamais vraiment compris ce monde si vaste et riche. Lors de mon parcours entrepreneurial, j'ai été amené à rédiger des newsletters en HTML/CSS d'abord, puis à vouloir refondre mon site web professionnel, initialement créé avec un outil no-code. J'ai fini par consacrer une grande partie de mon temps libre à l'apprentissage des bases du développement, grâce aux cours en ligne d'OpenClassrooms puis de l'université d'Harvard. Cette montée en compétences progressive m'a convaincu de mon attrait pour le développement, et de ma motivation à concrétiser ces nouvelles compétences grâce à des études traditionnelles.
+
+C'est dans la suite logique de cette formation autodidacte que j'ai décidé d'intégrer la 2iAcademy en Conception et Développement d'Applications, en alternance chez Frixel, afin de renforcer mes compétences et d'en acquérir de nouvelles en conception, ainsi que d'obtenir un diplôme reconnu et qualifiant.
+
+À l'issue de cette formation, je poursuivrai au sein de l'ESGI Paris en Mastère Big Data & Intelligence Artificielle dans le but de me spécialiser dans un secteur en forte croissance. À plus long terme, je me réserve le droit de retrouver le chemin de l'entrepreneuriat, fort d'une double compétence technique et d'un diplôme reconnu.
 
 ## 2. Présentation du projet Lifequest
 
 ### 2.1 Contexte et objectifs
 
 Durant mon activité entrepreneuriale, il était très compliqué de me projeter dans l'avenir à moyen ou long terme. Mon arrivée dans un univers professionnel stable m'a permis de découvrir la gestion d'épargne à long terme, les objectifs financiers et les placements financiers.
-En explorant le sujet, j'ai découvert beaucoup d'applications de gestion financière et de placements financiers, mais aucune qui permettait de faire les deux à la fois, en plus d'offrir du conseil en gestion de patrimoine.
+En explorant le sujet, j'ai découvert beaucoup d'applications de gestion financière et de placements financiers, mais aucune qui permettait de faire les deux à la fois, en plus d'offrir du conseil en gestion de patrimoine. Des applications comme Bankin' ou Linxo se concentrent sur le suivi bancaire et la catégorisation des dépenses, tandis que Finary ou Trade Republic se positionnent sur la gestion de placements. Aucune n'articule les deux en les ancrant autour d'objectifs de vie personnels, avec un moteur de simulation intégré.
 Un ami travaillant dans la finance m'avait fait part de son idée d'application de gestion et de conseil financiers, et une connaissance japonaise m'a fait découvrir des outils de gestion financière répandus au Japon. Ces différents échanges ont fait émerger l'idée de Lifequest, avec une approche innovante articulée autour des objectifs de vie de l'utilisateur, comme un achat de maison ou la volonté d'avoir un enfant.
 L'utilisateur renseigne sa situation financière actuelle, une estimation de ses revenus et de ses dépenses mensuels. Cela nous permet de prendre une photo de son patrimoine et d'effectuer des projections du futur simplement.
 Il définit ensuite un objectif représenté par un montant cible et une échéance. À partir de ces données, l'application génère des recommandations personnalisées : réduction des dépenses non essentielles, placements ponctuels ou réguliers, avec un niveau de risque adapté à la complexité de l'objectif et à la situation financière déclarée.
@@ -135,11 +148,13 @@ L'application cible des particuliers souhaitant gérer leur budget personnel et 
 - Tests : ExUnit, ConnCase, Phoenix.LiveViewTest
 - CI : GitHub Actions
 
-Le choix de cette stack technique s'est présentée comme une évidence, car c'est celle que j'ai apprise et sur laquelle j'ai travaillé durant la majorité de mon alternance chez Frixel. Le framework Phoenix est très complet, innovant, et bien conçu. La séparation des responsabilités est très claire (contexts, schemas, controllers, LiveViews), les outils intégrés sont très riches, et LiveView permet de construire des interfaces réactives côté serveur sans avoir à maintenir un framework JavaScript séparé.
+Elixir est un langage fonctionnel, concurrent et tolérant aux pannes, qui s'exécute sur la BEAM, la machine virtuelle d'Erlang éprouvée depuis des décennies dans les télécoms. Phoenix est le framework web Elixir de référence, qui embarque LiveView pour la construction d'interfaces réactives côté serveur.
 
-Côté données, Phoenix fournit l'ORM Ecto, conçu pour fonctionner par défaut avec PostGreSQL, avec un système de migrations versionné et les changesets qui permettent la validation des données avant toute écriture en base.
+Le choix de cette stack technique s'est présenté comme une évidence, car c'est celle que j'ai apprise et sur laquelle j'ai travaillé durant la majorité de mon alternance chez Frixel. Le framework Phoenix est très complet, innovant, et bien conçu. La séparation des responsabilités est très claire (contexts, schemas, controllers, LiveViews), les outils intégrés sont très riches, et LiveView permet de construire des interfaces réactives côté serveur sans avoir à maintenir un framework JavaScript séparé.
 
-`mix phx.gen.auth` nous fournit un système d'authentification poussé en une commande, avec stockage des mots de passes hashés avec bcrypt en base, ainsi que le magic link, un système de vérification de compte et de réinitialisation de mot de passe grâce à un envoi de token par email.
+Côté données, Phoenix fournit l'ORM Ecto, conçu pour fonctionner par défaut avec PostgreSQL, avec un système de migrations versionné et les changesets qui permettent la validation des données avant toute écriture en base.
+
+`mix phx.gen.auth` nous fournit un système d'authentification poussé en une commande, avec stockage des mots de passe hashés avec bcrypt en base, ainsi que le magic link, un système de vérification de compte et de réinitialisation de mot de passe grâce à un envoi de token par email.
 
 Les tests s'appuient sur ExUnit pour les tests unitaires, ConnCase pour les routes HTTP et Phoenix.LiveViewTest pour les interactions LiveView.
 
@@ -149,7 +164,7 @@ L'intégration continue est assurée par GitHub Actions, dont le pipeline exécu
 
 Lifequest repose sur une architecture en trois couches strictement séparées, afin de respecter la convention proposée par le framework.
 
-**Couche présentation :** HEEx est un language de templating permettant de construire nos pages webs en Elixir. Ce sont les LiveViews qui sont chargées d'interpréter ce code. Lors de leur création, un état est généré côté serveur et une Websocket persistante est ouverte pour communiquer avec le navigateur. Les interactions utilisateur déclenchent des évènements traités par le serveur qui renvoie le diff partiel du DOM, permettant de changer l'interface sans rechargement de la page.
+**Couche présentation :** HEEx est un langage de templating permettant de construire nos pages webs en Elixir. Ce sont les LiveViews qui sont chargées d'interpréter ce code. Lors de leur création, un état est généré côté serveur et une Websocket persistante est ouverte pour communiquer avec le navigateur. Les interactions utilisateur déclenchent des évènements traités par le serveur qui renvoie le diff partiel du DOM, permettant de changer l'interface sans rechargement de la page.
 
 **Couche métier :** Ce sont les contextes Elixir qui portent ces responsabilités. Chaque contexte expose des fonctions publiques qui pourront être appelées par l'ensemble des LiveView. Ces dernières doivent passer par les fonctions des contextes pour interagir avec la base de données. Cela centralise la logique métier, et facilite les tests.
 
@@ -158,7 +173,7 @@ Lifequest repose sur une architecture en trois couches strictement séparées, a
 Une autre fonctionnalité offerte par Phoenix s'appelle Scope. Il s'agit d'une struct représentant l'utilisateur actuel qui est passée en premier argument à toutes les fonctions de contexte. Cela garantit l'isolation des données entre les utilisateurs, car elle est utilisée comme filtre dans toutes les requêtes Ecto. On peut également s'appuyer sur elle pour la gestion des droits, par exemple entre admin et user, ou entre compte free ou premium.
 
 Pour résumer, à l'appel d'une route :
-**Voir Annexe 1.1**
+**Voir Annexe 1.1 — schéma UML de la séquence de traitement d'une requête**
 
 - la requête HTTP initiale déclenche le `mount/3` de la LiveView
 - les fonctions de contextes nécessaires au rendu initial sont appelées
@@ -172,13 +187,19 @@ Par la suite, les interactions utilisateurs déclencheront des fonctions `handle
 
 ### 3.1 Environnement de développement
 
-Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'utiliser des aides au développement, comme ElixirLS pour l'autocomplétion Elixir, PlantUML pour la création et la visualisation de mes schémas UML, ou TODO pour garder en tête les tâches à effectuer.
+#### IDE et extensions
 
-Le projet repose principalement sur Elixir et Mix, son outil natif pour lequel j'ai créé une tâche personnalisée, `mix precommit` afin de grouper les commandes de formatage, de lint, de build et d'exécution des tests afin de m'assurer de la qualité de mon code avant de le push sur la branche distante. Toutes ces étapes sont les mêmes que les tâches éxecutées sur la pipeline CI à la création d'une pull request, me permettant de gagner du temps en capturant les problèmes plus tôt dans mon workflow.
+Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'installer des aides au développement adaptées à la stack : ElixirLS pour l'autocomplétion et la navigation dans le code Elixir, l'extension PlantUML pour la création et la visualisation de mes schémas UML directement dans l'éditeur, et TODO Highlight pour garder en tête les tâches à effectuer dans le code.
 
-`mix.setup` permet d'installer le projet et ses dépendances, créer les bases de données et jouer leurs migrations. On a deux bases de données par défaut, la base de prod (dev en local) et de tests, permettant d'effectuer des tests reproductible sur cette dernière.
+#### Outillage Mix
 
-Enfin, `mix phx.server` permet de lancer l'application sur le port 4000 de la machine hôte.
+Le projet repose principalement sur Elixir et Mix, son gestionnaire de tâches natif. J'ai créé une tâche personnalisée, `mix precommit`, afin de grouper les commandes de formatage, de lint, de build et d'exécution des tests et de m'assurer de la qualité de mon code avant de le pousser sur la branche distante. Toutes ces étapes sont identiques à celles exécutées sur la pipeline CI à la création d'une pull request, ce qui me permet de capturer les problèmes plus tôt dans mon workflow.
+
+`mix setup` permet d'installer le projet et ses dépendances, créer les bases de données et jouer leurs migrations. On dispose de deux bases de données par défaut : la base de développement et la base de tests, permettant d'effectuer des tests reproductibles sur cette dernière sans affecter les données de développement.
+
+#### Commandes de lancement
+
+`mix phx.server` permet de lancer l'application en mode développement sur le port 4000 de la machine hôte. `iex -S mix phx.server` lance en parallèle un shell interactif, utile pour tester des expressions Elixir en contexte d'application.
 
 ### 3.2 Outils de gestion des versions et de collaboration
 
@@ -202,24 +223,26 @@ Toutes ces étapes permettent de garantir de conserver un historique et une bran
 
 Dans le cadre de la conteneurisation de ce projet, j'ai été amené à créer un `Dockerfile` et un `docker-compose.yml` qui permettent de lancer l'application et sa base de données dans des conteneurs isolés, sans aucune installation locale d'Elixir ou de PostgreSQL.
 
-Le `Dockerfile` part de l'image officielle `elixir:latest`. Grâce aux commandes fournies par `Mix` qu'on a évoqué plus tôt, il :
+Le `Dockerfile` part de l'image officielle `elixir:1.18-alpine` (version figée — utiliser `latest` serait une mauvaise pratique en production car une mise à jour de l'image peut casser le build sans avertissement). Grâce aux commandes fournies par `Mix` évoquées plus tôt, il :
 
 - Installe Hex et Rebar (`mix local.hex && mix local.rebar`), qui sont les gestionnaires de paquets Elixir
 - Récupère les dépendances du projet (`mix deps.get`)
 - Télécharge les assets frontend (`mix assets.setup`)
-- Compile et miniefie ces assets (`mix assets.deploy`) pour produire les fichiers statiques prêts pour la production
+- Compile et minifie ces assets (`mix assets.deploy`) pour produire les fichiers statiques prêts pour la production
 - Compile l'application complète en environnement de production (`MIX_ENV=prod mix compile`)
+
+Une amélioration à apporter est l'adoption d'un build multi-stage : un premier stage effectue la compilation (avec les outils de build), un second stage ne contient que la release OTP compilée, ce qui produit une image finale légère sans les dépendances de compilation. Ce point est développé en §13.2.
 
 Lorsque le conteneur est démarré, il joue les fichiers de migration (`mix ecto.migrate`) puis lance l'application (`mix phx.server`).
 
-Ce Dockerfile sera lui même lancé à l'aide d'une orchestration docker-compose aux côtés de la base de données pour s'assurer de la reproductibilité.
+Ce Dockerfile est lancé à l'aide d'une orchestration docker-compose aux côtés de la base de données pour garantir la reproductibilité.
 
 L'orchestration fonctionne comme suit :
 
-- Le service `db` est créé sur la base de l'image officielle `postgres:16`, avec un volume persistant.
+- Le service `db` est créé sur la base de l'image officielle `postgres:16` (version fixée explicitement), avec un volume persistant.
 - Un healthcheck vérifie que PostgreSQL est lancé et accepte les connexions.
 - Le service `app` est annoté comme dépendant de la condition de santé du service `db`
-- Il est construit à partir du DockerFile local, et charge les variables d'environnement depuis un fichier .env.
+- Il est construit à partir du Dockerfile local, et charge les variables d'environnement depuis un fichier .env.
 - La variable `DATABASE_URL` est injectée directement pour pointer vers le service `db` via son nom de service Docker.
 
 Cette configuration permet de lancer l'environnement complet avec une seule commande (`docker compose up`), ce qui garantit la reproductibilité de l'opération indépendamment de la machine hôte.
@@ -322,3 +345,58 @@ Aucune balise `<script>` inline n'est présente dans les templates HEEx de Lifeq
 Contre les attaques Cross-Site Request Forgery (CSRF), Phoenix génère un token unique intégré à chaque formulaire via le composant `<.form>`. Ce token est vérifié côté serveur à chaque soumission, ce qui garantit que la requête provient bien de l'application et non d'un site tiers.
 
 Les Scopes et leur présence dans les arguments des fonctions de Repo garantissent que l'utilisateur actif peut récupérer les données lui appartenant, et seulement celles-ci.
+
+## 5. CP3 — Développer des composants métier
+
+### 5.1 Architecture en contextes (Finances, Accounts)
+
+Les contextes sont un pilier d'organisation du code de Phoenix. Ils regroupent la logique métier dans des modules, qui exposent une API publique que la couche présentation peut utiliser. Dans mon application, deux contextes ont été mis en place, `Accounts` qui gère l'authentification et le Scope, et `Finances` qui contient la logique métier de l'application.
+
+Ce dernier expose notamment les fonctions CRUD générées à la création du schéma ainsi que toutes les fonctions d'accès aux données plus spécifiques. C'est le seul moyen pour les LiveViews de communiquer avec l'ORM, elle n'appellent jamais `Repo` directement, et j'ai appliqué cetet contrainte strictement dans l'ensemble du projet.
+
+Les `Scopes`, apportés par Phoenix 1.8 et générés par phx.gen.auth permettent d'isoler les données de manière sécurisée. L'utilisateur actif est passé en premier argument de toutes les fonctions de contexte, et est utilisé pour filtrer les requêtes Ecto. De cette façon, on est certain qu'un utilisateur ne peut jamais accéder aux données d'un autre.
+
+### 5.2 Développement défensif et gestion des erreurs
+
+Pour présenter cette partie, laissez moi vous parler du concept de pattern matching. Il s'agit d'une fonctionnalité Elixir qui permet à des fonctions qui portent le même nom d'avoir des corps différents selon leur arrité ou selon la forme des arguments reçus. Quand une fonction avec plusieurs définitions est appelée, Elixir essaye de pattern match avec chacune d'entre elle dans l'ordre du fichier et exécute la première qui correspond. Il est très commun de terminer la liste d'implémentation d'une fonction par une "catch all", qui permet d'avoir un comportement par défaut si aucune des implémentations spécifiques ne correspond.
+
+Ecto s'appuie sur cette mécanique pour générer ses valeurs de retour grâce à des objets appelés `changesets`. Ils sont utilisés pour s'assurer de la validité des données côté serveur. Si une validation échoue, l'écriture en base est annulée et un tuple `{:error, _changeset}` est retourné, et le changeset contient les messages d'erreur, permettant de les afficher directement sur le formulaire sans recharger la page ni crash.
+
+#### 5.2.a Exemples concrets de pattern matching : **_Voir annexe 3.1_**
+
+La fonction `format_transaction_type/1` du Dashboard a deux clauses, l'une qui matche sur `%{direction: :income}` et l'autre sur `%{direction: :expense}`. Dans les deux cas, l'objet passé en argument doit être un objet qui contient ces deux types, en l'occurence une transaction.
+Appeler cette fonction avec une transaction revenu ou une transaction dépense déclenche automatiquement la bonne clause, sans `if` ni `cond`.
+
+La fonction `format_income_type/1` prend le relai pour les revenus, et pattern match sur le type de transaction pour renvoyer une chaîne de caractère à afficher dans le DOM. La clause catch all, représentée par le symbole `_` gère les cas qu'on aurait pas prévu sans faire crasher l'application.
+
+Ce principe de pattern matching permet aussi d'adapter le comportement de la fonction dépendamment de la valeur de retour d'un appel de fonction présent dans son corps. Cet `handle_event/3` lance un case pour appeler `Finances.validate_recurring/3`, et pattern match sur {:ok, _} et {:error, _} pour effectuer la suite de ses opérations. Les deux cas sont traités explicitement, et aucun chemin d'exécution n'est ignoré silencieusement. C'est un pattern extrêmement commun en Elixir.
+
+### 5.3 Communication en temps réel avec Phoenix PubSub
+
+Phoenix PubSub permet à des processus de s'abonner à des canaux nommés et de recevoir des messages asynchrones émis par d'autres processus. Dans Lifequest, je l'utilise pour propager les mises à jour de données entre LiveViews. L'abonnement se fait dans `mount/3` au moment de la connexion à la socket. Les canaux sont scopés par utilisateur, avec un nom du type `"user:#{user_id}:transactions"`. Un message publié sur ce canal n'est reçu que par les LiveViews de cet utilisateur précis. Cela garantit que les événements d'un utilisateur ne se propagent pas aux sessions d'un autre.
+
+Quand un message PubSub est reçu, c'est le callback `handle_info/2` qui le traite. Il fonctionne de la même manière qu'un `handle_event/3`, mais déclenché par un message interne plutôt que par une action utilisateur.
+
+### 5.4 Tests unitaires des composants métier
+
+La séparation entre contexte et LiveView a un avantage direct pour les tests : on peut tester entièrement la logique métier de `Finances` sans instancier de LiveView ni simuler de connexion HTTP.
+
+Les contextes `Finances` et `Accounts` sont testés dans `test/lifequest/finances_test.exs` et `test/lifequest/accounts_test.exs` en suivant la convention Phoenix. Chaque fichier est structuré de la même façon : chaque fonction est décrite par un bloc `describe` qui contient le cas nominal, les cas d'erreur, et le test d'isolation par Scope.
+
+Ce dernier est systématique. Pour chaque fonction qui récupère des données en base, on crée un second utilisateur et s'assure que l'appel de fonction ne retourne pas de données appartenant au premier. Ce test permet de garantir que les données ne peuvent pas fuiter entre les utilisateurs. **_Voir annexe 3.2_**
+
+Pour créer facilement des données de tests sans dupliquer de code, Phoenix préconise de créer des fonctions helpers appelées fixtures. Ce sont des fonctions qu'on appelle dans chacun de nos tests pour définir des conditions initiales déterminées, avec des valeurs par défaut que l'on peut écraser selon les besoins du test. Cette approche rend les tests très lisibles, s'assure de leur reproductibilité et permet de se concentrer sur ce qu'ils vérifient.
+
+### 5.5 Sécurité des composants métier
+
+La sécurité des composants métier repose sur plusieurs couches complémentaires.
+
+Les changesets Ecto sont construits à partir de formulaires, dont les champs sont transmis à une fonction `cast/3`. Cependant, les champs système comme le `user_id` ne passent jamais par cette fonction, et sont ajoutés automatiquement après la validation à partir du Scope contenu dans la socket. Cela empêche tout utilisateur malveillant de les manipuler pour accéder à des données qui ne leur appartiennent pas.
+
+Les changesets incluent aussi des validations côté serveur systématiques : `validate_required` pour les champs obligatoires, `validate_number` pour les montants... On sait que la vérification côté client est utile pour l'expérience utilisateur mais n'est pas sécurisée, il est donc nécessaire de conserver cette étape. Il s'agit de notre source de vérité et de notre garantie que les données insérées en base sont toujours valides.
+
+Les requêtes Ecto sont systématiquement filtrées grâce au Scope. On ne récupère jamais une donnée par son seul identifiant, on filtre toujours la requête par l'id de l'utilisateur grâce au pattern `where: t.account_id in ^account_ids`
+
+On ne récupère jamais une transaction par son seul identifiant : la requête joint toujours l'identifiant du compte, soit en vérifiant que c'est bien la clé étrangère de la ligne, soit en faisant une jointure sur la table users si nécessaire.
+
+Enfin, certaines données sont définies comme des Enum, ce qui permet de s'assurer que le contenu de la donnée appartient à une liste prédéfinie.
