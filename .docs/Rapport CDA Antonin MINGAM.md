@@ -9,9 +9,6 @@
 ### BLOC 1 — Développer une application sécurisée
 
 3. [CP1 — Installer et configurer son environnement de travail en fonction du projet](#3-cp1--installer-et-configurer-son-environnement-de-travail-en-fonction-du-projet)
-   - 3.1 [Environnement de développement](#31-environnement-de-développement)
-   - 3.2 [Outils de gestion des versions et de collaboration](#32-outils-de-gestion-des-versions-et-de-collaboration)
-   - 3.3 [Conteneurisation](#33-conteneurisation)
 
 4. [CP2 — Développer des interfaces utilisateur](#4-cp2--développer-des-interfaces-utilisateur)
    - 4.1 [Conception des interfaces avec Phoenix LiveView](#41-conception-des-interfaces-avec-phoenix-liveview)
@@ -40,7 +37,6 @@
    - 7.1 [Analyse du cahier des charges et identification des besoins](#71-analyse-du-cahier-des-charges-et-identification-des-besoins)
    - 7.2 [User stories](#72-user-stories)
    - 7.3 [Maquettes et enchaînement des écrans](#73-maquettes-et-enchaînement-des-écrans)
-   - 7.4 [Dossier de conception](#74-dossier-de-conception)
 
 8. [CP6 — Définir l'architecture logicielle d'une application](#8-cp6--définir-larchitecture-logicielle-dune-application)
    - 8.1 [Architecture multicouche (web / contextes / schémas)](#81-architecture-multicouche-web--contextes--schémas)
@@ -185,67 +181,21 @@ Par la suite, les interactions utilisateurs déclencheront des fonctions `handle
 
 ## 3. CP1 — Installer et configurer son environnement de travail en fonction du projet
 
-### 3.1 Environnement de développement
-
-#### IDE et extensions
+### IDE et extensions
 
 Pour le développement, j'ai utilisé VSCode car c'est l'IDE que j'ai l'habitude d'utiliser. Son catalogue d'extensions m'a permis d'installer des aides au développement adaptées à la stack : ElixirLS pour l'autocomplétion et la navigation dans le code Elixir, l'extension PlantUML pour la création et la visualisation de mes schémas UML directement dans l'éditeur, et TODO Highlight pour garder en tête les tâches à effectuer dans le code.
 
-#### Outillage Mix
+### Outillage Mix
 
 Le projet repose principalement sur Elixir et Mix, son gestionnaire de tâches natif. J'ai créé une tâche personnalisée, `mix precommit`, afin de grouper les commandes de formatage, de lint, de build et d'exécution des tests et de m'assurer de la qualité de mon code avant de le pousser sur la branche distante. Toutes ces étapes sont identiques à celles exécutées sur la pipeline CI à la création d'une pull request, ce qui me permet de capturer les problèmes plus tôt dans mon workflow.
 
 `mix setup` permet d'installer le projet et ses dépendances, créer les bases de données et jouer leurs migrations. On dispose de deux bases de données par défaut : la base de développement et la base de tests, permettant d'effectuer des tests reproductibles sur cette dernière sans affecter les données de développement.
 
-#### Commandes de lancement
+### Commandes de lancement
 
 `mix phx.server` permet de lancer l'application en mode développement sur le port 4000 de la machine hôte. `iex -S mix phx.server` lance en parallèle un shell interactif, utile pour tester des expressions Elixir en contexte d'application.
 
-### 3.2 Outils de gestion des versions et de collaboration
-
-Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques utilisées au quotidien chez Frixel afin de maintenir un historique propre, traçable et permettant le travail en équipe.
-
-Chaque mise à jour commence par la création d'un ticket Jira s'il n'existe pas déjà, puis par la création d'une branche GIT selon la convention de nommage établie chez Frixel. Cette convention permet de relier directement le ticket, la branche et les merges sur main, eux même nommés en suivant une convention similaire.
-
-`LQ-XX type(description)` :
-
-- `LQ-XX` correspond au numéro de ticket JIRA
-- `type` correspond à la nature de la modification (feat, fix, refactor…)
-- `description` est un court résumé des changements apportés par la mise à jour
-
-Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions.
-
-Cette pipeline exécute trois vérifications primordiales : le formatage du code avec `mix format`, le lint avec `mix credo` qui applique des règles de lisibilité et de complexité définies en amont, l'exécution des tests avec `mix test`.
-
-Toutes ces étapes permettent de garantir de conserver un historique et une branche `main` propre, où chaque commit est validé en amont.
-
-### 3.3 Conteneurisation
-
-Dans le cadre de la conteneurisation de ce projet, j'ai été amené à créer un `Dockerfile` et un `docker-compose.yml` qui permettent de lancer l'application et sa base de données dans des conteneurs isolés, sans aucune installation locale d'Elixir ou de PostgreSQL.
-
-Le `Dockerfile` part de l'image officielle `elixir:1.18-alpine` (version figée — utiliser `latest` serait une mauvaise pratique en production car une mise à jour de l'image peut casser le build sans avertissement). Grâce aux commandes fournies par `Mix` évoquées plus tôt, il :
-
-- Installe Hex et Rebar (`mix local.hex && mix local.rebar`), qui sont les gestionnaires de paquets Elixir
-- Récupère les dépendances du projet (`mix deps.get`)
-- Télécharge les assets frontend (`mix assets.setup`)
-- Compile et minifie ces assets (`mix assets.deploy`) pour produire les fichiers statiques prêts pour la production
-- Compile l'application complète en environnement de production (`MIX_ENV=prod mix compile`)
-
-Une amélioration à apporter est l'adoption d'un build multi-stage : un premier stage effectue la compilation (avec les outils de build), un second stage ne contient que la release OTP compilée, ce qui produit une image finale légère sans les dépendances de compilation. Ce point est développé en §13.2.
-
-Lorsque le conteneur est démarré, il joue les fichiers de migration (`mix ecto.migrate`) puis lance l'application (`mix phx.server`).
-
-Ce Dockerfile est lancé à l'aide d'une orchestration docker-compose aux côtés de la base de données pour garantir la reproductibilité.
-
-L'orchestration fonctionne comme suit :
-
-- Le service `db` est créé sur la base de l'image officielle `postgres:16` (version fixée explicitement), avec un volume persistant.
-- Un healthcheck vérifie que PostgreSQL est lancé et accepte les connexions.
-- Le service `app` est annoté comme dépendant de la condition de santé du service `db`
-- Il est construit à partir du Dockerfile local, et charge les variables d'environnement depuis un fichier .env.
-- La variable `DATABASE_URL` est injectée directement pour pointer vers le service `db` via son nom de service Docker.
-
-Cette configuration permet de lancer l'environnement complet avec une seule commande (`docker compose up`), ce qui garantit la reproductibilité de l'opération indépendamment de la machine hôte.
+Même si j'ai travaillé seul sur ce projet, j'ai également utilisé les outils de versioning Jira, Git, Github, de CI GitHub Actions de conteneurisation Docker et d'orchestration. Mon utilisation de ces outils seront détaillés dans les parties de ce rapport qui leurs sont consacrées.
 
 ## 4. CP2 — Développer des interfaces utilisateur
 
@@ -400,3 +350,93 @@ Les requêtes Ecto sont systématiquement filtrées grâce au Scope. On ne récu
 On ne récupère jamais une transaction par son seul identifiant : la requête joint toujours l'identifiant du compte, soit en vérifiant que c'est bien la clé étrangère de la ligne, soit en faisant une jointure sur la table users si nécessaire.
 
 Enfin, certaines données sont définies comme des Enum, ce qui permet de s'assurer que le contenu de la donnée appartient à une liste prédéfinie.
+
+## 6. CP4 — Contribuer à la gestion d'un projet informatique
+
+### 6.1 Méthode de développement itérative
+
+Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques utilisées au quotidien chez Frixel afin de maintenir un historique propre, traçable et permettant le travail en équipe. 
+
+Chaque itération suit le même cycle : création du ticket Jira, ouverture d'une branche Git, développement, écriture des tests, création d'une Pull Request, validation par la CI, merge sur `main`.
+
+L'application est restée fonctionnelle à chaque étape de développement, pratique importante si l'on souhaite la mettre à jour régulièrement sans avoir à arrêter l'application en production.
+
+### 6.2 Planification et suivi des tâches (Jira)
+
+Chaque fonctionnalité commence par un ticket Jira qui décrit le besoin et les critères d'acceptation, ce qui m'oblige à définir clairement ce que je veux produire avant de coder. Le numéro du ticket est ensuite porté par la branche Git, les commits et la Pull Request, ce qui rend l'historique entièrement traçable.
+
+Le workflow Jira suit trois colonnes : backlog, en cours, terminé. Simple, mais suffisant pour garder une vision claire de l'avancement et prioriser les prochaines itérations.
+
+### 6.3 Outils collaboratifs (GitHub, conventions de commits)
+
+La suite du processus est la création d'une branche GIT selon la convention de nommage établie chez Frixel. Cette convention permet de relier directement le ticket, la branche et les merges sur main, eux même nommés en suivant une convention similaire.
+
+`LQ-XX type(description)` :
+
+- `LQ-XX` correspond au numéro de ticket JIRA
+- `type` correspond à la nature de la modification (feat, fix, refactor…)
+- `description` est un court résumé des changements apportés par la mise à jour
+
+Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions.
+
+
+### 6.4 Qualité du code (Credo, mix format, CI)
+
+Lorsqu'une PR est ouverte, une CI est automatiquement exécutée grâce à Github Actions.
+
+Cette pipeline exécute trois vérifications primordiales : le formatage du code avec `mix format`, le lint avec `mix credo` qui applique des règles de lisibilité et de complexité définies en amont, l'exécution des tests avec `mix test`.
+
+Ces trois vérifications sont enchaînées dans une tâche custom `mix precommit`, que j'exécute avant chaque commit, me permettant de détecter les problème avant de push mon code en distant.
+
+Toutes ces étapes permettent de garantir de conserver un historique et une branche `main` propre, où chaque commit est validé en amont.
+
+## 7. CP5 — Analyser les besoins et maquetter une application
+
+### 7.1 Analyse du cahier des charges et identification des besoins
+
+Comme expliqué en introduction, le point de départ de Lifequest est un constat personnel : aucune application existante ne permet à la fois de suivre ses flux financiers mensuels et de simuler, planifier et concrétiser son avenir financier en fonction d'objectifs de vie concrets.
+
+À partir de ce problème, j'ai identifié les besoins fonctionnels principaux :
+
+- Saisie des revenus et dépenses par catégorie, avec support des transactions récurrentes
+- Tableau de bord visuel synthétisant la situation du mois courant
+- Projections financières à horizon personnalisable, basées sur les données déclarées
+- Simulation de placements avec différents niveaux de risque
+- Suivi d'objectifs financiers définis par l'utilisateur
+
+Certaines fonctionnalités ont été volontairement mises hors périmètre pour garder le projet réaliste : le support multi-devises, la connexion à des comptes bancaires réels via API open banking et à des produits financiers réels pour faire de vrais placements.
+
+### 7.2 User stories
+
+Les user stories ont servi de fil directeur pour prioriser le développement. En voici quelques-unes représentatives :
+
+**En tant qu'utilisateur, je veux renseigner ma situation financière afin que l'application puisse calculer des projections réalistes.**
+Critères : le formulaire accepte un montant d'épargne actuelle, de dettes et de revenu mensuel net. Les données sont sauvegardées et réutilisées dans toutes les projections.
+
+**En tant qu'utilisateur, je veux saisir mes revenus et dépenses par catégorie afin de connaître précisément la répartition de mes flux mensuels.**
+Critères : je peux créer une transaction en choisissant un type (salaire, loyer, loisirs...), un montant et une date. Les transactions peuvent être marquées comme récurrentes.
+
+**En tant qu'utilisateur, je veux visualiser la répartition de mes dépenses sous forme de graphique afin d'identifier les postes les plus importants d'un coup d'oeil.**
+Critères : le dashboard affiche deux donuts SVG, l'un pour les revenus et l'autre pour les dépenses, avec les montants par catégorie.
+
+**En tant qu'utilisateur, je veux simuler un placement mensuel sur plusieurs années afin de savoir combien j'aurai accumulé selon différents niveaux de rendement.**
+Critères : je saisis un montant mensuel et un horizon en années. L'application affiche les projections pour trois scénarios : prudent, modéré et dynamique.
+
+**En tant qu'utilisateur, je veux supprimer mon compte et toutes mes données afin de pouvoir exercer mon droit à l'effacement.**
+Critères : une action dans les paramètres supprime le compte et toutes les données associées en cascade, sans possibilité de récupération.
+
+### 7.3 Maquettes et enchaînement des écrans
+
+Les maquettes ont été réalisées en amont grâce à l'outil Figma. Elles sont inspirées des différentes applications que j'ai été amené à utiliser dans mon parcours, ou à étudier au début de mon étude de marché. 
+
+Elles couvrent les différents écrans de l'application, en suivant le parcours utilisateur classique, même s'il est très simple. En dehors du parcours d'inscription/connexion, tous les écrans sont traités au même niveau et accessibles depuis le menu situé dans la barre latérale de navigation.
+
+La seule exception étant les formulaires que les utilisateurs peuvent utiliser pour remplir leurs informations financières, qui sont accessible par le clic de boutons situés dans la page finances. Ces formulaires sont simplifiés au maximum pour faciliter le parcours utilisateur et limiter les erreurs humaines.
+
+L'utilisation de donuts SVG pour l'affichage des informations est directement inspiré d'applications concurrentes, permettant à l'utilisateur de comprendre la répartition de ses revenus et dépenses et sa situation financière en un coup d'oeil.
+
+
+
+
+
+
