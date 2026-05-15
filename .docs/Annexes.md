@@ -2,7 +2,7 @@
 
 ## 1.1 Diagramme de Séquence LiveView
 
-TODO: Insérer le diagramme puml
+<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/1.Sequence_Liveview.png" style="width:100%; max-width:100%;" alt="Diagramme de Séquence LiveView" />
 
 ## 2.1 Exemple d'utilisation de LiveView : `dashboard_live`
 
@@ -273,3 +273,5 @@ describe "transactions" do
   end
 end
 ```
+
+## 4.1

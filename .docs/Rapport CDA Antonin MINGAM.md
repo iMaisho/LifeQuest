@@ -46,7 +46,7 @@
 
 9. [CP7 — Concevoir et mettre en place une base de données relationnelle](#9-cp7--concevoir-et-mettre-en-place-une-base-de-données-relationnelle)
    - 9.1 [Modèle Conceptuel de Données (MCD)](#91-modèle-conceptuel-de-données-mcd)
-   - 9.2 [Modèle Physique de Données (MPD)](#92-modèle-physique-de-données-mpd)
+   - 9.2 [Modèle Logique de Données (MLD)](#92-modèle-logique-de-données-mld)
    - 9.3 [Migrations Ecto et scripts de création](#93-migrations-ecto-et-scripts-de-création)
    - 9.4 [Sécurité et droits d'accès](#94-sécurité-et-droits-daccès)
    - 9.5 [Jeu d'essai](#95-jeu-dessai)
@@ -355,7 +355,7 @@ Enfin, certaines données sont définies comme des Enum, ce qui permet de s'assu
 
 ### 6.1 Méthode de développement itérative
 
-Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques utilisées au quotidien chez Frixel afin de maintenir un historique propre, traçable et permettant le travail en équipe. 
+Même si j'ai travaillé seul sur ce projet, j'ai appliqué les bonnes pratiques utilisées au quotidien chez Frixel afin de maintenir un historique propre, traçable et permettant le travail en équipe.
 
 Chaque itération suit le même cycle : création du ticket Jira, ouverture d'une branche Git, développement, écriture des tests, création d'une Pull Request, validation par la CI, merge sur `main`.
 
@@ -378,7 +378,6 @@ La suite du processus est la création d'une branche GIT selon la convention de 
 - `description` est un court résumé des changements apportés par la mise à jour
 
 Une fois les modifications terminées, je push mon code sur une nouvelle branche distante sur GitHub puis je crée une Pull Request vers `main` ce qui déclenche automatiquement le pipeline CI grâce à GitHub Actions.
-
 
 ### 6.4 Qualité du code (Credo, mix format, CI)
 
@@ -427,7 +426,7 @@ Critères : une action dans les paramètres supprime le compte et toutes les don
 
 ### 7.3 Maquettes et enchaînement des écrans
 
-Les maquettes ont été réalisées en amont grâce à l'outil Figma. Elles sont inspirées des différentes applications que j'ai été amené à utiliser dans mon parcours, ou à étudier au début de mon étude de marché. 
+Les maquettes ont été réalisées en amont grâce à l'outil Figma. Elles sont inspirées des différentes applications que j'ai été amené à utiliser dans mon parcours, ou à étudier au début de mon étude de marché.
 
 Elles couvrent les différents écrans de l'application, en suivant le parcours utilisateur classique, même s'il est très simple. En dehors du parcours d'inscription/connexion, tous les écrans sont traités au même niveau et accessibles depuis le menu situé dans la barre latérale de navigation.
 
@@ -435,8 +434,95 @@ La seule exception étant les formulaires que les utilisateurs peuvent utiliser 
 
 L'utilisation de donuts SVG pour l'affichage des informations est directement inspiré d'applications concurrentes, permettant à l'utilisateur de comprendre la répartition de ses revenus et dépenses et sa situation financière en un coup d'oeil.
 
+## 8. CP6 — Définir l'architecture logicielle d'une application
 
+### 8.1 Architecture multicouche (web / contextes / schémas)
 
+Comme indiqué plus tôt dans ce rapport, l'architecture de Lifequest suit la convention Phoenix de découplage des couches MVC. La couche Modèle contient les schémas Ecto et PostgreSQL, la couche Vue contient les LiveViews et les templates HEEx, et la couche métier qui fait le lien entre ces éléments, grâce aux fonctions de contextes exposées dans `Finances` et Accounts.
 
+Les dépendances sont unidirectionnelles : la couche web dépend des contextes, les contextes dépendent des schémas, les schémas dépendent de la base. Une LiveView ne connaît pas la structure d'une table, elle appelle une fonction du contexte qui lui retourne des données.
 
+Cette approche apporte des avantages concrets de testabilité, de maitenance, de lisibilité, de factorisation, et permettent le travail en collaboration en évitant les conflits.
 
+### 8.2 Choix du framework et de l'ORM (Phoenix / Ecto)
+
+Ce choix s'est imposé naturellement, car c'est la stack sur laquelle je travaille en entreprise. Laissez moi tout de même vous présenter d'autres avantages concrets, au delà de la familiarité.
+
+LiveView élimine le besoin d'un framework front et d'une API le reliant au Back, et est optimisé pour la conception d'interface réactives en temps réel, ce qui est primordial pour l'expérience utilisateur dans le cadre d'applications modernes.
+
+Elixir s'exécute sur la BEAM, la machine virtuelle d'Erlang, qui gère la concurrence par des processus légers et isolés. Chaque utilisateur connecté dispose de son propre processus LiveView sans que sa charge n'affecte les autres.
+
+Ecto est l'ORM de référence de l'écosystème Elixir. Il se distingue par l'absence de magie implicite : les requêtes sont composées explicitement avec `Ecto.Query`, et les données passent toujours par un changeset avant d'être écrites.
+
+PostgreSQL, grâce à son support natif des types `decimal` pour les montants (les `float` introduisent des erreurs d'arrondi) et ses types `enum` natifs qui permettent de contraindre les valeurs directement au niveau de la base a été retenu pour sa robustesse sur les données financières,
+
+Le serveur HTTP utilisé est Bandit, le successeur moderne de Cowboy, depuis la version 1.7 de Phoenix.
+
+### 8.3 Stratégie de sécurité par couche
+
+La sécurité est traitée à chaque couche de l'application garantissant une protection robuste et limitant les attaques possibles au maximum.
+
+**Couche Présentation :** Les templates HEEx échappent automatiquement toutes les variables interpolées, ce qui élimine les risques XSS par défaut. Le composant `<.form>` injecte un token CSRF dans chaque formulaire vérifié côté serveur à chaque soumission. Les routes protégées sont regroupées dans un bloc `live_session :require_authenticated_user` qui interdit l'accès sans session valide.
+
+**Couche métier :** les changesets valident toutes les données avant toute écriture. Les champs système ne passent jamais par `cast/3` et sont assignés programmatiquement. Toutes les requêtes filtrent par `current_scope`, ce qui rend impossible l'accès aux données d'un autre utilisateur même en manipulant un identifiant.
+
+**Couche données :** Ecto génère des requêtes paramétrées : les valeurs sont transmises séparément de la requête SQL, ce qui protège nativement contre les injections. Les enums PostgreSQL garantissent l'intégrité des valeurs sans code applicatif supplémentaire.
+
+**Côté authentification :** les magic links sont des tokens à usage unique stockés sous forme hashée en base. Le token brut n'est jamais persisté, et chaque token expire après 60 jours.
+
+### 8.4 Éco-conception
+
+Cette application n'a pas particulièrement conçue avec l'écologie en tête, mais le choix de cette stack, son origine historique et les optimisations qui en découlent permettent de limiter notre consommation d'espace serveur, de puissance de calcul nécessaire et de réseau, limitant par conséquent nos besoins en électricité.
+
+Elixir est un langage compilé. Pour la mise en production, un binaire contenant le strict nécessaire au fonctionnement de l'application est généré : code minifié, dépendances compilées, assets bundlés...
+
+Il repose sur la BEAM, la machine virtuelle sous-jacente, qui a été conçue à l'origine pour les systèmes de télécommunications où la densité de connexions simultanées est élevée. Elle gère la concurrence par des processus légers, dont chacun n'occupe que quelques kilo-octets en mémoire au démarrage.
+
+LiveView contribue à réduire la consommation réseau par sa conception même : le serveur calcule le diff du DOM et n'envoie via WebSocket que les parties modifiées. Chaque utilisateur maintient une seule connexion persistante, en lieu et place des multiples requêtes HTTP qu'une architecture REST classique générerait à chaque interaction.
+
+## 9. CP7 — Concevoir et mettre en place une base de données relationnelle
+
+### 9.1 Modèle Conceptuel de Données (MCD)
+
+<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MCD.png" style="width:100%; max-width:100%;" alt="MCD Lifequest" />
+
+Le modèle de données de Lifequest est relativement simple, puisqu'il s'agit d'une application qui simule ce que pourrait être une implémentation plus complexe, liée à des données externes réelles comme des comptes bancaires ou des produits financiers. Dans le cas d'utilisation d'API externe, le modèle pourrait évoluer pour s'adapter à des données réelles du monde de la finance. Dans notre cas, cette simplification est suffisante, et pourrait même peut être suffire à une implémentation concrète. 
+
+Il repose sur 4 entités, `users`, `financial_profiles`, `accounts` et `transactions`.
+Un utilisateur possède 0 ou 1 profil financier, 0 ou n comptes et chaque compte contient 0 à n transactions.
+
+Dans Phoenix, ces 4 entités et leurs relations sont définies dans des schémas groupés et lisibles, ce qui permet de facilement visualiser, modifier et comprendre le modèle de données.
+
+Au démarrage du projet, j'avais envisagé de séparer la table transactions en deux tables revenus et dépenses. J'ai rapidement constaté que cette séparation introdusait une complexité qui n'était pas nécéssaire, ces deux objets partageant les mêmes attributs. J'ai choisi de les fusionner en une seule entité en ajoutant un champ `direction` (`:income` ou `:expense`) et des champs `income_type` et `expense_type` optionnels selon la direction. Cette décision sera développée dans la partie 15.1.
+
+### 9.2 Modèle Logique de Données (MLD)
+
+<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MLD.png" style="width:100%; max-width:100%;" alt="MLD Lifequest" />
+
+Ce diagramme MLD permet de visualiser la structure de données du côté de PostgreSQL, et sont représentés dans la structure de fichiers par les fichiers de migration. 
+
+Les quatre tables PostgreSQL correspondent directement aux entités du MCD. Quelques choix techniques méritent d'être soulignés.
+
+Les clés primaires sont des UUID (`binary_id` chez Ecto) plutôt que des entiers auto-incrémentés, ce qui évite un compteur prédictible dans les URLs.
+
+Les montants utilisent le type `NUMERIC(18, 2)` plutôt que `FLOAT`. Quand on utilise des floats, `0.1 + 0.2` ne vaut pas exactement `0.3`. Ce comportement est inacceptable pour une application financière : on utilise donc des décimaux à précision fixe.
+
+Les champs de catégorie (`direction`, `income_type`, `expense_type`, `employment_status`, `type`) sont stockés en `VARCHAR` et validés côté application par les changesets Ecto, avec des enums définis au niveau du schéma Elixir. Les colonnes fréquemment filtrées sont indexées : `user_id` sur `financial_profiles` et `accounts`, `account_id` sur `transactions`.
+
+### 9.3 Migrations Ecto et scripts de création
+
+Ecto impose un processus strict pour les modifications de schéma : `mix ecto.gen.migration nom_migration` génère un fichier horodaté dans `priv/repo/migrations/`, que l'on édite puis applique avec `mix ecto.migrate`. Les migrations sont versionnées avec le reste du code, ce qui permet de rejouer l'historique complet du schéma sur n'importe quel environnement.
+
+La convention est d'utiliser `change/0` qui rend la migration réversible automatiquement via `mix ecto.rollback`. On peut également utiliser `up/do` et `down/0` pour les rollbacks qui nécessitent abstolument une logique personnalisée.
+
+L'historique des migrations illustre bien l'évolution du schéma. La table `transactions` a d'abord été créée avec une clé étrangère directe vers `users`. Une migration ultérieure a supprimé ce lien pour le remplacer par une clé vers `accounts`, ce qui correspond à la décision d'architecture de passer par les comptes bancaires comme point d'entrée des transactions. Une règle stricte s'applique : on ne modifie jamais une migration déjà fusionnée sur `main`. Bien que cela ne soit pas catastrophique en environnement de dev, toute correction passe par une nouvelle migration car c'est la bonne pratique une fois que notre application tourne en production.
+
+### 9.4 Sécurité et droits d'accès
+
+L'isolation des données est garantie par la chaîne de clés étrangères : une `Transaction` appartient à un `Account`, qui appartient à un `User`. On ne récupère jamais une transaction par son seul identifiant, on filtre toujours via le scope de l'utilisateur, ce qui garantit qu'un accès par un ID manipulé retourne une erreur 404 plutôt qu'une fuite de données.
+
+L'utilisateur utilisé par l'application dispose uniquement des droits de lecture et d'écriture sur les tables de l'application, sans droits d'administration. Il ne peut pas modifier le schéma, créer des tables ou accéder aux tables système.
+
+### 9.5 Jeu d'essai
+
+Le fichier `priv/repo/seeds.exs` permet de peupler la base de données avec des données fictives pour le dev ou des données d'initialisation pour la base de données en production. Elles utilisent `on_conflict: :nothing` pour ne pas créer de doublons si on les joue plusieurs fois. Dans le cadre de mon projet, seules des données propres aux utilisateurs sont stockées en base, donc je n'ai pas eu la nécéssité d'en créer, la base de test étant peuplée par les fixtures.
