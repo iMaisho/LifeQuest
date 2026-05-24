@@ -274,4 +274,65 @@ describe "transactions" do
 end
 ```
 
-## 4.1
+## 3.3 Définition d'une fixture : Transaction
+```elixir
+  def transaction_fixture(scope, attrs \\ %{}) do
+    account_id = Map.get(attrs, :account_id) || account_fixture(scope).id
+
+    attrs =
+      attrs
+      |> Map.put_new(:account_id, account_id)
+      |> Enum.into(%{
+        amount: "120.50",
+        date: ~D[2026-03-05],
+        direction: :income,
+        income_type: :salary,
+        is_active: true,
+        is_recurring: false,
+        label: "some label"
+      })
+
+    {:ok, transaction} = Lifequest.Finances.create_transaction(scope, attrs)
+    transaction
+  end
+  ```
+
+## 4.1 Plan de tests
+
+### Contexte `Finances` : Tests unitaires
+
+| ID  | Fonctionnalité                                   | Précondition                                      | Action                                                                        | Résultat attendu                                                               | Statut |
+| --- | ------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------ |
+| T01 | `list_transactions/1` : cas nominal              | 1 transaction créée pour le scope actif           | Appeler `list_transactions(scope)`                                            | Retourne une liste avec la transaction, association `account` préchargée       | ✅     |
+| T02 | `list_transactions/1` : isolation scope          | 1 transaction par utilisateur                     | Appeler avec `scope` et `other_scope` séparément                              | Chaque scope ne voit que sa propre transaction                                 | ✅     |
+| T03 | `get_transaction!/2` : cas nominal               | 1 transaction créée pour le scope                 | Appeler `get_transaction!(scope, id)`                                         | Retourne la transaction correspondante                                         | ✅     |
+| T04 | `get_transaction!/2` : isolation scope           | Transaction créée pour `scope`                    | Appeler `get_transaction!(other_scope, id)`                                   | Lève `Ecto.NoResultsError`                                                     | ✅     |
+| T05 | `create_transaction/2` : données valides         | Compte existant pour le scope                     | Appeler avec attributs complets (label, direction, income_type, amount, date) | Retourne `{:ok, %Transaction{}}`, `expense_type` est `nil` pour un revenu      | ✅     |
+| T06 | `create_transaction/2` : données invalides       | Scope existant                                    | Appeler avec `@invalid_attrs` (tous les champs à `nil`)                       | Retourne `{:error, %Ecto.Changeset{}}`                                         | ✅     |
+| T07 | `update_transaction/3` : données valides         | Transaction existante                             | Mettre à jour label, direction, amount                                        | Retourne `{:ok, %Transaction{}}` avec les nouvelles valeurs                    | ✅     |
+| T08 | `update_transaction/3` : scope invalide          | Transaction créée pour `scope`                    | Appeler `update_transaction(other_scope, transaction, %{})`                   | Lève `Ecto.NoResultsError`                                                     | ✅     |
+| T09 | `update_transaction/3` : données invalides       | Transaction existante                             | Appeler avec `@invalid_attrs` puis relire en base                             | Retourne `{:error, changeset}`, l'enregistrement en base est inchangé          | ✅     |
+| T10 | `delete_transaction/2` : cas nominal             | Transaction existante                             | Appeler `delete_transaction(scope, transaction)`                              | Retourne `{:ok, %Transaction{}}`, la transaction n'existe plus en base         | ✅     |
+| T11 | `delete_transaction/2` : scope invalide          | Transaction créée pour `scope`                    | Appeler `delete_transaction(other_scope, transaction)`                        | Lève `Ecto.NoResultsError`                                                     | ✅     |
+| T12 | `sum_all_by_category/2` : totaux corrects        | 2 transactions salary + 1 freelance               | Appeler `sum_all_by_category(scope, :income)`                                 | Retourne `%{salary: 1500.00, freelance: 300.00}`                               | ✅     |
+| T13 | `sum_all_by_category/2` : catégorie absente      | 1 transaction salary                              | Vérifier la clé `:freelance` dans la map retournée                            | La clé est absente (pas de valeur à zéro)                                      | ✅     |
+| T14 | `project_savings/2` : sans profil                | Aucun profil financier pour le scope              | Appeler `project_savings(scope, date)`                                        | Retourne `{:error, :no_profile}`                                               | ✅     |
+| T15 | `project_savings/2` : avec récurrents            | Profil + 1 revenu récurrent 500€ + 1 dépense 200€ | Projeter sur 3 mois depuis 1000€ d'épargne                                    | `projected_savings == 1900.00` (1000 + 300×3)                                  | ✅     |
+| T16 | `project_savings/2` : dette partiellement soldée | Profil avec 150€ de dettes, mensualité 100€       | Projeter sur 3 mois                                                           | `projected_savings == 850.00`, `projected_debts == 0` (plafonnement au mois 2) | ✅     |
+| T17 | `delete_all_user_data/1` : suppression complète  | Profil, compte et transaction créés               | Appeler `delete_all_user_data(scope)`                                         | Retourne `:ok`, aucune donnée restante en base pour ce scope                   | ✅     |
+| T18 | `delete_all_user_data/1` : isolation scope       | Données pour `scope` et `other_scope`             | Supprimer les données de `scope`                                              | Les données de `other_scope` sont intactes                                     | ✅     |
+
+### LiveView : Tests d'intégration
+
+| ID  | Fonctionnalité                                    | Précondition                                         | Action                                                                | Résultat attendu                                                                                        | Statut |
+| --- | ------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ |
+| T19 | Dashboard : rendu                                 | Utilisateur connecté                                 | Naviguer vers `/dashboard`                                            | La page s'affiche                                                                                       | ✅     |
+| T20 | Dashboard : redirect non authentifié              | Connexion anonyme                                    | `live(build_conn(), ~p"/dashboard")`                                  | Redirige vers `/users/log-in`                                                                           | ✅     |
+| T21 | Dashboard : revenus récurrents à valider          | Transaction récurrente créée le mois précédent       | Monter le Dashboard                                                   | La section "Revenus récurrents à valider" s'affiche avec le montant                                     | ✅     |
+| T22 | Dashboard : validation d'un récurrent             | Revenu récurrent en attente affiché                  | Cliquer sur "Valider"                                                 | La section disparaît, le revenu apparaît dans les transactions du mois                                  | ✅     |
+| T23 | Dashboard : pas de doublons si déjà validé        | Récurrent créé le mois dernier + déjà validé ce mois | Monter le Dashboard                                                   | La section "à valider" n'apparaît pas                                                                   | ✅     |
+| T24 | Formulaire transaction : rendu revenu             | Utilisateur connecté, compte existant                | Naviguer vers `/transactions/new?direction=income&income_type=salary` | Le titre "Nouveau revenu" s'affiche, les champs `direction` et `income_type` sont pré-remplis en hidden | ✅     |
+| T25 | Formulaire transaction : création revenu          | Formulaire rendu                                     | Soumettre le formulaire avec données valides                          | Redirige vers `/finances` avec le message "Transaction créée avec succès"                               | ✅     |
+| T26 | Formulaire transaction : erreurs de validation    | Formulaire rendu                                     | Soumettre avec des champs vides                                       | Les messages d'erreur "ne peut pas être vide" s'affichent, pas de redirection                           | ✅     |
+| T27 | Formulaire transaction : création dépense         | Utilisateur connecté, compte existant                | Soumettre un formulaire dépense valide                                | Redirige vers `/finances` avec confirmation                                                             | ✅     |
+| T28 | Formulaire transaction : redirect non authentifié | Connexion anonyme                                    | Naviguer vers `/transactions/new`                                     | Redirige vers `/users/log-in`                                                                           | ✅     |

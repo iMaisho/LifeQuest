@@ -1,7 +1,7 @@
 ## Sommaire
 
 1. [Présentation du candidat et du contexte de formation](#1-présentation-du-candidat-et-du-contexte-de-formation)
-2. [Présentation du projet Lifequest](#2-présentation-du-projet-lifequest)
+2. [Présentation du projet LifeQuest](#2-présentation-du-projet-lifequest)
    - 2.1 [Contexte et objectifs](#21-contexte-et-objectifs)
    - 2.2 [Stack technique](#22-stack-technique)
    - 2.3 [Architecture générale](#23-architecture-générale)
@@ -124,13 +124,13 @@ C'est dans la suite logique de cette formation autodidacte que j'ai décidé d'i
 
 À l'issue de cette formation, je poursuivrai au sein de l'ESGI Paris en Mastère Big Data & Intelligence Artificielle dans le but de me spécialiser dans un secteur en forte croissance. À plus long terme, je me réserve le droit de retrouver le chemin de l'entrepreneuriat, fort d'une double compétence technique et d'un diplôme reconnu.
 
-## 2. Présentation du projet Lifequest
+## 2. Présentation du projet LifeQuest
 
 ### 2.1 Contexte et objectifs
 
 Durant mon activité entrepreneuriale, il était très compliqué de me projeter dans l'avenir à moyen ou long terme. Mon arrivée dans un univers professionnel stable m'a permis de découvrir la gestion d'épargne à long terme, les objectifs financiers et les placements financiers.
 En explorant le sujet, j'ai découvert beaucoup d'applications de gestion financière et de placements financiers, mais aucune qui permettait de faire les deux à la fois, en plus d'offrir du conseil en gestion de patrimoine. Des applications comme Bankin' ou Linxo se concentrent sur le suivi bancaire et la catégorisation des dépenses, tandis que Finary ou Trade Republic se positionnent sur la gestion de placements. Aucune n'articule les deux en les ancrant autour d'objectifs de vie personnels, avec un moteur de simulation intégré.
-Un ami travaillant dans la finance m'avait fait part de son idée d'application de gestion et de conseil financiers, et une connaissance japonaise m'a fait découvrir des outils de gestion financière répandus au Japon. Ces différents échanges ont fait émerger l'idée de Lifequest, avec une approche innovante articulée autour des objectifs de vie de l'utilisateur, comme un achat de maison ou la volonté d'avoir un enfant.
+Un ami travaillant dans la finance m'avait fait part de son idée d'application de gestion et de conseil financiers, et une connaissance japonaise m'a fait découvrir des outils de gestion financière répandus au Japon. Ces différents échanges ont fait émerger l'idée de LifeQuest, avec une approche innovante articulée autour des objectifs de vie de l'utilisateur, comme un achat de maison ou la volonté d'avoir un enfant.
 L'utilisateur renseigne sa situation financière actuelle, une estimation de ses revenus et de ses dépenses mensuels. Cela nous permet de prendre une photo de son patrimoine et d'effectuer des projections du futur simplement.
 Il définit ensuite un objectif représenté par un montant cible et une échéance. À partir de ces données, l'application génère des recommandations personnalisées : réduction des dépenses non essentielles, placements ponctuels ou réguliers, avec un niveau de risque adapté à la complexité de l'objectif et à la situation financière déclarée.
 
@@ -158,7 +158,7 @@ L'intégration continue est assurée par GitHub Actions, dont le pipeline exécu
 
 ### 2.3 Architecture générale
 
-Lifequest repose sur une architecture en trois couches strictement séparées, afin de respecter la convention proposée par le framework.
+LifeQuest repose sur une architecture en trois couches strictement séparées, afin de respecter la convention proposée par le framework.
 
 **Couche présentation :** HEEx est un langage de templating permettant de construire nos pages webs en Elixir. Ce sont les LiveViews qui sont chargées d'interpréter ce code. Lors de leur création, un état est généré côté serveur et une Websocket persistante est ouverte pour communiquer avec le navigateur. Les interactions utilisateur déclenchent des évènements traités par le serveur qui renvoie le diff partiel du DOM, permettant de changer l'interface sans rechargement de la page.
 
@@ -201,7 +201,7 @@ Même si j'ai travaillé seul sur ce projet, j'ai également utilisé les outils
 
 ### 4.1 Conception des interfaces avec Phoenix LiveView
 
-Lifequest repose entièrement sur Phoenix LiveView pour la construction de ses interfaces. Ce modèle se distingue des approches frontend classiques (React, Vue) en maintenant l'état de l'interface côté serveur : le navigateur établit une connexion WebSocket persistante avec le serveur, qui calcule les changements de DOM et envoie uniquement les diffs nécessaires au client. Cette architecture élimine le besoin d'un framework JavaScript séparé et d'une API entre le front et le back, tout en offrant une réactivité comparable à celle d'une Single Page Application.
+LifeQuest repose entièrement sur Phoenix LiveView pour la construction de ses interfaces. Ce modèle se distingue des approches frontend classiques (React, Vue) en maintenant l'état de l'interface côté serveur : le navigateur établit une connexion WebSocket persistante avec le serveur, qui calcule les changements de DOM et envoie uniquement les diffs nécessaires au client. Cette architecture élimine le besoin d'un framework JavaScript séparé et d'une API entre le front et le back, tout en offrant une réactivité comparable à celle d'une Single Page Application.
 
 Chaque LiveView suit une structure définie par trois callbacks principaux :
 
@@ -235,7 +235,7 @@ A la compilation, seules les classes effectivement utilisées sont incluses dans
 
 daisyUI vient compléter Tailwind en proposant des composants prêts à l'emploi : `btn`, `card`, `badge`, `menu`... Ce sont de simples classes CSS qui regroupent des combinaisons de classes Tailwind, sans JavaScript embarqué.
 
-Le système de thèmes est configuré dans `app.css` où l'on définit nos couleurs `primary`, `base-100`, `base-200`... Changer le thème revient à changer la valeur de ces variables, sans toucher aux composants. Lifequest propose trois modes : clair, sombre, et système. Ce dernier détecte automatiquement la préférence du navigateur.
+Le système de thèmes est configuré dans `app.css` où l'on définit nos couleurs `primary`, `base-100`, `base-200`... Changer le thème revient à changer la valeur de ces variables, sans toucher aux composants. LifeQuest propose trois modes : clair, sombre, et système. Ce dernier détecte automatiquement la préférence du navigateur.
 
 La bascule est gérée côté client via l'attribut `data-theme` sur la balise `html`, ce qui évite un rechargement de page.
 
@@ -255,7 +255,7 @@ Certaines interactions complexes comme les graphiques n'ont pas fait l'objet de 
 
 ### 4.4 Conformité RGPD — Mentions légales
 
-Lifequest collecte et traite des données personnelles, ce qui implique de respecter le Règlement Général sur la Protection des Données. J'ai créé une page dédiée, accessible depuis le footer sur l'ensemble de l'application, y compris sans être connecté.
+LifeQuest collecte et traite des données personnelles, ce qui implique de respecter le Règlement Général sur la Protection des Données. J'ai créé une page dédiée, accessible depuis le footer sur l'ensemble de l'application, y compris sans être connecté.
 
 La base légale retenue est l'exécution d'un contrat au sens de l'article 6(1)(b) du RGPD : en créant un compte, l'utilisateur accepte que ses données soient traitées pour lui permettre d'utiliser le service. Les données sont conservées pendant toute la durée d'activité du compte, puis supprimées à sa résiliation. Les tokens d'authentification expirent automatiquement après 60 jours.
 
@@ -263,7 +263,7 @@ La page liste les droits de l'utilisateur : accès, rectification, effacement, p
 
 ### 4.5 Tests des composants d'interface
 
-Les interfaces de Lifequest sont testées via le module `Phoenix.LiveViewTest` qui simule le cycle de vie complet d'une LiveView dans un environnement de test.
+Les interfaces de LifeQuest sont testées via le module `Phoenix.LiveViewTest` qui simule le cycle de vie complet d'une LiveView dans un environnement de test.
 
 Les tests utilisent le module `ConnCase` pour établir une connexion HTTP simulée avec une session authentifiée.
 
@@ -290,7 +290,7 @@ La stratégie de test porte sur trois aspects : la vérification du rendu HTML a
 
 Phoenix fournit des protections contre les principales vulnérabilités web directement dans sa couche de templating. Contre le Cross-Site Scripting (XSS), HEEx échappe automatiquement toute variable interpolée via `{@assign}` : si une donnée utilisateur contient du HTML ou du JavaScript, le contenu est affiché tel quel, sans être interprété par le navigateur.
 
-Aucune balise `<script>` inline n'est présente dans les templates HEEx de Lifequest : l'ensemble du JavaScript est isolé dans le répertoire `assets/js/`.
+Aucune balise `<script>` inline n'est présente dans les templates HEEx de LifeQuest : l'ensemble du JavaScript est isolé dans le répertoire `assets/js/`.
 
 Contre les attaques Cross-Site Request Forgery (CSRF), Phoenix génère un token unique intégré à chaque formulaire via le composant `<.form>`. Ce token est vérifié côté serveur à chaque soumission, ce qui garantit que la requête provient bien de l'application et non d'un site tiers.
 
@@ -323,7 +323,7 @@ Ce principe de pattern matching permet aussi d'adapter le comportement de la fon
 
 ### 5.3 Communication en temps réel avec Phoenix PubSub
 
-Phoenix PubSub permet à des processus de s'abonner à des canaux nommés et de recevoir des messages asynchrones émis par d'autres processus. Dans Lifequest, je l'utilise pour propager les mises à jour de données entre LiveViews. L'abonnement se fait dans `mount/3` au moment de la connexion à la socket. Les canaux sont scopés par utilisateur, avec un nom du type `"user:#{user_id}:transactions"`. Un message publié sur ce canal n'est reçu que par les LiveViews de cet utilisateur précis. Cela garantit que les événements d'un utilisateur ne se propagent pas aux sessions d'un autre.
+Phoenix PubSub permet à des processus de s'abonner à des canaux nommés et de recevoir des messages asynchrones émis par d'autres processus. Dans LifeQuest, je l'utilise pour propager les mises à jour de données entre LiveViews. L'abonnement se fait dans `mount/3` au moment de la connexion à la socket. Les canaux sont scopés par utilisateur, avec un nom du type `"user:#{user_id}:transactions"`. Un message publié sur ce canal n'est reçu que par les LiveViews de cet utilisateur précis. Cela garantit que les événements d'un utilisateur ne se propagent pas aux sessions d'un autre.
 
 Quand un message PubSub est reçu, c'est le callback `handle_info/2` qui le traite. Il fonctionne de la même manière qu'un `handle_event/3`, mais déclenché par un message interne plutôt que par une action utilisateur.
 
@@ -393,7 +393,7 @@ Toutes ces étapes permettent de garantir de conserver un historique et une bran
 
 ### 7.1 Analyse du cahier des charges et identification des besoins
 
-Comme expliqué en introduction, le point de départ de Lifequest est un constat personnel : aucune application existante ne permet à la fois de suivre ses flux financiers mensuels et de simuler, planifier et concrétiser son avenir financier en fonction d'objectifs de vie concrets.
+Comme expliqué en introduction, le point de départ de LifeQuest est un constat personnel : aucune application existante ne permet à la fois de suivre ses flux financiers mensuels et de simuler, planifier et concrétiser son avenir financier en fonction d'objectifs de vie concrets.
 
 À partir de ce problème, j'ai identifié les besoins fonctionnels principaux :
 
@@ -438,7 +438,7 @@ L'utilisation de donuts SVG pour l'affichage des informations est directement in
 
 ### 8.1 Architecture multicouche (web / contextes / schémas)
 
-Comme indiqué plus tôt dans ce rapport, l'architecture de Lifequest suit la convention Phoenix de découplage des couches MVC. La couche Modèle contient les schémas Ecto et PostgreSQL, la couche Vue contient les LiveViews et les templates HEEx, et la couche métier qui fait le lien entre ces éléments, grâce aux fonctions de contextes exposées dans `Finances` et Accounts.
+Comme indiqué plus tôt dans ce rapport, l'architecture de LifeQuest suit la convention Phoenix de découplage des couches MVC. La couche Modèle contient les schémas Ecto et PostgreSQL, la couche Vue contient les LiveViews et les templates HEEx, et la couche métier qui fait le lien entre ces éléments, grâce aux fonctions de contextes exposées dans `Finances` et Accounts.
 
 Les dépendances sont unidirectionnelles : la couche web dépend des contextes, les contextes dépendent des schémas, les schémas dépendent de la base. Une LiveView ne connaît pas la structure d'une table, elle appelle une fonction du contexte qui lui retourne des données.
 
@@ -484,9 +484,9 @@ LiveView contribue à réduire la consommation réseau par sa conception même :
 
 ### 9.1 Modèle Conceptuel de Données (MCD)
 
-<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MCD.png" style="width:100%; max-width:100%;" alt="MCD Lifequest" />
+<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MCD.png" style="width:100%; max-width:100%;" alt="MCD LifeQuest" />
 
-Le modèle de données de Lifequest est relativement simple, puisqu'il s'agit d'une application qui simule ce que pourrait être une implémentation plus complexe, liée à des données externes réelles comme des comptes bancaires ou des produits financiers. Dans le cas d'utilisation d'API externe, le modèle pourrait évoluer pour s'adapter à des données réelles du monde de la finance. Dans notre cas, cette simplification est suffisante, et pourrait même peut être suffire à une implémentation concrète. 
+Le modèle de données de LifeQuest est relativement simple, puisqu'il s'agit d'une application qui simule ce que pourrait être une implémentation plus complexe, liée à des données externes réelles comme des comptes bancaires ou des produits financiers. Dans le cas d'utilisation d'API externe, le modèle pourrait évoluer pour s'adapter à des données réelles du monde de la finance. Dans notre cas, cette simplification est suffisante, et pourrait même peut être suffire à une implémentation concrète.
 
 Il repose sur 4 entités, `users`, `financial_profiles`, `accounts` et `transactions`.
 Un utilisateur possède 0 ou 1 profil financier, 0 ou n comptes et chaque compte contient 0 à n transactions.
@@ -497,9 +497,9 @@ Au démarrage du projet, j'avais envisagé de séparer la table transactions en 
 
 ### 9.2 Modèle Logique de Données (MLD)
 
-<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MLD.png" style="width:100%; max-width:100%;" alt="MLD Lifequest" />
+<img src="file:///C:/Users/anton/IdeaProjects/lifequest/.docs/img/MLD.png" style="width:100%; max-width:100%;" alt="MLD LifeQuest" />
 
-Ce diagramme MLD permet de visualiser la structure de données du côté de PostgreSQL, et sont représentés dans la structure de fichiers par les fichiers de migration. 
+Ce diagramme MLD permet de visualiser la structure de données du côté de PostgreSQL, et sont représentés dans la structure de fichiers par les fichiers de migration.
 
 Les quatre tables PostgreSQL correspondent directement aux entités du MCD. Quelques choix techniques méritent d'être soulignés.
 
@@ -526,3 +526,235 @@ L'utilisateur utilisé par l'application dispose uniquement des droits de lectur
 ### 9.5 Jeu d'essai
 
 Le fichier `priv/repo/seeds.exs` permet de peupler la base de données avec des données fictives pour le dev ou des données d'initialisation pour la base de données en production. Elles utilisent `on_conflict: :nothing` pour ne pas créer de doublons si on les joue plusieurs fois. Dans le cadre de mon projet, seules des données propres aux utilisateurs sont stockées en base, donc je n'ai pas eu la nécéssité d'en créer, la base de test étant peuplée par les fixtures.
+
+## 10. CP8 — Développer des composants d'accès aux données SQL et NoSQL
+
+### 10.1 Requêtes Ecto (CRUD sécurisé)
+
+Comme expliqué plus tôt, l'accès aux données se fait exclusiement par le bien de requêtes Ecto, générées par le contexte. Ces dernières sont ensuite traduites en reqûetes SQL paramètrées, dans un processus que je vais décrire en détail tout au long de ce chapitre.
+
+Le contexte `Finances` expose les fonctions CRUD standard ainsi que des requêtes d'agrégations plus spécifiques. Chacune de ces fonctions utilise le Scope de l'utilisateur actif comme argument, et filtre les résultats par le `user_id` extrait de ce Scope via une jointure sur la table `accounts`.
+
+```elixir
+  def list_transactions(%Scope{} = scope) do
+    Transaction
+    |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+    |> where([t, a], a.user_id == ^scope.user.id)
+    |> preload([t, a], account: a)
+    |> Repo.all()
+  end
+```
+
+Par exemple, cette fonction permet de lister toutes les transactions propres à un utilisateur. Elle joint `transactions` et `accounts`, filtre sur `a.user_id == ^scope.user.id`, et précharge l'association `account` pour éviter le problème des N+1 requêtes.
+
+```elixir
+  def sum_all_by_category(%Scope{} = scope, direction) do
+    type_field = if direction == :income, do: :income_type, else: :expense_type
+
+    Transaction
+    |> join(:inner, [t], a in Account, on: t.account_id == a.id)
+    |> where([t, a], a.user_id == ^scope.user.id)
+    |> where([t, a], t.direction == ^direction)
+    |> group_by([t, a], field(t, ^type_field))
+    |> select([t, a], {field(t, ^type_field), sum(t.amount)})
+    |> Repo.all()
+    |> Map.new()
+  end
+```
+
+Certaines requêtes d'agrégation sont plus spécifiques. Celle-ci regroupe les transactions par catégorie pour alimenter les donuts du dashboard : elle joint les tables `accounts` et `transactions` grâce à la FK présente sur cette dernière, filtre par direction (`:income` ou `:expense`), groupe dynamiquement sur le champ de type correspondant, et retourne une map `%{catégorie => total}`. Ces requêtes sont composées avec `Ecto.Query` de façon explicite, sans magie implicite.
+
+```elixir
+## Examples
+
+#      iex> sum_all_by_category(scope, :income)
+#      %{salary: #Decimal<3500.00>, freelance: #Decimal<500.00>}
+
+#      iex> sum_all_by_category(scope, :expense)
+#      %{essential: #Decimal<1200.00>, pleasure: #Decimal<350.00>}
+  """
+```
+
+### 10.2 Validation et contrôle des entrées côté serveur
+
+```elixir
+  def changeset(transaction, attrs, _scope) do
+    transaction
+    |> cast(attrs, [
+      :label,
+      :direction,
+      :income_type,
+      :expense_type,
+      :amount,
+      :date,
+      :is_recurring,
+      :is_active,
+      :account_id
+    ])
+    |> validate_required([:account_id, :label, :direction, :amount, :date])
+    |> validate_type_by_direction()
+  end
+```
+
+Toute écriture en base passe par un changeset, qui est chargé d'hydrater un objet complet ou partiel, ici de transaction, et d'exécuter un certain nombre de vérifications de base ou personalisées.
+Le changeset `Transaction.changeset/2` commence par `cast/3` pour lister les champs autorisés, puis enchaîne les validations : `validate_required` pour les champs obligatoires, et une fonction custom privée `validate_type_by_direction/1` qui applique des règles conditionnelles selon la direction de la transaction. Si `direction` est `:income`, le champ `income_type` est requis et `expense_type` est forcé à `nil`. L'inverse s'applique pour `:expense`.
+
+```elixir
+  defp validate_type_by_direction(changeset) do
+    case get_field(changeset, :direction) do
+      :income ->
+        changeset
+        |> validate_required([:income_type])
+        |> put_change(:expense_type, nil)
+
+      :expense ->
+        changeset
+        |> validate_required([:expense_type])
+        |> put_change(:income_type, nil)
+
+      _ ->
+        changeset
+    end
+  end
+```
+
+Ces validations sont faites du côté serveur, et sont par conséquent impossible à contourner côté client. Si le changeset est invalide, `Repo.insert/2` ou `Repo.update/2` retourne `{:error, changeset}`. Le changeset de retour contient le changeset d'origine et les messages d'erreur par champ qui ont été ajoutés côté serveur. La fonction `to_form/1` fournie par Phoenix utilise ce changeset pour mettre à jour le formulaire à chaud grâce à LiveView, et afficher les erreurs tout en conservant les champs remplis par l'utilisateur, sans recharger la page.
+
+### 10.3 Gestion de l'intégrité (transactions Ecto)
+
+Certaines opérations impliquent plusieurs écritures en base qui doivent réussir ou échouer ensemble. Sans précaution, un crash entre deux opérations laisserait la base dans un état incohérent, comme des données orphelines par exemple.
+
+Pour s'assurer d'obtenir un état final stable, Ecto fournit `Repo.transaction/1` : Si l'une des opérations contenues dans la transaction lève une exception ou retourne une erreur, PostgreSQL annule l'ensemble de la transaction.
+
+```elixir
+  def delete_all_user_data(%Scope{} = scope) do
+    user_id = scope.user.id
+
+    Repo.transaction(fn ->
+      Repo.delete_all(from(a in Account, where: a.user_id == ^user_id))
+      Repo.delete_all(from(fp in FinancialProfile, where: fp.user_id == ^user_id))
+    end)
+
+    :ok
+  end
+```
+
+Dans ce cas de figure, il s'agit de la fonction utilisée lorsqu'un utilisateur souhaite supprimer l'intégralité de ses données. Bien qu'ici on ne se retrouverait pas avec des données orphelines car les deux tables portent des clés étrangères liées à User et qu'il n'est pas question de supprimer l'utilisateur, il s'agit tout de même d'une fonctionnalité critique, et il est judicieux de s'assurer que tout est bien supprimé avant de retourner une confirmation à l'utilisateur. Cette structure permet de garantir que le feedback visuel rendu à l'utilisateur après sa manipulation sera cohérent avec l'état de la base de données.
+
+### 10.4 Tests des accès aux données
+
+Les tests du contexte `Finances` couvrent quatre axes pour chaque fonction publique : le comportement nominal, la gestion des erreurs, l'isolation par scope, et les cas limites.
+
+**Comportement nominal :** Chaque fonction CRUD est testée avec des données valides et ses valeurs de retour sont vérifiées champ par champ. Le test de `create_transaction/2` vérifie par exemple que `expense_type` est bien `nil` quand on crée un revenu :
+
+**Gestion des erreurs :** On utilise des attributs invalides pour vérifier que la fonction retourne bien un tuple `{:error, %Ecto.Changeset{}}`. Après l'échec, on récupère l'enregistrement en base et on vérifie qu'il est identique à l'original ce qui assure qu'on a pas fait d'écriture partielle.
+
+**Isolation par scope :** Pour les lectures, on appelle la fonction avec deux scopes distincts et on vérifie que chaque scope ne voit que ses propres enregistrements. Pour les opérations ciblées on vérifie que tenter d'agir sur la ressource d'un autre utilisateur lève une exception.
+
+**Cas limites :** Dans certains cas, l'entrée est valide mais sa valeur implique un changement de comportement de la logique métier. Il est primordial d'essayer de les visualiser, traiter et tester en amont, pour essayer d'éviter de les découvrir en production.
+
+Par exemple, `project_savings/2` permet de créer une projection de l'épargne de l'utilisateur dans le futur. Ses paramètres d'entrée sont l'épargne de départ, la capacité d'épargne (revenus mensuels - dépenses mensuelles) et les mensualités de remboursement des dettes. Lorsque le montant restant de la dette est inférieur à la mensualité prévue, on entre dans un cas limite : sans précaution, on déduirait la mensualité complète sur le mois suivant, entrainant une baisse de l'épargne projetée. Le test permet de vérifier que le remboursement est plafonné au montant de dette restante, et que la mensualité de la dette passe à 0 au mois suivant.
+
+```elixir
+    test "caps debt payment at remaining debt when debt is nearly paid off" do
+      scope = user_scope_fixture()
+
+      financial_profile_fixture(scope, %{
+        current_savings: "1000.00",
+        current_debts: "150.00",
+        monthly_debt_payment: "100.00"
+      })
+
+      {:ok, projection} = Finances.project_savings(scope, months_ahead(3))
+      # Month 1: savings=900, debts=50   (payment=min(100,150)=100)
+      # Month 2: savings=850, debts=0    (payment=min(100,50)=50)
+      # Month 3: savings=850, debts=0    (payment=min(100,0)=0)
+      assert Decimal.equal?(projection.projected_savings, Decimal.new("850.00"))
+      assert Decimal.equal?(projection.projected_debts, Decimal.new("0"))
+    end
+```
+
+### 10.5 Protection contre l'injection SQL
+
+L'injection SQL est l'une des vulnérabilités les plus répandues dans les applications web. Elle consiste à insérer du SQL malveillant dans une valeur d'entrée pour manipuler la requête construite côté serveur. La parade classique est d'utiliser des requêtes paramétrées : la valeur est transmise séparément de la requête, PostgreSQL ne l'interprète jamais comme du SQL.
+
+Ecto applique ce principe nativement, sans configuration. L'opérateur `^` marque une valeur comme paramètre externe :
+
+```elixir
+|> where([t, a], a.user_id == ^scope.user.id)
+```
+
+Ce code génère le SQL suivant :
+
+```sql
+WHERE accounts.user_id = $1
+```
+
+La valeur de `scope.user.id` est transmise à PostgreSQL dans un second canal, distinct de la requête elle-même. Peu importe ce que contient cette valeur, elle sera toujours traitée comme une donnée et jamais interprétée. Sans le `^`, Elixir tenterait d'interpoler la valeur directement dans la requête à la compilation, ce qui serait refusé par Ecto avec une erreur explicite.
+
+Cette protection est donc structurelle : elle ne dépend pas de la vigilance du développeur sur chaque requête, mais du comportement par défaut de l'ORM. L'injection SQL via les fonctions Ecto standard est impossible dans LifeQuest.
+
+## 11. CP9 — Préparer et exécuter les plans de tests d'une application
+
+### 11.1 Plan de tests
+
+Grâce à la méthode de travail acquise chez Frixel, la rédaction d'un plan de tests n'a pas été nécessaire durant le développement de mon application. En effet, le framework de tests inclus dans Phoenix et la dépendance coveralls permettant de monitorer la couverture de tests et exécutée dans la CI nous pousse à garder une couverture de tests quasi complète sur toute la durée du développement. Le comportement que cela induit est simple : chaque branche doit apporter les tests des fonctionnalités et LiveViews qu'elle ajoute au projet.
+
+La nature des tests elle aussi est induite par le framework, et a été acquise au cours de mon expérience en entreprise. Les contextes font l'objet de tests unitaires pour chacune de leurs fonctions, et chaque LiveView fait l'objet de tests d'intégration. Les critères de réussite sont simples : aucun test ne doit échouer, un warning est considéré comme une erreur, et la CI doit passer avant tout merge sur main.
+
+L'ensemble des tests sont couverts sur 2 points au minimum, le comportement du cas nominal et l'isolation des données par scope. Certaines fonctionnalités ayant des implémentations plus spécifiques peuvent nécessiter d'être testées sur des cas limites, lorsqu'on parvient à les détecter.
+
+Vous trouverez en Annexe 4.1 un tableau non-exhaustif des tests de l'application, pour vous donner un aperçu compréhensible des fonctionnalités testées.
+
+### 11.2 Tests unitaires (ExUnit)
+
+Elixir intègre son propre framework de tests unitaires `ExUnit` que Phoenix permet d'utiliser de manière poussée grâce à des modules complémentaires. ExUnit nous permet d'écrire et de jouer des tests dans un bac à sable qui les isole les uns des autres, permettant d'effectuer chacun des tests dans une base de test, avec un état de départ déterminé.
+
+Chaque test s'exécute dans une transaction qui rollback automatiquement une fois le test terminé ce qui garantit qu'un test ne pourra pas influer sur le résultat d'un autre test, même lorsqu'ils sont joués en parallèle.
+
+La structure des tests dans Lifequest est standard : Un bloc describe permet de regrouper les tests, et chaque test porte pour nom une phrase en anglais qui décrit clairement le scope du test, sous la forme "la fonction X dans la situation Y a le comportement Z"
+
+Par exemple, _update_transaction/3 with invalid scope raises_.
+
+Pour éviter de répéter la création des données de test dans chaque fonction, des fixtures réutilisables sont définies dans les fichiers qui y sont consacrés. La structure de base d'une fixture crée un objet en base avec des valeurs par défaut, mais l'ajout d'une map en argument facultatif permet d'écraser les valeurs de notre choix, en fonction des besoins du test.
+
+#### Exemples concrets : **_Voir annexe 3.2 et 3.3_**
+
+L'implémentation des tests d'isolation par scope peut être implémentée de deux façons, en fonction des valeurs de retour des fonctions testées.
+Ces deux fonctions créent des conditions de base similaires, avec la création de deux utilisateurs en base, et de transactions qui leur sont associées.
+`list_transactions/1` retourne une liste de transactions qui peut être vide, donc on vérifie que lorsqu'un utilisateur l'exécute il obtient bien et seulement les transactions qui lui sont associées.
+`get_transaction!/2` retourne une transaction ou une erreur. Cela est indiqué par le `bang operator !`, une convention pour nommer les fonctions qui ont ce genre de comportement. On utilise donc `assert_raise Ecto.NoResultsError` pour vérifier que tenter d'accéder à la transaction d'un autre utilisateur lève une exception.
+
+### 11.3 Tests d'intégration (LiveView)
+
+Les LiveViews sont la base de la couche présentation. Toutes leurs fonctionnalités sont testées grâce à des tests d'intégration dans lesquels la connexion HTTP est simulée grâce au module `ConnCase`.
+
+Il y a 3 types de tests différents pour les LiveViews :
+
+- **Test du rendu initial :** `{:ok, _live, html} = live(conn, ~p"/dashboard")` monte la LiveView et retourne le HTML rendu. On vient faire des assertions textuelles, pour vérifier que le contenu est bien chargé dans le DOM.
+
+- **Tests de clics :** `live |> element("button", "Valider") |> render_click()` simule un clic sur un élément du DOM et retourne le nouveau rendu après l'événement.
+
+- **Tests de formulaires :** `live |> form("form", transaction: %{...}) |> render_submit()` simule une soumission complète et permet de vérifier le résultat.
+
+#### Exemples concrets : **_Voir annexe 2.2_**
+
+### 11.4 Tests de sécurité
+
+Deux tests majeurs sont effectués pour s'assurer du bon fonctionnement des couches de sécurité de base du projet.
+
+- Les tests d'isolation par scope pour les données confidentielles, que j'ai déjà eu l'occasion de vous présenter à plusieurs reprises tout au long de ce rapport. Pour chaque LiveView qui affiche des données, un test crée des données pour un second utilisateur (`other_scope`) et vérifie qu'elles n'apparaissent pas dans le rendu de l'utilisateur courant grâce à `refute html =~ "label de l'autre utilisateur"`. Ces tests valident simultanément le comportement fonctionnel et la sécurité des données.
+- Les tests de redirection pour les LiveViews accessibles aux utilisateurs identifiés seulement. Ce test est présent dans le fichier de test de chaque LiveView pour lequel c'est nécessaire. Il crée une connexion sans session grâce à `build_conn()`, et vérifie que l'utilisateur est redirigé vers la page de connexion. Ce test est systématique : il protège contre les régressions où une route serait accidentellement déplacée hors du `live_session :require_authenticated_user`.
+
+```elixir
+assert {:error, {:redirect, %{to: path}}} = live(build_conn(), ~p"/dashboard")
+assert path == ~p"/users/log-in"
+```
+
+### 11.5 Résultats et compte-rendu de tests
+
+Le projet compte 262 tests répartis sur 21 fichiers, avec 0 failure et 0 warning de compilation. La couverture porte sur l'ensemble des fonctions publiques des contextes `Finances` et `Accounts`, toutes les LiveViews de l'application (dashboard, finances, comptes, projections, placements, objectifs, paramètres, authentification), et les tests de sécurité associés.
+
+Les fonctions privées (`defp`), les callbacks internes de LiveView et le comportement des librairies tierces (Ecto, Phoenix) sont volontairement exclus du périmètre de test.
+
+La CI GitHub Actions exécute la suite complète à chaque push et à chaque PR vers `main`, contre une vraie base PostgreSQL 16. Aucun merge n'est autorisé si la CI est rouge.
