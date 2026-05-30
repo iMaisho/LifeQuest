@@ -758,3 +758,55 @@ Le projet compte 262 tests répartis sur 21 fichiers, avec 0 failure et 0 warnin
 Les fonctions privées (`defp`), les callbacks internes de LiveView et le comportement des librairies tierces (Ecto, Phoenix) sont volontairement exclus du périmètre de test.
 
 La CI GitHub Actions exécute la suite complète à chaque push et à chaque PR vers `main`, contre une vraie base PostgreSQL 16. Aucun merge n'est autorisé si la CI est rouge.
+
+## 12. CP10 — Préparer et documenter le déploiement d'une application
+
+### 12.1 Environnements (développement, test, production)
+
+Phoenix permet de gérer nativement différents environnements en fonction du contexte d'execution. Il en existe 3 par défaut `dev`, `test` et `prod`, qui sont définis dans le dossier `config/` et chargés grâce à une variable d'environnement `MIX_ENV`.
+
+L'environnement de **développement** (`config/dev.exs`) est configuré pour maximiser le confort de travail : il utilise la base de données locale, permet de voir les changements de code sans redémarrer le serveur grâce au hot reload, et le mailer permet de simuler les envois de mails sur une boite mail fictive. Les logs sont détaillés pour faciliter le débugage.
+
+L'environnement de **test** (`config/test.exs`) est conçu pour l'isolation et la reproductibilité. Il utilise une base de données séparée de celle du développement, ce qui garantit que les tests n'intéragissent pas avec les données de la base de dev ou, cela va sans dire, de prod. Chaque test de s'exécute dans une transaction rollbackée automatiquement et le mailer est configuré en mode mémoire, sans envoi réel.
+
+L'environnement de **production** est géré par deux fichiers complémentaires. `config/prod.exs` est chargé à la **compilation** pour fixer les valeurs statiques connues à ce moment là, puis `config/runtime.exs` est chargé au **démarrage** de l'application. Ce fichier permet de lire les variables d'environnement grâce à `System.get_env`, qui seront accessibles dans le reste de l'application via `Application.get_env`. La configuration est ainsi centralisée, testable et ne fuite pas dans les logs.
+
+### 12.2 Procédure de déploiement
+
+Pour déployer l'application, j'ai décidé d'utiliser Fly.io qui est la plateforme de référence pour l'écosystème Phoenix. Après l'avoir installé, la commande `fly launch` a analysé le projet et généré automatiquement le `Dockerfile` et le fichier de configuration `fly.toml`.
+
+La procédure de déploiement manuel est la suivante :
+
+- S'authentifier avec `flyctl auth login`
+- Depuis la racine du projet, lancer `flyctl deploy` qui construit l'image Docker sur les serveurs de Fly.io et la déploie
+- Fly.io exécute automatiquement les migrations de base de données avant de démarrer la nouvelle version
+
+En pratique, cette commande n'est jamais lancée manuellement en dehors des phases initiales : c'est la pipeline CD qui s'en charge automatiquement à chaque merge sur `main`, comme décrit dans la partie 13.
+
+### 12.3 Scripts de déploiement et migrations
+
+Pour présenter cette partie, laissez moi vous expliquer le concept de release OTP. Elixir est un langage compilé qui s'exécute sur la BEAM. `mix release` permet de générer un binaire autonome contenant le runtime Erlang, l'application compilée, ses dépendances et les assets, sans nécessiter qu'Elixir ou Mix soient installés sur la machine cible. C'est ce binaire qui est embarqué dans le stage final du Dockerfile et déployé sur Fly.io.
+
+Le Dockerfile suit un pattern multi-stage permettant de produire des images de production légères. Un premier stage, `builder`, installe les outils de compilation, récupère les dépendances, compile les assets et génère la release. Un second stage, `final`, repart d'une image Debian minimale et ne copie que la release produite par le premier stage. L'image finale ne contient donc aucun outil de build, ce qui réduit sa taille et sa surface d'attaque.
+
+Le répertoire `rel/` contient les scripts de démarrage générés par `mix release`. Le script `server` démarre l'application, et le script `migrate` exécute les migrations Ecto en base de données. Ce dernier est configuré comme `release_command` dans le `fly.toml` :
+
+```toml
+[deploy]
+  release_command = '/app/bin/migrate'
+```
+
+Fly.io exécute ce script avant chaque démarrage d'une nouvelle version de l'application. Les migrations sont donc toujours jouées avant que le trafic ne soit basculé vers la nouvelle version, ce qui garantit la cohérence entre le schéma de base de données et le code déployé.
+
+### 12.4 Variables d'environnement et configuration
+
+LifeQuest requiert quatre variables d'environnement en production :
+
+- `SECRET_KEY_BASE` : clé secrète utilisée pour signer les sessions et les tokens.
+- `DATABASE_URL` : URL de connexion à la base de données PostgreSQL.
+- `PHX_HOST` : domaine public de l'application.
+- `PORT` : port sur lequel l'application écoute les connexions entrantes.
+
+Ces variables sont configurées côté Fly.io via la commande `flyctl secrets set NOM=valeur`. Elles sont stockées de manière chiffrée sur la plateforme et injectées dans l'environnement du conteneur au démarrage, sans jamais apparaître dans le code ou les logs.
+
+Le fichier `.env.example` documente ces variables avec leurs descriptions, sans aucune valeur réelle. Ce fichier est versionné dans le dépôt Git, ce qui permet à tout développeur reprenant le projet de savoir exactement quelles variables configurer pour lancer l'application.
