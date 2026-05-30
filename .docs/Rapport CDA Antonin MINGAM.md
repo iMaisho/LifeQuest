@@ -810,3 +810,61 @@ LifeQuest requiert quatre variables d'environnement en production :
 Ces variables sont configurées côté Fly.io via la commande `flyctl secrets set NOM=valeur`. Elles sont stockées de manière chiffrée sur la plateforme et injectées dans l'environnement du conteneur au démarrage, sans jamais apparaître dans le code ou les logs.
 
 Le fichier `.env.example` documente ces variables avec leurs descriptions, sans aucune valeur réelle. Ce fichier est versionné dans le dépôt Git, ce qui permet à tout développeur reprenant le projet de savoir exactement quelles variables configurer pour lancer l'application.
+
+## 13. CP11 — Contribuer à la mise en production dans une démarche DevOps
+
+### 13.1 Pipeline CI/CD (GitHub Actions)
+
+La pipeline est définie dans `.github/workflows/ci-cd.yml` et se déclenche à chaque push et à chaque PR ouverte vers `main`. Elle est composée de deux jobs distincts : `ci` et `deploy`.
+
+Le job `ci` s'exécute en premier, et dans un ordre précis : vérification du formatage, analyse statique Credo, compilation avec `--warnings-as-errors`, puis exécution des tests. Les vérifications rapides sont faites en premier pour échouer rapidement et éviter d'attendre l'exécution complète des tests si le code n'est pas formaté correctement. Les tests arrivent en dernier car ils sont les plus longs à s'exécuter.
+
+Pour que les tests puissent s'exécuter dans la CI exactement comme en local, le runner GitHub Actions démarre une instance PostgreSQL 16 sous forme de service Docker, avec un healthcheck qui garantit que la base est prête avant de lancer les tests.
+
+```yaml
+services:
+  postgres:
+    image: postgres:16
+    options: >-
+      --health-cmd pg_isready
+      --health-interval 10s
+```
+
+Le job `deploy` ne s'exécute que sur un push vers `main`, jamais sur une PR. Il est conditionné à la réussite du job `ci` grâce à `needs: [ci]`, ce qui garantit que seul du code validé est déployé en production.
+
+### 13.2 Conteneurisation (Docker)
+
+Comme décrit dans la partie 12.3, `fly launch` a généré un Dockerfile multi-stage, ce qui est intéressant d'un point de vue DevOps : l'image finale déployée en production ne contient aucun outil de compilation, aucune version d'Elixir ou de Mix. Elle ne contient que le binaire de la release OTP et les librairies système dont la BEAM a besoin pour s'exécuter, ce qui se traduit par une image plus légère et une surface d'attaque réduite.
+
+Le projet dispose également d'un `docker-compose.yml` qui permet de lancer l'application complète en local sans aucune installation d'Elixir ou de PostgreSQL. Il orchestre deux services : `db` (PostgreSQL 16 avec un volume persistant et un healthcheck) et `app` (construit à partir du Dockerfile local). Le service `app` dépend de la bonne santé du service `db` avant de démarrer, ce qui évite les erreurs de connexion au démarrage.
+
+```yaml
+depends_on:
+  db:
+    condition: service_healthy
+command: /bin/sh -c "/app/bin/migrate && /app/bin/seed && /app/bin/server"
+```
+
+La commande enchaîne trois étapes : migrations, seeds, puis démarrage du serveur. Les seeds sont idempotents grâce à `on_conflict: :nothing`, ce qui permet de les rejouer sans risque à chaque démarrage. Ils créent un compte de démonstration (`demo@lifequest.fr` / `LifeQuest2025!`) pour permettre de tester l'application sans configuration supplémentaire. Une seule commande suffit pour lancer l'environnement complet :
+
+```bash
+docker compose up --build
+```
+
+### 13.3 Outils de qualité de code (Credo, mix format)
+
+Trois outils s'enchaînent dans la CI pour garantir la qualité du code, et je les applique également en local avant chaque commit grâce à un alias `mix precommit` défini dans le projet.
+
+**`mix format`** est le formateur officiel de l'écosystème Elixir. Il n'a aucune configuration à maintenir : son comportement est déterministe et partagé par tous les projets Elixir. La vérification `mix format --check-formatted` échoue si le code n'a pas été formaté, ce qui élimine tout débat de style dans les revues de code.
+
+**`mix credo --strict`** est un analyseur statique qui détecte les problèmes de style et les anti-patterns Elixir : fonctions trop complexes ou trop longues, modules sans documentation, variables inutilisées... Le mode `--strict` active toutes les vérifications disponibles. J'ai utilisé cet outil tout au long du développement pour m'assurer d'avoir un code propre à chaque étape.
+
+**`mix compile --warnings-as-errors`** transforme les avertissements de compilation en erreurs bloquantes. En Elixir, un warning peut signaler une clause de pattern matching inaccessible ou une variable non utilisée, deux situations qui révèlent souvent un bug latent. En les traitant comme des erreurs dès la CI, on garantit qu'ils ne s'accumulent pas.
+
+### 13.4 Automatisation des tests
+
+les tests sont exécutés automatiquement à chaque push par GitHub Actions, sans aucune intervention manuelle. Ce qui est spécifique à la CI, c'est l'utilisation d'une vraie base PostgreSQL 16, identique à celle de production, plutôt qu'un mock ou une base en mémoire. Cette approche garantit que les requêtes Ecto fonctionnent exactement comme en production.
+
+### 13.5 Interprétation des rapports CI
+
+Chaque job est visible dans l'interface GitHub, avec le détail de chaque étape. Lorsqu'une étape échoue, son log s'affiche directement : il contient le fichier, la ligne concernée, et le message d'erreur exact, ce qui permet d'identifier et de résoudre facilement les problèmes.

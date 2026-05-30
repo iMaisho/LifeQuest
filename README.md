@@ -1,18 +1,43 @@
 # Lifequest
 
-To start your Phoenix server:
+Application de gestion financière personnelle construite avec Phoenix LiveView (Elixir), PostgreSQL et une authentification par magic link.
 
-* Run `mix setup` to install and setup dependencies
-* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Lancer le projet avec Docker
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+La méthode la plus simple, sans installer Elixir ni PostgreSQL :
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+```bash
+docker compose up --build
+```
 
-## Learn more
+L'application est accessible sur [http://localhost:4000](http://localhost:4000).
 
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+Au premier démarrage, l'image Docker est construite (quelques minutes). Les migrations et les seeds sont joués automatiquement avant le démarrage du serveur.
+
+Compte de démonstration créé par les seeds :
+
+- Email : `demo@lifequest.fr`
+- Mot de passe : `LifeQuest2025!`
+
+## Lancer le projet en développement local
+
+Prérequis : Elixir 1.18+, PostgreSQL 16.
+
+```bash
+mix setup        # installe les dépendances, crée et migre la base de données
+mix phx.server   # démarre le serveur sur localhost:4000
+```
+
+Le même compte de démonstration est disponible après `mix setup`.
+
+## Commandes utiles
+
+```bash
+mix test              # lance la suite de tests
+mix precommit         # format + credo + tests (à lancer avant chaque commit)
+mix ecto.reset        # recrée la base de données depuis zéro
+```
+
+## Variables d'environnement
+
+Voir `.env.example` pour la liste complète des variables requises en production.

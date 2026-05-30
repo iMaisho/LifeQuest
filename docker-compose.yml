@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lifequest_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@db/lifequest_prod
+      # Clé de démonstration — à remplacer par `mix phx.gen.secret` en production
+      SECRET_KEY_BASE: "demoSecretKeyBaseForLocalDevelopmentOnlyDoNotUseInProductionReplaceWithMixPhxGenSecret"
+      PHX_HOST: localhost
+      PORT: "4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: /bin/sh -c "/app/bin/migrate && /app/bin/lifequest eval Lifequest.Release.seed && /app/bin/server"
+
+volumes:
+  postgres_data:
