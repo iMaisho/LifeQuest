@@ -84,7 +84,8 @@
 
 14. [Communiquer en français et en anglais](#14-communiquer-en-français-et-en-anglais)
     - 14.1 [Documentation technique en anglais](#141-documentation-technique-en-anglais)
-    - 14.2 [Lecture de documentation technique en anglais (niveau B1)](#142-lecture-de-documentation-technique-en-anglais-niveau-b1)
+    - 14.2 [Internationalisation avec Gettext](#142-i8n-avec-gettext)
+    - 14.3 [Lecture de documentation technique en anglais](#143-lecture-de-documentation-technique-en-anglais)
 
 15. [Mettre en œuvre une démarche de résolution de problème](#15-mettre-en-œuvre-une-démarche-de-résolution-de-problème)
     - 15.1 [Refactoring du modèle de données (LQ-5)](#151-refactoring-du-modèle-de-données-lq-5)
@@ -868,3 +869,48 @@ les tests sont exécutés automatiquement à chaque push par GitHub Actions, san
 ### 13.5 Interprétation des rapports CI
 
 Chaque job est visible dans l'interface GitHub, avec le détail de chaque étape. Lorsqu'une étape échoue, son log s'affiche directement : il contient le fichier, la ligne concernée, et le message d'erreur exact, ce qui permet d'identifier et de résoudre facilement les problèmes.
+
+## 14. Communiquer en français et en anglais
+
+### 14.1 Documentation technique en anglais
+
+Dans le développement de LifeQuest, l'anglais est la langue du code et la langue de la documentation technique. Tous les identifiants du projet suivent cette règle : les noms de fonctions (`list_transactions`, `get_transaction!`, `deliver_login_instructions`), les modules (`FinancialProfile`, `UserToken`, `Scope`), les variables (`current_scope`, `socket`, `changeset`) et les noms de routes sont en anglais. C'est une convention universelle dans l'écosystème Elixir et dans le développement logiciel en général que j'ai appliquée dès le premier commit.
+
+Les fichiers de conventions et de configuration du projet sont également rédigés en anglais, ce qui permet à n'importe quel développeur international de comprendre les règles du projet sans barrière linguistique.
+
+Les messages de commit suivent une convention hybride : le type et le scope sont en anglais (`feat`, `fix`, `dashboard`, `transactions`), et la description est en français. Par exemple : `LQ-50 feat(dashboard): donuts SVG mensuels`. Ce choix permet à la fois de respecter les conventions internationales de commit et de maintenir une lisibilité en français pour le suivi de projet.
+
+### 14.2 I8n avec Gettext
+
+L'interface de LifeQuest est rédigée en anglais dans le code source, et traduite en français via le module `Gettext` intégré à Phoenix. C'est une pratique standard dans l'écosystème : le code source reste en anglais, langue universelle du développement, et les traductions sont externalisées dans des fichiers dédiés.
+
+Le fonctionnement est simple : dans les templates et les LiveViews, chaque chaîne visible par l'utilisateur est passée à la fonction `gettext/1` plutôt qu'écrite en dur.
+
+```elixir
+{gettext("Projected savings")}
+{gettext("Projection over %{months} months", months: @projection.months)}
+```
+
+La commande `mix gettext.extract --merge` parcourt automatiquement le code source, extrait toutes les chaînes marquées avec `gettext`, et génère les fichiers `.pot` (templates de traduction) et `.po` (traductions par langue) dans `priv/gettext/`. Le fichier `priv/gettext/fr/LC_MESSAGES/default.po` contient l'ensemble des traductions françaises du projet.
+
+```
+msgid "Projected savings"
+msgstr "Épargne projetée"
+
+msgid "%{years} years"
+msgstr "%{years} ans"
+```
+
+La locale par défaut est configurée dans `config/config.exs` :
+
+```elixir
+config :lifequest, LifequestWeb.Gettext, default_locale: "fr"
+```
+
+Ce mécanisme garantit que l'application est présentée en français aux utilisateurs, tout en conservant un code source entièrement en anglais. Il prépare aussi l'application à une éventuelle internationalisation : ajouter une nouvelle langue ne nécessite que d'ajouter un fichier `.po` correspondant, qui pourra facilement être donné à un traducteur pour lui permettre de travailler.
+
+### 14.3 Lecture de documentation technique en anglais
+
+La totalité de la documentation technique que j'ai consultée pour construire LifeQuest est en anglais. Les sources principales sont `hexdocs.pm` pour Phoenix, Ecto, LiveView et leurs dépendances, ainsi que les guides officiels Phoenix et la documentation de Tailwind CSS.
+
+Plus généralement, les forums techniques comme ElixirForum sont des ressources que j'utilise régulièrement pour débloquer des problèmes. Les discussions y sont quasi exclusivement en anglais, et la capacité à formuler une recherche précise, à lire les réponses et à identifier la solution pertinente est une compétence que j'ai développée au quotidien pendant ce projet.
