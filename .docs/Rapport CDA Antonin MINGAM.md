@@ -101,12 +101,6 @@
     - 17.1 [Bilan technique](#171-bilan-technique)
     - 17.2 [Bilan personnel](#172-bilan-personnel)
     - 17.3 [Suite et perspectives](#173-suite-et-perspectives)
-18. [Annexes](#18-annexes)
-    - A. Diagramme MCD / MPD
-    - B. Maquettes des interfaces
-    - C. Plan de tests complet
-    - D. Extraits de code commentés
-    - E. Captures d'écran de l'application
 
 ## 1. Présentation du candidat et du contexte de formation
 
@@ -914,3 +908,32 @@ Ce mécanisme garantit que l'application est présentée en français aux utilis
 La totalité de la documentation technique que j'ai consultée pour construire LifeQuest est en anglais. Les sources principales sont `hexdocs.pm` pour Phoenix, Ecto, LiveView et leurs dépendances, ainsi que les guides officiels Phoenix et la documentation de Tailwind CSS.
 
 Plus généralement, les forums techniques comme ElixirForum sont des ressources que j'utilise régulièrement pour débloquer des problèmes. Les discussions y sont quasi exclusivement en anglais, et la capacité à formuler une recherche précise, à lire les réponses et à identifier la solution pertinente est une compétence que j'ai développée au quotidien pendant ce projet.
+
+## 15. Mettre en œuvre une démarche de résolution de problème
+
+La planification et la conception sont autant d'outils pouvant servir à limiter les problèmes de dev. Malgré cela, il arrive parfois qu'on ait à faire face à des imprévus. Quand cela arrive, le processus itératif permet de limiter l'impact de ces surprises, et un bon développeur se reconnait moins à sa capacité à éviter les problèmes qu'à sa méthode pour les résoudre : identifier le symptôme, formuler des hypothèses, les tester, et tirer une leçon réutilisable.
+Je vais vous présenter trois situations concrètes rencontrées pendant le développement de LifeQuest, avec à chaque fois le contexte, l'analyse et la solution retenue.
+
+### 15.1 Refactoring du modèle de données (LQ-5)
+
+Au démarrage du projet, les revenus et les dépenses étaient modélisés dans deux entités distinctes : `IncomeStream` et `Expense`. Cette séparation semblait logique au premier abord, et mon approche instinctive du modèle de données sans passer par un dictionnaire de données m'a poussé à faire ce choix de conception.
+
+Lorsque j'ai commencé à implémenter mes fonctions de prédiction, les requêtes Ecto devenaient complexes, difficiles à tester et à maintenir.
+
+Après analyse, notamment une comparaison des deux schémas de données, j'ai décidé de fusionner les deux entités en une table `Transaction` unifiée avec un champ `direction` (`:income` / `:expense`). Cette migration a simplifié l'ensemble du contexte `Finances`, réduit le contexte de moitié et rendu les requêtes d'agrégation directes.
+
+### 15.2 Encodage des apostrophes dans les tests LiveView (LQ-65)
+
+Lors de la traduction de l'interface en français grâce à gettext (LQ-65), les tests ont de LiveViews qui étaient rédigés en anglais ont naturellement échoué. Après traduction de ces tests, les assertions du type `assert html =~ "S'inscrire"` n'étaient jamais vérifiées malgré la bonne présence du texte dans le navigateur.
+
+L'investigation a révélé que `Phoenix.LiveViewTest` retourne du HTML brut dans lequel les apostrophes sont encodées en entité HTML (`&#39;`). L'assertion attendait le caractère littéral, absent du rendu. Cela a été facile à diagnostiquer, car les tests invalides retourne une comparaison directe entre les chaines de caractères.
+
+La solution : remplacer toutes les assertions contenant des apostrophes par leur équivalent encodé (`"S&#39;inscrire"`). La leçon : dans les tests LiveView, le rendu est du HTML échappé, pas du texte brut et il faut adapter les assertions en conséquence.
+
+### 15.3 Diagnostic d'une CI rouge inattendue
+
+Après un merge en apparence anodin, la CI GitHub Actions s'est mise à échouer sur l'étape `mix compile --warnings-as-errors`. En local, la compilation passait sans avertissement.
+
+L'analyse du rapport CI a révélé un warning sur une variable non utilisée, dans un fichier qui n'avait pas été recompilé à cause du cache. Forcer `mix compile --force` en local a reproduit l'erreur.
+
+Cette expérience sans conséquence a tout de même servi à démontrer de l'importance de l'accumulation des garde-fous, même s'ils peuvent sembler parfois rébarbatifs. Les différences d'environnement peuvent entrainer des problèmes qu'on ne détecte pas en local.
